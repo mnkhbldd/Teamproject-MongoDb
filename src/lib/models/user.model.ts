@@ -13,6 +13,9 @@ const UserSchema = new Schema(
       unique: true,
     },
     userName: { type: String, unique: true },
+    firstName: { type: String },
+    lastName: { type: String },
+    photo: { type: String },
     isAdmin: { type: Boolean, default: false },
   },
   {

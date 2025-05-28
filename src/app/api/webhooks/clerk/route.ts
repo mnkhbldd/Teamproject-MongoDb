@@ -1,6 +1,8 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
+import { createUser } from "@/lib/actions/user.action";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -51,6 +53,45 @@ export async function POST(req: Request) {
   // For this guide, log payload to console
   const { id } = evt.data;
   const eventType = evt.type;
+
+  //Create user in mongodb
+
+  if (eventType === "user.created") {
+    const { id, email_addresses, image_url, username, first_name, last_name } =
+      evt.data;
+    const user = {
+      clerkId: id,
+      email: email_addresses[0].email_address,
+      userName: username || "",
+      firstName: first_name ?? "",
+      lastName: last_name ?? "",
+      isAdmin: false,
+      photo: image_url,
+    };
+    console.log(user);
+
+    const newUser = await createUser(user);
+
+    if (newUser && newUser._id) {
+      try {
+        const client = await clerkClient();
+        await client.users.updateUserMetadata(id, {
+          publicMetadata: {
+            userId: newUser._id,
+          },
+        });
+      } catch (error) {
+        console.error("Error updating user metadata:", error);
+      }
+    } else {
+      console.warn("New user or user ID is undefined.");
+    }
+
+    return NextResponse.json({
+      message: "User created",
+      data: newUser,
+    });
+  }
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log("Webhook payload:", body);
 

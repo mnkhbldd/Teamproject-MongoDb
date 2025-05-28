@@ -7,7 +7,10 @@ export interface CreateUserParams {
   clerkId: string;
   email: string;
   userName: string;
+  firstName: string;
+  lastName: string;
   isAdmin: boolean;
+  photo: string;
 }
 
 export async function createUser(params: CreateUserParams) {
