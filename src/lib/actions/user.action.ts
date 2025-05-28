@@ -3,10 +3,17 @@
 import { connect } from "@/lib/mongoDb";
 import User from "../models/user.model";
 
-export async function createUser(user: any) {
+export interface CreateUserParams {
+  clerkId: string;
+  email: string;
+  userName: string;
+  isAdmin: boolean;
+}
+
+export async function createUser(params: CreateUserParams) {
   try {
     await connect();
-    const newUser = await User.create(user);
+    const newUser = await User.create(params);
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     console.log(error);
