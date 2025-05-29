@@ -2,8 +2,6 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-
-import { axiosInstance } from "@/lib/utils";
 import axios from "axios";
 
 export async function POST(req: Request) {
