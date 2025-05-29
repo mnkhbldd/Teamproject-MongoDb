@@ -13,29 +13,23 @@ export async function POST(req: Request) {
     );
   }
 
-  // Create new Svix instance with secret
   const wh = new Webhook(SIGNING_SECRET);
-
-  // Get headers
   const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
-  // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return new Response("Error: Missing Svix headers", {
       status: 400,
     });
   }
 
-  // Get body
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
   let evt: WebhookEvent;
 
-  // Verify payload with headers
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -49,16 +43,18 @@ export async function POST(req: Request) {
     });
   }
 
-  // Do something with payload
-  // For this guide, log payload to console
   const { id } = evt.data;
   const eventType = evt.type;
-
-  //Create user in mongodb
 
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
+
+    if (!email_addresses || email_addresses.length === 0) {
+      console.error("Error: No email addresses found in event data");
+      return new Response("Error: No email addresses", { status: 400 });
+    }
+
     const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
@@ -70,36 +66,42 @@ export async function POST(req: Request) {
     };
     console.log(user);
 
-    const newUser = await axios.post(
-      "https://teamproject-mongodb.onrender.com/user/create-user",
-      user,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (newUser && newUser.data._id) {
-      try {
-        const client = await clerkClient();
-        await client.users.updateUserMetadata(id, {
-          publicMetadata: {
-            userId: newUser.data._id,
+    try {
+      const newUser = await axios.post(
+        "https://teamproject-mongodb.onrender.com/user/create-user",
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-        });
-      } catch (error) {
-        console.error("Error updating user metadata:", error);
-      }
-    } else {
-      console.warn("New user or user ID is undefined.");
-    }
+        }
+      );
 
-    return NextResponse.json({
-      message: "User created",
-      data: newUser,
-    });
+      if (newUser && newUser.data && newUser.data._id) {
+        try {
+          const client = await clerkClient();
+          await client.users.updateUserMetadata(id, {
+            publicMetadata: {
+              userId: newUser.data._id,
+            },
+          });
+        } catch (error) {
+          console.error("Error updating user metadata:", error);
+        }
+      } else {
+        console.warn("New user or user ID is undefined.");
+      }
+
+      return NextResponse.json({
+        message: "User created",
+        data: newUser.data,
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return new Response("Error creating user", { status: 500 });
+    }
   }
+
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log("Webhook payload:", body);
 
