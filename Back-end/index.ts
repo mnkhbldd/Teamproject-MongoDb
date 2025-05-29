@@ -1,0 +1,26 @@
+import express, { json } from "express";
+import cors from "cors";
+import { configDotenv } from "dotenv";
+import connectMongoDB from "./connectDb";
+import usersRouter from "./routes/user";
+
+const app = express();
+
+configDotenv();
+
+const port = process.env.PORT;
+
+connectMongoDB();
+
+app.use(cors());
+app.use(json());
+
+app.use("/user", usersRouter);
+
+app.get("/pp", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(port, () => {
+  console.log(`Server running at PORT: ${port}`);
+});
