@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import axios from "axios";
+import { axiosInstance } from "@/lib/utils";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -70,7 +71,7 @@ export async function POST(req: Request) {
     };
     console.log(user);
 
-    const newUser = await axios.post("http://localhost:8000/user", user);
+    const newUser = await axiosInstance.post("user/create-user", user);
 
     if (newUser && newUser.data._id) {
       try {

@@ -59,3 +59,25 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
       .end();
   }
 };
+
+export const getUsers = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const users = await User.find({}).sort({ createdAt: -1 });
+    return res
+      .status(200)
+      .send({
+        success: true,
+        users: users,
+      })
+      .end();
+  } catch (error) {
+    console.error(error, "err");
+    return res
+      .status(400)
+      .send({
+        success: false,
+        message: error,
+      })
+      .end();
+  }
+};
