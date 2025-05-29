@@ -72,7 +72,12 @@ export async function POST(req: Request) {
 
     const newUser = await axios.post(
       "https://teamproject-mongodb.onrender.com/user/create-user",
-      user
+      user,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     if (newUser && newUser.data._id) {
