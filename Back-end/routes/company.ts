@@ -1,6 +1,12 @@
-import express, { RequestHandler } from "express";
+import express from "express";
 import { Request, Response } from "express";
-import { createCompany } from "../controllers/company";
+import {
+  createCompany,
+  deleteCompany,
+  getCompanies,
+  getCompaniesByUser,
+  updateCompany,
+} from "../controllers/company";
 import { verifyClerkToken } from "../middleware/checkClerkToken";
 
 interface RequestWithUserId extends Request {
@@ -9,13 +15,35 @@ interface RequestWithUserId extends Request {
 
 export const companyRouter = express.Router();
 
-companyRouter.post(
-  "/create-company",
-  verifyClerkToken,
-  (req: Request, res: Response) => {
+companyRouter
+  .post("/create-company", verifyClerkToken, (req: Request, res: Response) => {
     const reqWithUserId = req as RequestWithUserId;
     return createCompany(reqWithUserId, res);
-  }
-);
+  })
+  .get("/get-companies", getCompanies)
+  .get(
+    "/get-companies-by-user",
+    verifyClerkToken,
+    (req: Request, res: Response) => {
+      const reqWithUserId = req as RequestWithUserId;
+      return getCompaniesByUser(reqWithUserId, res);
+    }
+  )
+  .put(
+    "/update-company/:companyId",
+    verifyClerkToken,
+    (req: Request, res: Response) => {
+      const reqWithUserId = req as RequestWithUserId;
+      return updateCompany(reqWithUserId, res);
+    }
+  )
+  .delete(
+    "/delete-company/:companyId",
+    verifyClerkToken,
+    (req: Request, res: Response) => {
+      const reqWithUserId = req as RequestWithUserId;
+      return deleteCompany(reqWithUserId, res);
+    }
+  );
 
 export default companyRouter;
