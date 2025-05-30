@@ -105,7 +105,7 @@ export async function GET() {
     const { getToken } = await auth();
     const token = await getToken();
     return NextResponse.json({ token });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to get token" }, { status: 500 });
   }
 }
