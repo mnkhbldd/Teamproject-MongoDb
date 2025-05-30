@@ -52,14 +52,26 @@ import axiosInstance from "@/utils/axios";
 export default function Home() {
   const handleClick = async () => {
     const response = await axiosInstance.post("/company/create-company", {
-      name: "test",
-      description: "test",
-      logo: "test",
-      website: "test",
-      category: "test",
-      location: "test",
-      phoneNumber: "test",
-      email: "test",
+      name: "test company",
+      description: "test description",
+      location: [
+        {
+          coordinate: [100.0, 100.0],
+          address: "test address",
+        },
+      ],
+      phoneNumber: 1234567890,
+      category: "64c76e3d2d5e7f0008f9f9f9",
+      socialMedia: [
+        {
+          instagram: "test",
+          Facebook: "test",
+          website: "test",
+        },
+      ],
+      images: ["test"],
+      companyLogo: "test",
+      companyCoverImage: "test",
     });
     console.log(response.data);
   };
