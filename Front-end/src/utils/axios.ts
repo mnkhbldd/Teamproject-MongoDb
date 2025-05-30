@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getClerkToken } from "@/lib/server/clerk";
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
   headers: {
@@ -9,12 +8,13 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    config.headers.Authorization = `Bearer ${await getClerkToken()}`;
+    const tokenRes = await fetch("/api/webhooks/clerk");
+    const { token } = await tokenRes.json();
+
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(

@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
+import { auth, clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import axiosInstance from "@/utils/axios";
 
@@ -98,4 +98,14 @@ export async function POST(req: Request) {
   console.log("Webhook payload:", body);
 
   return new Response("Webhook received", { status: 200 });
+}
+
+export async function GET() {
+  try {
+    const { getToken } = await auth();
+    const token = await getToken();
+    return NextResponse.json({ token });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to get token" }, { status: 500 });
+  }
 }
