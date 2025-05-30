@@ -128,7 +128,7 @@ import axiosInstance from "@/utils/axios";
 
 export default function Home() {
   const handleClick = async () => {
-    const response = await axiosInstance.post("/company/get-companies", {
+    const response = await axiosInstance.post("/company/create-company", {
       name: "test",
       description: "test",
       logo: "test",
