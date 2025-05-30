@@ -40,8 +40,8 @@ export default function Home() {
         duration: 1,
         scrollTrigger: {
           trigger: titleRef.current,
-          start: "top 80%", // when the top of element hits 80% of viewport
-          toggleActions: "play pause resume reset", // play on enter, do nothing on leave, reverse on re-enter
+          start: "top 80%",
+          toggleActions: "play pause resume reset",
         },
       }
     );
@@ -54,7 +54,7 @@ export default function Home() {
         duration: 1,
         scrollTrigger: {
           trigger: textRef.current,
-          start: "bottom 90%",
+          start: "top 20%",
           toggleActions: "play pause resume reset",
         },
       }
@@ -104,7 +104,7 @@ export default function Home() {
         </div>
       </div>
       <div className="w-screen h-[800px]">
-        <p
+        <div
           ref={textRef}
           className="text-[48px] text-center  items-center flex   justify-center  pt-20"
         >
@@ -121,7 +121,7 @@ export default function Home() {
               veniam!
             </p>
           </div>
-        </p>
+        </div>
       </div>
     </div>
   );

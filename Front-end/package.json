@@ -11,6 +11,7 @@
   "dependencies": {
     "@clerk/nextjs": "^6.20.1",
     "axios": "^1.9.0",
+    "font-family": "^0.2.0",
     "gsap": "^3.13.0",
     "mongodb": "^6.16.0",
     "mongoose": "^8.15.1",
