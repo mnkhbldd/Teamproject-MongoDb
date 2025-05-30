@@ -9,9 +9,19 @@ export const createCompany = async (
   req: RequestWithUserId,
   res: Response
 ): Promise<any> => {
-  const { name, description, location, phoneNumber, category } = req.body;
-
   const userId = req.userId;
+  const {
+    name,
+    description,
+    location,
+    phoneNumber,
+    category,
+    socialMedia,
+    images,
+    companyLogo,
+    companyCoverImage,
+    reviews,
+  } = req.body;
 
   if (!userId) {
     return res
@@ -28,6 +38,11 @@ export const createCompany = async (
       location,
       phoneNumber,
       category,
+      socialMedia,
+      images,
+      companyLogo,
+      companyCoverImage,
+      reviews,
     });
     return res.status(200).json({ success: true, newCompany }).end();
   } catch (error) {
