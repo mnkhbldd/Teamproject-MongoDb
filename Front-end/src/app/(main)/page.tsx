@@ -1,5 +1,7 @@
 // "use client";
 
+import axiosInstance from "@/utils/axios";
+
 // import gsap from "gsap";
 // import { useEffect, useRef } from "react";
 // import { text } from "stream/consumers";
@@ -125,5 +127,23 @@
 // }
 
 export default function Home() {
-  return <div>Hello</div>;
+  const handleClick = async () => {
+    const response = await axiosInstance.post("/company/get-companies", {
+      name: "test",
+      description: "test",
+      logo: "test",
+      website: "test",
+      category: "test",
+      location: "test",
+      phoneNumber: "test",
+      email: "test",
+    });
+    console.log(response.data);
+  };
+  return (
+    <div>
+      Hello
+      <button onClick={handleClick}>Click here</button>
+    </div>
+  );
 }

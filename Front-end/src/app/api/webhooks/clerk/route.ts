@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import axios from "axios";
+import axiosInstance from "@/utils/axios";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -67,15 +68,7 @@ export async function POST(req: Request) {
     console.log(user);
 
     try {
-      const newUser = await axios.post(
-        "https://teamproject-mongodb.onrender.com/user/create-user",
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const newUser = await axiosInstance.post("/user/create-user", user);
 
       if (newUser && newUser.data && newUser.data._id) {
         try {
