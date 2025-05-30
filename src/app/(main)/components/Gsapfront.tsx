@@ -1,7 +1,6 @@
+"use client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Category } from "./Category";
 
 gsap.registerPlugin(MotionPathPlugin, ScrollToPlugin, TextPlugin);
 
@@ -39,8 +38,6 @@ export const Gsapfront = () => {
         gsap.to(boxRef.current, { scale: 1.0, duration: 0.3 })
       }
       className="w-[240px] h-[240px] bg-white rounded-lg shadow-md mx-auto mt-[100vh]"
-    >
-      {/* Та агуулгаа энд нэмнэ */}
-    </div>
+    ></div>
   );
 };

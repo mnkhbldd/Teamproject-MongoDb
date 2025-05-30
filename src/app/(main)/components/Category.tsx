@@ -3,16 +3,15 @@ type CategoryProps = {
   title: string;
   discription?: string;
 };
-export const Category = ({ img, title, discription }: CategoryProps) => {
+export const Category = ({ img, title }: CategoryProps) => {
   return (
-    <div className="flex pt-10">
-      <div className="px-3  py-2 w-[240px] h-[240px] bg-white flex flex-col rounded-md ">
+    <div>
+      <div className="w-[240px] h-[240px] rounded-full  text-center flex flex-col ">
         <img
-          className="w-[60px] h-[50px] opacity-10 text-transparent"
+          className="w-[237px] h-[240px] rounded-md  text-transparent"
           src={img}
         />
         <p className="text-[20px] text-gray-700 ">{title}</p>
-        <p className="text-[16px] text-gray-500">{discription}</p>
       </div>
     </div>
   );
