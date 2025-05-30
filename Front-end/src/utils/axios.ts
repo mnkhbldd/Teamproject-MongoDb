@@ -1,6 +1,5 @@
 import axios from "axios";
-
-// Create axios instance with base configuration
+import { getClerkToken } from "@/lib/server/clerk";
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
   headers: {
@@ -8,11 +7,9 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add a request interceptor to add the authorization header
 axiosInstance.interceptors.request.use(
   async (config) => {
-    // Using a placeholder token for now
-    config.headers.Authorization = `Bearer ${process.env.NEXT_PUBLIC_CLERK_SECRET_KEY}`;
+    config.headers.Authorization = `Bearer ${await getClerkToken()}`;
     return config;
   },
   (error) => {
@@ -20,7 +17,6 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add a response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
