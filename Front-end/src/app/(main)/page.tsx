@@ -1,103 +1,128 @@
-import Image from "next/image";
+"use client";
+
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Button } from "./components/Button";
+import { FullCategory } from "./components/Fullcategory";
+import { useEffect, useRef } from "react";
+import { text } from "stream/consumers";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const boxRef = useRef(null);
+  const titleRef = useRef(null);
+  const textRef = useRef(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    gsap.fromTo(
+      boxRef.current,
+      { y: 200, opacity: 1 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "sine.inOut",
+        scrollTrigger: {
+          trigger: boxRef.current,
+          start: "top 100%", // when the top of element hits 80% of viewport
+          toggleActions: "play pause resume reset", // play on enter, do nothing on leave, reverse on re-enter
+        },
+      }
+    );
+
+    gsap.fromTo(
+      titleRef.current,
+      { y: 100, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: titleRef.current,
+          start: "top 80%", // when the top of element hits 80% of viewport
+          toggleActions: "play pause resume reset", // play on enter, do nothing on leave, reverse on re-enter
+        },
+      }
+    );
+    gsap.fromTo(
+      textRef.current,
+      { x: 400, opacity: 0 },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: textRef.current,
+          start: "bottom 90%",
+          toggleActions: "play pause resume reset",
+        },
+      }
+    );
+  }, []);
+
+  return (
+    <div className="w-full h-full overflow-hidden flex flex-col bg-white">
+      <div className="w-full h-full flex  justify-center items-center flex-col bg-white">
+        <div
+          ref={boxRef}
+          onMouseEnter={() =>
+            gsap.to(boxRef.current, {
+              duration: 0.3,
+              width: 1500,
+            })
+          }
+          onMouseLeave={() =>
+            gsap.to(boxRef.current, { width: 1500, duration: 0.3 })
+          }
+        >
+          <img
+            className="w-[1500px] h-[700px] mb-1 rounded-md"
+            src="https://alpsinsight.com/wp-content/uploads/2019/02/15CL0415.jpg"
+            alt=""
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <div
+          ref={titleRef}
+          className="pt-4 w-full text-center flex flex-col items-center"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <h1 className="text-[48px] text-gray-400">
+            Welcome to <span className="text-[#0ea2bd]">Our project</span>
+          </h1>
+          <p className="text-gray-700">
+            Et voluptate esse accusantium accusamus natus reiciendis quidem
+            voluptates similique aut.
+          </p>
+          <div className="flex pt-10">
+            <Button />
+          </div>
+        </div>
+
+        <div className="pt-10">
+          <FullCategory />
+        </div>
+      </div>
+      <div className="w-screen h-[800px]">
+        <p
+          ref={textRef}
+          className="text-[48px] text-center  items-center flex   justify-center  pt-20"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className=" text-black">
+            <p>About us</p>
+            <p className="text-start">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+              Blanditiis quasi aut commodi porro, eaque voluptatum explicabo
+              nisi pariatur fuga dicta, dolorum magnam, sit nostrum soluta et
+              cupiditate atque laborum. Recusandae! Lorem ipsum dolor sit amet
+              consectetur adipisicing elit. Iste quaerat rerum debitis.
+              Doloremque aperiam ad molestiae tempora eligendi sint mollitia,
+              quaerat, quos autem eum, earum recusandae facere! Sapiente, at
+              veniam!
+            </p>
+          </div>
+        </p>
+      </div>
     </div>
   );
 }
