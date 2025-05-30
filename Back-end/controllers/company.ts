@@ -1,15 +1,28 @@
 import { Request, Response } from "express";
 import CompanyModel from "../model/company";
 
+interface RequestWithUserId extends Request {
+  userId: string;
+}
+
 export const createCompany = async (
-  req: Request,
+  req: RequestWithUserId,
   res: Response
 ): Promise<any> => {
-  const { user, name, description, location, phoneNumber, category } = req.body;
+  const { name, description, location, phoneNumber, category } = req.body;
+
+  const userId = req.userId;
+
+  if (!userId) {
+    return res
+      .status(400)
+      .json({ success: false, message: "userId is required" })
+      .end();
+  }
 
   try {
     const newCompany = await CompanyModel.create({
-      user,
+      user: userId,
       name,
       description,
       location,
@@ -37,12 +50,14 @@ export const getCompanys = async (
 };
 
 export const getCompanysByUser = async (
-  req: Request,
+  req: RequestWithUserId,
   res: Response
 ): Promise<any> => {
-  const { user } = req.body;
+  const userId = req.userId;
   try {
-    const companies = await CompanyModel.find({ user }).sort({ createdAt: -1 });
+    const companies = await CompanyModel.find({ user: userId }).sort({
+      createdAt: -1,
+    });
     return res.status(200).json({ success: true, companies }).end();
   } catch (error) {
     console.error(error, "err");
