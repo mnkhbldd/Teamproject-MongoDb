@@ -3,6 +3,7 @@ import cors from "cors";
 import { configDotenv } from "dotenv";
 import connectMongoDB from "./connectDb";
 import usersRouter from "./routes/user";
+import companyRouter from "./routes/company";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(json());
 
 app.use("/user", usersRouter);
+app.use("/company", companyRouter);
 
 app.get("/pp", (req, res) => {
   res.send("Hello World!");

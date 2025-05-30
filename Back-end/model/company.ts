@@ -35,6 +35,6 @@ const companySchema = new mongoose.Schema({
   reviews: [reviewSchema],
 });
 
-const Company = mongoose.model("Company", companySchema);
+const CompanyModel = mongoose.model("Company", companySchema);
 
-export default Company;
+export default CompanyModel;

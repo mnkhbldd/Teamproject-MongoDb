@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { diff } from "util";
 
 const categorySchema = new mongoose.Schema({
   categoryName: {
