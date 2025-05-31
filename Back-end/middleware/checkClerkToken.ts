@@ -1,34 +1,35 @@
 // middleware/verifyClerkToken.ts
-import { verifyToken } from "@clerk/backend";
 import { NextFunction, Request, Response } from "express";
-import dotenv from "dotenv";
-dotenv.config();
+import { auth } from "@clerk/nextjs/server";
 
+interface RequestWithUserId extends Request {
+  userId: string;
+}
 
 export const verifyClerkToken = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<any> => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Missing token" });
-  }
-
-  const token = authHeader.replace("Bearer ", "");
-
+): Promise<void> => {
   try {
-    const payload = await verifyToken(token, {
-      secretKey: process.env.CLERK_SECRET_KEY,
-    });
+    const { userId } = await auth();
 
-    (req as any).userId = payload.sub; // end user id iig hadgalj bga
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+      return;
+    }
 
+    (req as RequestWithUserId).userId = userId;
     next();
-  } catch (err) {
-    return res
-      .status(401)
-      .json({ message: "Invalid token", error: err.message });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({
+      success: false,
+      message: "Authentication failed",
+    });
+    return;
   }
 };
