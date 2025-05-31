@@ -58,8 +58,8 @@ export default function NavBar() {
       </div>
       <div className="flex items-center gap-4">
         <SignedOut>
-          <SignInButton className="text-white" />
-          <SignUpButton className="text-white" />
+          <SignInButton />
+          <SignUpButton />
         </SignedOut>
         <SignedIn>
           {isLoaded && user && (
