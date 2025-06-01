@@ -26,37 +26,35 @@ function RootLayout({
 }>) {
   return (
     <ClerkProvider
-        appearance={{
-          elements: {
-            signInButtonPrimary: {
-              color: 'white',
-              backgroundColor: '#000000',
-              borderColor: '#ffffff',
-              borderWidth: '1px',
-              borderRadius: '8px',
-              padding: '8px 16px',
-              fontSize: '14px',
-              fontWeight: '500'
-            },
-            signUpButtonPrimary: {
-              color: 'white',
-              backgroundColor: '#000000',
-              borderColor: '#ffffff',
-              borderWidth: '1px',
-              borderRadius: '8px',
-              padding: '8px 16px',
-              fontSize: '14px',
-              fontWeight: '500'
-            }
-          }
-        }}
-      >
+      appearance={{
+        elements: {
+          signInButtonPrimary: {
+            color: "white",
+            backgroundColor: "#000000",
+            borderColor: "#ffffff",
+            borderWidth: "1px",
+            borderRadius: "8px",
+            padding: "8px 16px",
+            fontSize: "14px",
+            fontWeight: "500",
+          },
+          signUpButtonPrimary: {
+            color: "white",
+            backgroundColor: "#000000",
+            borderColor: "#ffffff",
+            borderWidth: "1px",
+            borderRadius: "8px",
+            padding: "8px 16px",
+            fontSize: "14px",
+            fontWeight: "500",
+          },
+        },
+      }}
+    >
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <NavBar />
-
           {children}
         </body>
       </html>

@@ -37,7 +37,7 @@ function NavLink({
 export default function NavBar() {
   const { user, isLoaded } = useUser();
   return (
-    <div className="flex justify-between items-center w-screen h-16 bg-black border border-white">
+    <div className="flex justify-between items-center w-screen h-16 bg-black bg-opacity-0 border border-white">
       <div className="flex gap-2 items-center p-4">
         <Rabbit size={45} className="text-purple-500" />
         <p className="text-white font-bold text-2xl">Freely</p>
@@ -46,57 +46,63 @@ export default function NavBar() {
         <NavLink href="/">
           <span className={`${interFont.className}`}>Home</span>
         </NavLink>
-        <NavLink href="/explore">
+        <NavLink href="/Explore">
           <span className={`${interFont.className}`}>Explore</span>
         </NavLink>
-        <NavLink href="/recommendations">
+        <NavLink href="/Recommendation">
           <span className={`${interFont.className}`}>Recommendations</span>
         </NavLink>
-        <NavLink href="/about-us">
+        <NavLink href="/AboutUs">
           <span className={`${interFont.className}`}>About Us</span>
         </NavLink>
       </div>
       <div className="flex items-center gap-4">
-        <SignedOut>
-          <SignInButton />
-          <SignUpButton />
-        </SignedOut>
-        <SignedIn>
-          {isLoaded && user && (
-            <div
-              className="flex gap-4 items-center cursor-pointer"
-              onClick={() => {
-                const userButton = document.querySelector(
-                  ".cl-userButtonTrigger"
-                );
-                if (userButton) (userButton as HTMLElement).click();
-              }}
-            >
-              <UserButton
-                appearance={{
-                  elements: {
-                    userButtonTrigger: { display: "none" },
-                    popoverContent: {
-                      transform: "translateX(-200px)",
-                      marginTop: "8px",
-                    },
-                  },
+        {user ? (
+          <SignedIn>
+            {isLoaded && user && (
+              <div
+                className="flex gap-4 items-center cursor-pointer"
+                onClick={() => {
+                  const userButton = document.querySelector(
+                    ".cl-userButtonTrigger"
+                  );
+                  if (userButton) (userButton as HTMLElement).click();
                 }}
-              />
-              <Image
-                src={user.imageUrl}
-                alt={user.username || user.firstName || "User"}
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-              <p className="font-medium">
-                {user.username || user.firstName || "User"}
-              </p>
-              <ChevronDown className="size-[16px]" />
-            </div>
-          )}
-        </SignedIn>
+              >
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonTrigger: { display: "none" },
+                      popoverContent: {
+                        transform: "translateX(-200px)",
+                        marginTop: "8px",
+                      },
+                    },
+                  }}
+                />
+                <Image
+                  src={user.imageUrl}
+                  alt={user.username || user.firstName || "User"}
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+                <p className="font-medium text-white">
+                  {user.username || user.firstName || "User"}
+                </p>
+                <ChevronDown className="size-[16px] text-white" />
+              </div>
+            )}
+          </SignedIn>
+        ) : (
+          <div className="p-2 flex justify-center items-center rounded-[8px] w-[152px] bg-purple-600">
+            <NavLink href="/sign-in">
+              <span className={`${interFont.className} text-white font-medium`}>
+                Sign In
+              </span>
+            </NavLink>
+          </div>
+        )}
       </div>
     </div>
   );
