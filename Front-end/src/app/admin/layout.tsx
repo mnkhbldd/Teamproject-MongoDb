@@ -49,7 +49,7 @@ export default function AdminLayout({
           </Button>
         </nav>
       </div>
-      <div>{children}</div>
+      {children}
     </div>
   );
 }
