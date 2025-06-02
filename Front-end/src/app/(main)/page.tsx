@@ -1,10 +1,9 @@
 "use client";
 import { FaHiking } from "react-icons/fa";
-
-import React, { useRef } from "react";
+import { useRef } from "react";
+import React from "react";
 import MouseSpotlight from "../components/Mouselight";
 import gsap from "gsap";
-
 import { CarouselCat } from "../components/Carousel";
 
 export const page1 = () => {
