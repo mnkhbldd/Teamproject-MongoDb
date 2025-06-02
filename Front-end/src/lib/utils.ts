@@ -1,5 +1,6 @@
-import axios from "axios";
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-export const axiosInstance = axios.create({
-  baseURL: "https://teamproject-mongodb.onrender.com/",
-});
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}

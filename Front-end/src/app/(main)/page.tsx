@@ -1,6 +1,17 @@
-// "use client";
+"use client";
+import { FaHiking } from "react-icons/fa";
+
+import React, { useEffect, useRef } from "react";
+import MouseSpotlight from "../components/Mouselight";
+import gsap from "gsap";
+import { Carousel } from "@/components/ui/carousel";
+import { CarouselCat } from "../components/Carousel";
+import { Button } from "@/components/ui/button";
 
 // import gsap from "gsap";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import { Button } from "./components/Button";
+// import { FullCategory } from "./components/Fullcategory";
 // import { useEffect, useRef } from "react";
 // import { text } from "stream/consumers";
 
@@ -37,8 +48,8 @@
 //         duration: 1,
 //         scrollTrigger: {
 //           trigger: titleRef.current,
-//           start: "top 80%", // when the top of element hits 80% of viewport
-//           toggleActions: "play pause resume reset", // play on enter, do nothing on leave, reverse on re-enter
+//           start: "top 80%",
+//           toggleActions: "play pause resume reset",
 //         },
 //       }
 //     );
@@ -51,7 +62,7 @@
 //         duration: 1,
 //         scrollTrigger: {
 //           trigger: textRef.current,
-//           start: "bottom 90%",
+//           start: "top 20%",
 //           toggleActions: "play pause resume reset",
 //         },
 //       }
@@ -96,12 +107,10 @@
 //           </div>
 //         </div>
 
-//         <div className="pt-10">
-//           <FullCategory />
-//         </div>
+//         <div className="pt-10">{/* <FullCategory /> */}</div>
 //       </div>
 //       <div className="w-screen h-[800px]">
-//         <p
+//         <div
 //           ref={textRef}
 //           className="text-[48px] text-center  items-center flex   justify-center  pt-20"
 //         >
@@ -118,12 +127,62 @@
 //               veniam!
 //             </p>
 //           </div>
-//         </p>
+//         </div>
 //       </div>
+//       <footer className="w-full h-[500px] bg-">
+//         <div>
+//           <div>
+//             <div className="flex items-center space-x-2">
+//               <div className="text-3xl font-extrabold text-teal-600 tracking-tight">
+//                 Zg
+//               </div>
+//               <div className="w-2 h-1 bg-teal-400 rounded-full"></div>
+//               <div className="text-3xl font-extrabold text-blue-900 tracking-tight">
+//                 ly
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </footer>
 //     </div>
 //   );
 // }
+export const page1 = () => {
+  const textref = useRef(null);
+  React.useEffect(() => {
+    gsap.fromTo(
+      textref.current,
+      { y: 400, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1.4,
+        scrollTrigger: {
+          trigger: textref.current,
+          start: "top 10%",
+          toggleActions: "play pause resume reset",
+        },
+      }
+    );
+  }, []);
 
-export default function Home() {
-  return <div>Hello</div>;
-}
+  return (
+    <div className="w-full h-full bg-gradient-to-r from-[#B8CFCE] via-[#7F8CAA]  to-[#333446] overflow-hidden  flex flex-col">
+      <div className="w-screen h-screen flex justify-center flex-col items-center">
+        <FaHiking className="animate-pulse" size={180} />
+        <div
+          ref={textref}
+          className="pl-17 w-[1000px]  text-[52px] font-extrabold bg-gradient-to-r  from-[#5459AC] via-[#648DB3] to-[#B2D8CE] text-transparent bg-clip-text"
+        >
+          Welcome to FreelyAgency fpllsa mdfsahuew ndsaj .fdsamkmlwe
+        </div>
+        <MouseSpotlight />
+      </div>
+      <div className="w-full h-[20px] bg-gradient-to-b from-[#7F8CAA] to-[#483AA0] outline-none"></div>
+      <div className="w-screen flex h-screen bg-gradient-to-r from-[#0E2148] via-[#483AA0] to-[#7965C1]">
+        <CarouselCat />
+      </div>
+    </div>
+  );
+};
+export default page1;
