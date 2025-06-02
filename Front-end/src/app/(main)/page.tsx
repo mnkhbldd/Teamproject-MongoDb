@@ -6,7 +6,7 @@ import MouseSpotlight from "../components/Mouselight";
 import gsap from "gsap";
 import { CarouselCat } from "../components/Carousel";
 
-export const page1 = () => {
+export default function Home() {
   const textref = useRef(null);
   React.useEffect(() => {
     gsap.fromTo(
@@ -41,7 +41,9 @@ export const page1 = () => {
       <div className="w-screen flex h-screen bg-gradient-to-r from-[#0E2148] via-[#483AA0] to-[#7965C1]">
         <CarouselCat />
       </div>
+      <div>
+        find one 7P9Ye8IwSnBUCKO6wDRrgE81e3lCjAI50hQYPfYRppACSVJVmSebLQsRe
+      </div>
     </div>
   );
-};
-export default page1;
+}
