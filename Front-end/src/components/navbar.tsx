@@ -42,7 +42,7 @@ export default function NavBar() {
         <NavLink href="/Explore">
           <span className={`${interFont.className}`}>Explore</span>
         </NavLink>
-        <NavLink href="/Recommendation">
+        <NavLink href="/recommendation">
           <span className={`${interFont.className}`}>Recommendations</span>
         </NavLink>
         <NavLink href="/AboutUs">
