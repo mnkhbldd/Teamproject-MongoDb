@@ -1,14 +1,7 @@
 "use client";
 import { ChevronDown, Rabbit } from "lucide-react";
 import { Inter } from "next/font/google";
-import {
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 
 const interFont = Inter({
