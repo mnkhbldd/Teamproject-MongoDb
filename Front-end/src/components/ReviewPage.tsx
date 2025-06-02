@@ -236,9 +236,9 @@ export default function ReviewsPage() {
                       <span className="text-sm text-gray-500">2 days ago</span>
                     </div>
                     <p className="text-gray-700">
-                      "Excellent bootcamp! The instructors were knowledgeable
+                      &quot;Excellent bootcamp! The instructors were knowledgeable
                       and the curriculum was comprehensive. Highly recommend for
-                      anyone looking to break into tech."
+                      anyone looking to break into tech.&quot;
                     </p>
                     <div className="text-sm text-gray-500 mt-2">- Sarah M.</div>
                   </div>
@@ -249,9 +249,9 @@ export default function ReviewsPage() {
                       <span className="text-sm text-gray-500">1 week ago</span>
                     </div>
                     <p className="text-gray-700">
-                      "Great experience overall. The hands-on projects really
+                      &quot;Great experience overall. The hands-on projects really
                       helped me understand the concepts. The career support was
-                      also fantastic."
+                      also fantastic.&quot;
                     </p>
                     <div className="text-sm text-gray-500 mt-2">- James K.</div>
                   </div>
@@ -269,7 +269,7 @@ export default function ReviewsPage() {
                   <Alert className="bg-green-50 border-green-200 mb-4">
                     <CheckCircle className="h-4 w-4 text-green-600" />
                     <AlertDescription className="text-green-800">
-                      Thank you for your suggestion! We'll review it shortly.
+                      Thank you for your suggestion! We&apos;ll review it shortly.
                     </AlertDescription>
                   </Alert>
                 ) : null}
