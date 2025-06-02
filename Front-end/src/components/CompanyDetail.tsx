@@ -20,12 +20,12 @@ export const CompanyDetail = () => {
   }, []);
 
   return (
-    <div className="bg-white h-screen [url(/bgImage.avif)] bg-cover">
+    <div className="bg-white h-screen [url(/bgImage.avif)] bg-cover overflow-hidden">
       <div className="flex flex-col px-8 gap-8">
         <div>
           <CompanyName />
         </div>
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-around">
           <ScrollArea className="h-screen">
             <div className="px-4">
               <CarouselImage />

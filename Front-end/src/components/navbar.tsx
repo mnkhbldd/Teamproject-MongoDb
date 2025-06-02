@@ -30,7 +30,7 @@ function NavLink({
 export default function NavBar() {
   const { user, isLoaded } = useUser();
   return (
-    <div className="flex justify-between items-center w-screen h-16 bg-black bg-opacity-0 border border-white">
+    <div className="flex px-5 justify-between items-center w-full h-16 bg-black bg-opacity-0 border border-white">
       <div className="flex gap-2 items-center p-4">
         <Rabbit size={45} className="text-purple-500" />
         <p className="text-white font-bold text-2xl">Freely</p>
