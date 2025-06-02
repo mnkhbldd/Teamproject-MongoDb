@@ -1,4 +1,5 @@
 "use client";
+
 import { FaHiking } from "react-icons/fa";
 import { useRef } from "react";
 import React from "react";
@@ -44,6 +45,4 @@ export default function Home() {
       <div>
         find one 7P9Ye8IwSnBUCKO6wDRrgE81e3lCjAI50hQYPfYRppACSVJVmSebLQsRe
       </div>
-    </div>
-  );
-}
+</div>);

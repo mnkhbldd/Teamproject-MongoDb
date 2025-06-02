@@ -1,8 +1,8 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
+import { auth, clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import axios from "axios";
+import axiosInstance from "@/utils/axios";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -67,15 +67,7 @@ export async function POST(req: Request) {
     console.log(user);
 
     try {
-      const newUser = await axios.post(
-        "https://teamproject-mongodb.onrender.com/user/create-user",
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const newUser = await axiosInstance.post("/user/create-user", user);
 
       if (newUser && newUser.data && newUser.data._id) {
         try {
@@ -106,4 +98,14 @@ export async function POST(req: Request) {
   console.log("Webhook payload:", body);
 
   return new Response("Webhook received", { status: 200 });
+}
+
+export async function GET() {
+  try {
+    const { getToken } = await auth();
+    const token = await getToken();
+    return NextResponse.json({ token });
+  } catch {
+    return NextResponse.json({ error: "Failed to get token" }, { status: 500 });
+  }
 }
