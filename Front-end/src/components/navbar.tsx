@@ -1,6 +1,6 @@
 "use client";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { Inter } from "next/font/google";
+
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import LogoIcon from "./LogoIcon";
