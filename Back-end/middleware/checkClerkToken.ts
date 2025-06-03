@@ -1,6 +1,9 @@
 // middleware/verifyClerkToken.ts
 import { NextFunction, Request, Response } from "express";
-import { auth } from "@clerk/nextjs/server";
+import { createClerkClient } from "@clerk/backend";
+import jwt from "jsonwebtoken";
+
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 interface RequestWithUserId extends Request {
   userId: string;
@@ -12,7 +15,28 @@ export const verifyClerkToken = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { userId } = await auth();
+    const authHeader = req.headers.authorization;
+    const sessionToken = authHeader?.replace("Bearer ", "");
+    if (!sessionToken) {
+      res.status(401).json({
+        success: false,
+        message: "Authentication token missing",
+      });
+      return;
+    }
+
+    const decoded: any = jwt.decode(sessionToken);
+    const sessionId = decoded?.sid;
+    if (!sessionId) {
+      res.status(401).json({
+        success: false,
+        message: "Invalid session token",
+      });
+      return;
+    }
+
+    const session = await clerk.sessions.verifySession(sessionId, sessionToken);
+    const userId = session.userId;
 
     if (!userId) {
       res.status(401).json({
