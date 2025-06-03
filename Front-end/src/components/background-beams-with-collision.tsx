@@ -66,15 +66,11 @@ export const BackgroundBeamsWithCollision = ({
     },
   ];
 
-  if (!containerRef.current || !parentRef.current) {
-    return null;
-  }
-
   return (
     <div
       ref={parentRef}
       className={cn(
-        "h-96 md:h-screen bg-gradient-to-b from-black to-gray-900 dark:from-neutral-950 dark:to-neutral-800 relative flex items-center w-full justify-center overflow-hidden",
+        "h-screen md:h-screen bg-gradient-to-b from-black to-gray-900 dark:from-neutral-950 dark:to-neutral-800 relative flex items-center w-full justify-center overflow-hidden",
         // h-screen if you want bigger
         className
       )}
@@ -106,7 +102,7 @@ const CollisionMechanism = React.forwardRef<
   {
     containerRef: React.RefObject<HTMLDivElement | null>;
     parentRef: React.RefObject<HTMLDivElement | null>;
-    beamOptions: {
+    beamOptions?: {
       initialX?: number;
       translateX?: number;
       initialY?: number;
