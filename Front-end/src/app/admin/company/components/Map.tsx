@@ -9,9 +9,10 @@ import {
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
+import type { Marker as LeafletMarker } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { Camera, MapPin, X } from "lucide-react";
+import { Camera, MapPin } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import {
   Dialog,
@@ -19,14 +20,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -68,10 +61,12 @@ const MarkerIcon = new L.DivIcon({
     <MapPin className=" hidden text-red-400" />
   ),
 });
-const MarkerPin = new L.DivIcon({
-  className: "custom-div-icon",
-  html: ReactDOMServer.renderToString(<MapPin className=" text-blue-700" />),
-});
+
+// const MarkerPin = new L.DivIcon({
+//   className: "custom-div-icon",
+//   html: ReactDOMServer.renderToString(<MapPin className=" text-blue-700" />),
+// });   Ene haana ch ashiglagdaagui bn
+
 const initialData = [
   {
     latLng: [47.9222, 106.95],
@@ -89,12 +84,12 @@ export const Map = () => {
   const [address, setAddress] = useState("");
   const [data, setData] = useState(initialData);
   const [review, setReview] = useState<string[]>([]);
-  const [image, setImage] = useState<string[] | File>([]);
-  const [profile, setProfile] = useState<string | File>();
+  const [image, setImage] = useState<File[]>([]);
+  const [profile, setProfile] = useState<File>();
   const [profileReview, setProfileReview] = useState<string>("");
   console.log(address, "address");
 
-  const markerRef = useRef(null);
+  const markerRef = useRef<LeafletMarker>(null);
   useEffect(() => {
     if (markerRef!.current) {
       markerRef!.current!.openPopup();
@@ -151,7 +146,7 @@ export const Map = () => {
     console.log(values);
   };
 
-  const HandleImage = (e) => {
+  const HandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.files, "targets");
     if (e.target.files) {
       setImage([...image, ...e.target.files]);
@@ -163,7 +158,7 @@ export const Map = () => {
     }
   };
 
-  const handleProfileImage = (e) => {
+  const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setProfile(e.target.files[0]);
       setProfileReview(URL.createObjectURL(e.target.files[0]));
@@ -190,7 +185,11 @@ export const Map = () => {
         <ClickHandler setClicked={setClicked} />
         <ChangeZoomControlPosition />
         {clicked && (
-          <Marker icon={MarkerIcon} ref={markerRef} position={clicked}>
+          <Marker
+            icon={MarkerIcon}
+            ref={markerRef}
+            position={[clicked[0], clicked[1]]}
+          >
             <Popup>
               <p className="text-black font-bold text-[18px] flex pb-2 h-0">
                 Are you sure 🤔
@@ -341,7 +340,11 @@ export const Map = () => {
         />
         {data.map((el, index) => {
           return (
-            <Marker key={index} icon={el.icon} position={el.latLng}>
+            <Marker
+              key={index}
+              icon={el.icon}
+              position={[el.latLng[0], el.latLng[1]]}
+            >
               <Popup>{el.title}</Popup>
             </Marker>
           );

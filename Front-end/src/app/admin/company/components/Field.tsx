@@ -7,13 +7,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Control, FieldValues } from "react-hook-form";
 export const Field = ({
   control,
   name,
   LabelName,
   inputType,
 }: {
-  control: any;
+  control: Control<FieldValues>;
   name: string;
   LabelName: string;
   inputType?: boolean;

@@ -3,7 +3,8 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import LogoIcon from "./LogoIcon";
+import LogoIconMain from "./LogoIcon";
+import { useRouter } from "next/navigation";
 
 const twkLausanneFont = {
   fontFamily: '"TWK Lausanne 400", "TWK Lausanne 400 Placeholder", sans-serif',
@@ -31,11 +32,12 @@ function NavLink({
 
 export default function NavBar() {
   const { user, isLoaded } = useUser();
+  const router = useRouter();
   return (
     <div className="w-full flex justify-center bg-[rgba(13, 13, 18, 0.4)] border-t border-b border-[rgba(255,255,255,0.1)] h-[50px] fixed z-50 ">
       <div className="flex items-center justify-between w-[1080px]">
         <div className="flex items-center gap-[15px]">
-          <LogoIcon />
+          <LogoIconMain />
 
           <p
             className="text-[#B8CFCE] font-semibold text-[15px]"
@@ -108,10 +110,13 @@ export default function NavBar() {
                     height={32}
                     className="rounded-full"
                   />
-                  <p className="font-medium text-white" style={twkLausanneFont}>
+                  <p
+                    className="font-medium text-[#B8CFCE]"
+                    style={twkLausanneFont}
+                  >
                     {user.username || user.firstName || "User"}
                   </p>
-                  <ChevronDown className="size-[16px] text-white" />
+                  <ChevronDown className="size-[16px] text-[#B8CFCE]" />
                 </div>
               )}
             </SignedIn>
@@ -120,6 +125,9 @@ export default function NavBar() {
               <p
                 className={`text-[#B8CFCE] font-medium`}
                 style={twkLausanneFont}
+                onClick={() => {
+                  router.push("/sign-in");
+                }}
               >
                 Try it free
               </p>

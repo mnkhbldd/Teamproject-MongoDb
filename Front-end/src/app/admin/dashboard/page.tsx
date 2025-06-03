@@ -1,9 +1,7 @@
-const Dashboard = () => {
+const AdminDashboard = () => {
   return (
-    <div className="min-h-screen flex flex-col p-8">
-      <h1 className="text-3xl text-white">Dashboard</h1>
-    </div>
+    <div className="w-screen h-screen bg-red-500 rounded-lg">Dashboard</div>
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

@@ -119,5 +119,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
 
+.cl-userButtonPopoverCard {
+  left: auto !important;
+  right: 0px !important;
+  margin-right: 207px !important;
+  margin-left: auto !important;
+  margin-top: 40px !important;
 }

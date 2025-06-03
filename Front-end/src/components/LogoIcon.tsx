@@ -1,4 +1,4 @@
-const LogoIcon = () => {
+const LogoIconMain = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -34,4 +34,4 @@ const LogoIcon = () => {
   );
 };
 
-export default LogoIcon;
+export default LogoIconMain;
