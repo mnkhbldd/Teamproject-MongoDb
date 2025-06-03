@@ -50,6 +50,10 @@ export default function AdminLayout({
   const [open, setOpen] = useState(false);
   const { user } = useUser();
 
+  if (!user) {
+    return <div>loading</div>;
+  }
+
   return (
     <div
       className={cn(
