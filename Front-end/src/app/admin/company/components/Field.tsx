@@ -25,13 +25,13 @@ export const Field = ({
       name={name}
       render={({ field }) => (
         <FormItem className="flex-col flex items-start w-full">
-          <FormLabel>{LabelName}</FormLabel>
+          <FormLabel className="text-[#e3e8ffe6]">{LabelName}</FormLabel>
           <FormControl>
             {inputType ? (
               <Input
-                className={` focus-visible:ring-0 ${
+                className={` text-white focus-visible:ring-0 ${
                   field.value.length >= 2 &&
-                  "focus-visible:border-[#18BA51] border-solid border-2"
+                  "focus-visible:border-[#18BA51] border-solid border border-[#e3e8ffe6]"
                 }`}
                 type="text"
                 placeholder="Enter your name here"
@@ -39,9 +39,9 @@ export const Field = ({
               />
             ) : (
               <Textarea
-                className={` focus-visible:ring-0 ${
+                className={`text-white focus-visible:ring-0 ${
                   field.value.length >= 2 &&
-                  "focus-visible:border-[#18BA51] border-solid border-2"
+                  "focus-visible:border-[#18BA51] border-solid border border-[#e3e8ffe6]"
                 }`}
                 placeholder="Enter your name here"
                 {...field}

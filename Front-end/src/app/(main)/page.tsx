@@ -1,49 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import React from "react";
 import gsap from "gsap";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
-import { HeroParallax } from "@/components/hero-parallax";
-import axiosInstance from "@/utils/axios";
-import { BackgroundBeams } from "@/components/background-beams";
 
 export default function Home() {
-  const [companies, setCompanies] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchCompanies = async () => {
-  //     const companies = await axiosInstance.get("/company/get-companies");
-  //     setCompanies(companies.data);
-  //   };
-  //   fetchCompanies();
-  // }, []);
-
-  const products = Array.isArray(companies)
-    ? [
-        ...companies.map((company: any) => ({
-          title: company.name,
-          link: company.link,
-          thumbnail: company.thumbnail,
-        })),
-        {
-          title: "Moonbeam",
-          link: "https://gomoonbeam.com",
-          thumbnail:
-            "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
-        },
-      ]
-    : [
-        {
-          title: "Moonbeam",
-          link: "https://gomoonbeam.com",
-          thumbnail:
-            "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
-        },
-      ];
-
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
   const textref = useRef(null);

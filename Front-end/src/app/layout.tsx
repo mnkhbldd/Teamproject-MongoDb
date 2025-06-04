@@ -21,10 +21,15 @@ function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  useEffect(() => {
-    const response = axiosInstance.get("/user/get-current-user");
-    console.log(response);
-  });
+  // useEffect(() => {
+  //   const response = axiosInstance.get("/user/get-current-user", {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Clerk-Backend-Api-Key": process.env.NEXT_PUBLIC_CLERK_SECRET_KEY,
+  //     },
+  //   });
+  //   console.log(response);
+  // });
   return (
     <ClerkProvider
       appearance={{

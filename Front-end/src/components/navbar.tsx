@@ -1,17 +1,10 @@
 "use client";
 import { ArrowRight, ChevronDown } from "lucide-react";
 
-import {
-  SignedIn,
-  useOrganization,
-  useOrganizationList,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import LogoIconMain from "./LogoIcon";
 import { useRouter } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
 
 const twkLausanneFont = {
   fontFamily: '"TWK Lausanne 400", "TWK Lausanne 400 Placeholder", sans-serif',

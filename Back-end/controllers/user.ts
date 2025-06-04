@@ -91,8 +91,8 @@ export const getCurrentUser = async (
   res: Response
 ): Promise<any> => {
   try {
-    const userId = req.userId;
-    const user = await User.findById(userId);
+    const clerkId = req.userId;
+    const user = await User.findOne({ clerkId });
     return res.status(200).send({ success: true, user: user }).end();
   } catch (error) {
     console.error(error, "err");
