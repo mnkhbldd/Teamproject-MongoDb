@@ -6,6 +6,7 @@ import usersRouter from "./routes/user";
 import companyRouter from "./routes/company";
 import reviewsRouter from "./routes/review";
 import bookingRouter from "./routes/booking";
+import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.use("/user", usersRouter);
 app.use("/company", companyRouter);
 app.use("/review", reviewsRouter);
 app.use("/booking", bookingRouter);
+
+app.use(clerkMiddleware());
 
 app.get("/pp", (req, res) => {
   res.send("Hello World!");

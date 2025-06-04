@@ -27,6 +27,7 @@ export const verifyClerkToken = async (
 
     const decoded: any = jwt.decode(sessionToken);
     const sessionId = decoded?.sid;
+    console.log(sessionId, "token");
     if (!sessionId) {
       res.status(401).json({
         success: false,
