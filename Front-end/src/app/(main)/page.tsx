@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import React from "react";
 import gsap from "gsap";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
-import { Button } from "@/components/ui/button";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
 import { HeroParallax } from "@/components/hero-parallax";

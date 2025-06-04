@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 
 const categorySchema = new mongoose.Schema({
-  categoryName: {
+  name: {
     type: String,
+    required: true,
+  },
+  group: {
+    type: String,
+    enum: ["Type", "Difficulty", "Activity"],
     required: true,
   },
   createdAt: { type: Date, default: Date.now, required: true },

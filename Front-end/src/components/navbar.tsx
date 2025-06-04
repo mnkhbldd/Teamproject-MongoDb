@@ -1,10 +1,17 @@
 "use client";
 import { ArrowRight, ChevronDown } from "lucide-react";
 
-import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
+import {
+  SignedIn,
+  useOrganization,
+  useOrganizationList,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import Image from "next/image";
 import LogoIconMain from "./LogoIcon";
 import { useRouter } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 
 const twkLausanneFont = {
   fontFamily: '"TWK Lausanne 400", "TWK Lausanne 400 Placeholder", sans-serif',
@@ -135,6 +142,16 @@ export default function NavBar() {
             </div>
           )}
         </div>
+        {/* {isAdmin ? (
+          <NavLink href="/AboutUs">
+            <span
+              className={`text-[15px] text-[rgba(99,100,117)] hover:text-white`}
+              style={twkLausanneFont}
+            >
+              Hello
+            </span>
+          </NavLink>
+        ) : null} */}
       </div>
     </div>
   );

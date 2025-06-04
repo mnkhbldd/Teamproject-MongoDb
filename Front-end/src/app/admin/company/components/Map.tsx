@@ -175,7 +175,7 @@ export const Map = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="w-screen h-screen flex rounded-lg">
       <MapContainer
         className=" size-full z-10 "
         center={[47.92, 106.91]}
