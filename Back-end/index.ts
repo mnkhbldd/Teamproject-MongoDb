@@ -1,4 +1,4 @@
-import express, { json } from "express";
+import express, { json, Request, Response } from "express";
 import cors from "cors";
 import { configDotenv } from "dotenv";
 import connectMongoDB from "./connectDb";
@@ -17,13 +17,13 @@ const port = process.env.PORT;
 connectMongoDB();
 
 app.use(cors());
+
 app.use(json());
 
 app.use("/user", usersRouter);
 app.use("/company", companyRouter);
 app.use("/review", reviewsRouter);
 app.use("/booking", bookingRouter);
-
 app.use(clerkMiddleware());
 
 app.get("/pp", (req, res) => {

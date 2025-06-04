@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import React from "react";
-import gsap from "gsap";
+
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
@@ -10,23 +9,6 @@ import Image from "next/image";
 export default function Home() {
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
-  const textref = useRef(null);
-  React.useEffect(() => {
-    gsap.fromTo(
-      textref.current,
-      { y: 400, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1.4,
-        scrollTrigger: {
-          trigger: textref.current,
-          start: "top 10%",
-          toggleActions: "play pause resume reset",
-        },
-      }
-    );
-  }, []);
 
   return (
     <div className="w-full">
@@ -124,7 +106,16 @@ export default function Home() {
         </div>
       </div>
 
-      {/* <HeroParallax products={products} /> */}
+      {/* <div className="fixed bottom-4 right-4 p-4 bg-gray-900/80 backdrop-blur-lg rounded-lg border border-gray-800">
+        {loading && <p className="text-white">Loading user data...</p>}
+        {error && <p className="text-red-400">Error: {error.message}</p>}
+        {user && (
+          <div>
+            <p className="text-white">Welcome, {user.firstName || "User"}</p>
+            <p className="text-gray-400">Email: {user.email}</p>
+          </div>
+        )}
+      </div> */}
     </div>
   );
 }

@@ -11,9 +11,6 @@ export const usersRouter = express.Router();
 usersRouter
   .post("/create-user", createUser)
   .get("/get-users", getUsers)
-  .get("/get-current-user", verifyClerkToken, (req: Request, res: Response) => {
-    const reqWithUserId = req as RequestWithUserId;
-    return getCurrentUser(reqWithUserId, res);
-  });
+  .get("/get-current-user", verifyClerkToken, getCurrentUser as any);
 
 export default usersRouter;
