@@ -81,3 +81,21 @@ export const getUsers = async (req: Request, res: Response): Promise<any> => {
       .end();
   }
 };
+
+interface RequestWithUserId extends Request {
+  userId: string;
+}
+
+export const getCurrentUser = async (
+  req: RequestWithUserId,
+  res: Response
+): Promise<any> => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    return res.status(200).send({ success: true, user: user }).end();
+  } catch (error) {
+    console.error(error, "err");
+    return res.status(400).send({ success: false, message: error }).end();
+  }
+};

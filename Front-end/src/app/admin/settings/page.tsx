@@ -1,10 +1,5 @@
-export default function SettingsPage() {
+export default function Settings() {
   return (
-    <div className="p-4">
-      <h1 className="text-3xl text-white">Settings</h1>
-      <div className="mt-4">
-        <p className="mb-2">Signed in as:</p>
-      </div>
-    </div>
+    <div className="w-screen h-screen bg-green-500 rounded-lg">Settings</div>
   );
 }

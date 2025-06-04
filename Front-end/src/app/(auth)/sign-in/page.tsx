@@ -1,12 +1,12 @@
-const Signin = () => {
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8">
-      <h1 className="text-3xl font-bold mb-4">Sign-in</h1>
-      <p className="text-lg text-center">
-        Welcome to the Explore page! Discover new content and features here.
-      </p>
-    </div>
-  );
-};
+import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
+import { SignIn } from "@clerk/nextjs";
 
-export default Signin;
+export default function SigninPage() {
+  return (
+    <BackgroundBeamsWithCollision>
+      <div className="min-h-screen flex flex-col items-center justify-center p-8">
+        <SignIn routing="hash" signUpUrl="/sign-up" />
+      </div>
+    </BackgroundBeamsWithCollision>
+  );
+}

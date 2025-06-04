@@ -1,84 +1,166 @@
 "use client";
 
+import { useRef, useState } from "react";
+import React from "react";
+import gsap from "gsap";
+import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
+import { TextGenerateEffect } from "@/components/text-generate-effect";
+import Image from "next/image";
+import { HeroParallax } from "@/components/hero-parallax";
 import axiosInstance from "@/utils/axios";
-
-//           />
-//         </div>
-
-//         <div
-//           ref={titleRef}
-//           className="pt-4 w-full text-center flex flex-col items-center"
-//         >
-//           <h1 className="text-[48px] text-gray-400">
-//             Welcome to <span className="text-[#0ea2bd]">Our project</span>
-//           </h1>
-//           <p className="text-gray-700">
-//             Et voluptate esse accusantium accusamus natus reiciendis quidem
-//             voluptates similique aut.
-//           </p>
-//           <div className="flex pt-10">
-//             <Button />
-//           </div>
-//         </div>
-
-//         <div className="pt-10">
-//           <FullCategory />
-//         </div>
-//       </div>
-//       <div className="w-screen h-[800px]">
-//         <p
-//           ref={textRef}
-//           className="text-[48px] text-center  items-center flex   justify-center  pt-20"
-//         >
-//           <div className=" text-black">
-//             <p>About us</p>
-//             <p className="text-start">
-//               Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-//               Blanditiis quasi aut commodi porro, eaque voluptatum explicabo
-//               nisi pariatur fuga dicta, dolorum magnam, sit nostrum soluta et
-//               cupiditate atque laborum. Recusandae! Lorem ipsum dolor sit amet
-//               consectetur adipisicing elit. Iste quaerat rerum debitis.
-//               Doloremque aperiam ad molestiae tempora eligendi sint mollitia,
-//               quaerat, quos autem eum, earum recusandae facere! Sapiente, at
-//               veniam!
-//             </p>
-//           </div>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// }
+import { BackgroundBeams } from "@/components/background-beams";
 
 export default function Home() {
-  const handleClick = async () => {
-    const response = await axiosInstance.post("/company/create-company", {
-      name: "test company",
-      description: "test description",
-      location: [
+  const [companies, setCompanies] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchCompanies = async () => {
+  //     const companies = await axiosInstance.get("/company/get-companies");
+  //     setCompanies(companies.data);
+  //   };
+  //   fetchCompanies();
+  // }, []);
+
+  const products = Array.isArray(companies)
+    ? [
+        ...companies.map((company: any) => ({
+          title: company.name,
+          link: company.link,
+          thumbnail: company.thumbnail,
+        })),
         {
-          coordinate: [100.0, 100.0],
-          address: "test address",
+          title: "Moonbeam",
+          link: "https://gomoonbeam.com",
+          thumbnail:
+            "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
         },
-      ],
-      phoneNumber: 1234567890,
-      category: "64c76e3d2d5e7f0008f9f9f9",
-      socialMedia: [
+      ]
+    : [
         {
-          instagram: "test",
-          Facebook: "test",
-          website: "test",
+          title: "Moonbeam",
+          link: "https://gomoonbeam.com",
+          thumbnail:
+            "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
         },
-      ],
-      images: ["test"],
-      companyLogo: "test",
-      companyCoverImage: "test",
-    });
-    console.log(response.data);
-  };
+      ];
+
+  const words =
+    "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
+  const textref = useRef(null);
+  React.useEffect(() => {
+    gsap.fromTo(
+      textref.current,
+      { y: 400, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1.4,
+        scrollTrigger: {
+          trigger: textref.current,
+          start: "top 10%",
+          toggleActions: "play pause resume reset",
+        },
+      }
+    );
+  }, []);
+
   return (
-    <div>
-      Hello
-      <button onClick={handleClick}>Click here</button>
+    <div className="w-full">
+      <BackgroundBeamsWithCollision>
+        <div className="flex flex-col items-center">
+          <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-[rgba(227,232,255,0.9)] dark:text-white font-sans tracking-tight">
+            U looking for best activity site?{" "}
+            <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
+              <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
+                <span className="">Freely is for you</span>
+              </div>
+              <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
+                <span className="">Freely is for you</span>
+              </div>
+            </div>
+          </h2>
+          <TextGenerateEffect
+            words={words}
+            className=" text-center max-w-2xl  "
+          />
+
+          <div className="flex gap-6 pt-6">
+            <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                Join us
+              </span>
+            </button>
+            <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                Learn More
+              </span>
+            </button>
+          </div>
+        </div>
+      </BackgroundBeamsWithCollision>
+
+      <div className="w-full h-[80px] bg-gray-900 flex items-center justify-center">
+        <div className="flex items-center justify-center w-full gap-30">
+          <div className="flex gap-[30px] items-center">
+            <p className="text-[13px] font-bold text-[rgba(227,232,255,0.21)]">
+              Trusted <br /> by
+            </p>
+            <div className="h-[35px] w-[1px] bg-[rgba(227,232,255,0.21)]"></div>
+          </div>
+
+          <div className="flex gap-[100px]">
+            {" "}
+            <Image
+              src="/logo1.png"
+              width={40}
+              height={40}
+              alt=""
+              className="w-10"
+              style={{
+                maskImage: "linear-gradient(to left, black, transparent)",
+                WebkitMaskImage: "linear-gradient(to left, black, transparent)",
+              }}
+            />
+            <Image
+              width={40}
+              height={40}
+              src="/logo2.png"
+              alt=""
+              className="w-10"
+            />
+            <Image
+              width={40}
+              height={40}
+              src="/logo3.png"
+              alt=""
+              className="w-10"
+            />
+            <Image
+              width={40}
+              height={40}
+              src="/logo4.png"
+              alt=""
+              className="w-10"
+            />
+            <Image
+              width={40}
+              height={40}
+              src="/logo5.png"
+              alt=""
+              className="w-10"
+              style={{
+                maskImage: "linear-gradient(to right, black, transparent)",
+                WebkitMaskImage:
+                  "linear-gradient(to right, black, transparent)",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* <HeroParallax products={products} /> */}
     </div>
   );
 }
