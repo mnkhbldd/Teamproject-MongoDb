@@ -10,6 +10,11 @@ import Image from "next/image";
 import { HeroParallax } from "@/components/hero-parallax";
 import axiosInstance from "@/utils/axios";
 import { BackgroundBeams } from "@/components/background-beams";
+import { Carousel } from "@/components/ui/carousel";
+import { CarouselCat } from "./components/Carousel";
+import { Package } from "./components/Package";
+import { Placesdata } from "./components/Placesdata";
+import { Boxedbg } from "./components/Boxedbg";
 
 export default function Home() {
   const [companies, setCompanies] = useState([]);
@@ -66,7 +71,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <BackgroundBeamsWithCollision>
         <div className="flex flex-col items-center">
           <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-[rgba(227,232,255,0.9)] dark:text-white font-sans tracking-tight">
@@ -112,7 +117,6 @@ export default function Home() {
           </div>
 
           <div className="flex gap-[100px]">
-            {" "}
             <Image
               src="/logo1.png"
               width={40}
@@ -160,8 +164,18 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* <HeroParallax products={products} /> */}
+      <div className="w-full h-full flex flex-col  bg-gray-700">
+        <div>
+          <Placesdata />
+        </div>
+        <div className="flex justify-center  items-center w-full">
+          <p className=" text-[62px] text-white font-bold ">Packages</p>
+        </div>
+        <div className="flex flex-col">
+          <Boxedbg />
+          <Package />
+        </div>
+      </div>
     </div>
   );
 }
