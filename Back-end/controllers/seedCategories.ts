@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import categoryModel from "../model/category";
 
-await mongoose.connect(process.env.MONGODB_URL);
+await mongoose.connect(process.env.MONGODB_URL!);
 
 const categories = [
   { name: "Family", group: "Type" },
@@ -24,6 +24,6 @@ const categories = [
   { name: "Cycling", group: "Activity" },
 ];
 
-await Cetegory.insertMany(categories);
+await categoryModel.insertMany(categories);
 
 process.exit();
