@@ -9,6 +9,7 @@ import Image from "next/image";
 import { HeroParallax } from "@/components/hero-parallax";
 import axiosInstance from "@/utils/axios";
 import { BackgroundBeams } from "@/components/background-beams";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   const [companies, setCompanies] = useState([]);
@@ -159,8 +160,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* <HeroParallax products={products} /> */}
+      <Footer />
     </div>
   );
 }
