@@ -133,13 +133,8 @@ export const ExploreMap = () => {
             }),
           }));
 
-        console.log(formatted, "formatted");
-
         setData([...initialData, ...formatted]);
         setCompany(companies);
-
-        console.log(data, "data");
-        console.log(companies, "companies");
       } catch (error) {
         console.log("Error fetching companies:", error);
       }

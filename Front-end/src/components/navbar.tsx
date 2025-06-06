@@ -64,7 +64,6 @@ export default function NavBar() {
         });
 
         setSignedUser(res.data.user);
-        console.log("User from backend:", res.data.user);
       } catch (error) {
         console.error("Failed to fetch user:", error);
       }
@@ -74,7 +73,7 @@ export default function NavBar() {
   }, [isSignedIn, getToken]);
 
   return (
-    <div className="w-full flex justify-center bg-[rgba(13, 13, 18, 0.4)] border-t border-b border-[rgba(255,255,255,0.1)] h-[50px] fixed z-50 ">
+    <div className="w-full flex justify-center backdrop-blur-lg bg-[#111827]/30 border-t border-b border-[rgba(255,255,255,0.1)] h-[50px] fixed z-50 ">
       <div className="flex items-center justify-between w-[1080px]">
         <div className="flex items-center gap-[15px]">
           <LogoIconMain />

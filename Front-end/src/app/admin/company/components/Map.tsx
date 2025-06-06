@@ -87,7 +87,6 @@ export const Map = () => {
   const [image, setImage] = useState<File[]>([]);
   const [profile, setProfile] = useState<File>();
   const [profileReview, setProfileReview] = useState<string>("");
-  console.log(address, "address");
 
   const markerRef = useRef<LeafletMarker>(null);
   useEffect(() => {
@@ -143,7 +142,7 @@ export const Map = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    // console.log(values);
   };
 
   // const HandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,7 +161,6 @@ export const Map = () => {
     if (e.target.files) {
       setProfile(e.target.files[0]);
       setProfileReview(URL.createObjectURL(e.target.files[0]));
-      console.log(review, "re");
     } else {
       setProfileReview("");
     }

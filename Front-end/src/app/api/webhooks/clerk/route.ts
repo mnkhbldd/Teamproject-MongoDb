@@ -64,7 +64,6 @@ export async function POST(req: Request) {
       isAdmin: false,
       photo: image_url,
     };
-    console.log(user);
 
     try {
       const newUser = await axiosInstance.post("/user/create-user", user);
@@ -93,9 +92,6 @@ export async function POST(req: Request) {
       return new Response("Error creating user", { status: 500 });
     }
   }
-
-  console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
-  console.log("Webhook payload:", body);
 
   return new Response("Webhook received", { status: 200 });
 }
