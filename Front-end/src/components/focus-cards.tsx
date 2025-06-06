@@ -25,8 +25,8 @@ export const Card = React.memo(
       )}
     >
       <Image
-        width={30}
-        height={30}
+        width={1538}
+        height={1367}
         src={card.src}
         alt={card.title}
         className="object-cover absolute h-60 md:h-96"

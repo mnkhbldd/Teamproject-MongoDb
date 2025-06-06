@@ -15,6 +15,38 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.clerk.dev",
       },
+      {
+        protocol: "https",
+        hostname: "t3.ftcdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "media.istockphoto.com",
+      },
+      {
+        protocol: "https",
+        hostname: "heathermitts.com",
+      },
+      {
+        protocol: "https",
+        hostname: "e7v7eoh5g4s.exactdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.heathermitts.com",
+      },
+      {
+        protocol: "https",
+        hostname: "doy-community.sites.uu.nl",
+      },
+      {
+        protocol: "https",
+        hostname: "i0.wp.com",
+      },
     ],
   },
 };

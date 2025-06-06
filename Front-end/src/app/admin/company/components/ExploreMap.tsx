@@ -61,6 +61,36 @@ interface Company {
     coordinates: string[];
   }[];
 }
+
+const MarkerWithPopup = ({
+  position,
+  icon,
+  title,
+}: {
+  position: [number, number];
+  icon: L.Icon;
+  title: string;
+}) => {
+  const map = useMap();
+
+  return (
+    <Marker
+      position={position}
+      icon={icon}
+      eventHandlers={{
+        click: () => {
+          map.flyTo(position, 16, {
+            duration: 1,
+            animate: true,
+          });
+        },
+      }}
+    >
+      <Popup>{title}</Popup>
+    </Marker>
+  );
+};
+
 export const ExploreMap = () => {
   const [clicked, setClicked] = useState<number[]>([0, 0]);
   const [address, setAddress] = useState("");
@@ -90,8 +120,8 @@ export const ExploreMap = () => {
           )
           .map((company: any) => ({
             latLng: [
-              company.location[0].coordinate[1], // lat
-              company.location[0].coordinate[0], // lng
+              company.location[0].coordinate[0],
+              company.location[0].coordinate[1],
             ],
             title: company.name,
             icon: L.icon({
@@ -103,8 +133,13 @@ export const ExploreMap = () => {
             }),
           }));
 
-        setData((prev) => [...prev, ...formatted]);
+        console.log(formatted, "formatted");
+
+        setData([...initialData, ...formatted]);
         setCompany(companies);
+
+        console.log(data, "data");
+        console.log(companies, "companies");
       } catch (error) {
         console.log("Error fetching companies:", error);
       }
@@ -152,11 +187,13 @@ export const ExploreMap = () => {
   }
 
   return (
-    <div className="w-screen h-screen flex rounded-lg">
+    <div className="w-full h-full flex rounded-lg">
       <MapContainer
         className=" size-full z-10 "
         center={[47.92, 106.91]}
         zoom={14}
+        maxZoom={19}
+        minZoom={1}
         attributionControl={false}
       >
         <ClickHandler setClicked={setClicked} />
@@ -172,17 +209,14 @@ export const ExploreMap = () => {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.jawg.io/5811666f-ea6e-421b-a1a8-c220b61f6b36/{z}/{x}/{y}{r}.png?access-token=uqeYaHBOlPqp13ESsgteE53obi4o78aMNktTHsvSRtv6g2DhywRCEzEIelnC7vhx"
         />
-        {data.map((el, index) => {
-          return (
-            <Marker
-              key={index}
-              icon={el.icon}
-              position={[el.latLng[0], el.latLng[1]]}
-            >
-              <Popup>{el.title}</Popup>
-            </Marker>
-          );
-        })}
+        {data.map((el, index) => (
+          <MarkerWithPopup
+            key={index}
+            position={[el.latLng[0], el.latLng[1]]}
+            icon={el.icon}
+            title={el.title}
+          />
+        ))}
       </MapContainer>
     </div>
   );
