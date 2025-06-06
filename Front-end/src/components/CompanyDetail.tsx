@@ -22,18 +22,16 @@ export const CompanyDetail = () => {
   return (
     <div className="bg-white h-screen [url(/bgImage.avif)] bg-cover overflow-hidden">
       <div className="flex flex-col px-8 gap-8">
-        <div>
-          <CompanyName />
-        </div>
-        <div className="flex w-full justify-around">
-          <ScrollArea className="h-screen">
-            <div className="px-4">
+        <div className="flex w-full justify-around pt-12">
+          <ScrollArea className="h-screen scrollbar-hide ">
+            <div className="px-4 pt-8">
+              <CompanyName />
               <CarouselImage />
               <About />
               <ReviewsPage />
             </div>
           </ScrollArea>
-          <div>
+          <div className="pt-25">
             <MapInfo />
           </div>
         </div>
