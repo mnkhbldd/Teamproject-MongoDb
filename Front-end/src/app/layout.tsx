@@ -3,9 +3,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { dark } from "@clerk/themes";
+
 import { useEffect } from "react";
 import axiosInstance from "@/utils/axios";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
