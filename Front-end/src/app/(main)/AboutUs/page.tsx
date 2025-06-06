@@ -1,5 +1,6 @@
 "use client";
 
+import {CompanyDetailCard} from "@/components/CompanyDetailCard";
 import React from "react";
 import { SparklesCore } from "@/components/sparkles";
 import { ColourfulText } from "@/components/colourful-text";
@@ -114,6 +115,7 @@ const AboutUs = () => {
       </div>
     </div>
   );
+
 };
 
 export default AboutUs;
