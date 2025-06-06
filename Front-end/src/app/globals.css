@@ -129,6 +129,15 @@
   margin-top: 40px !important;
 }
 
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
 .leaflet-popup-tip {
   background-color: rgb(159, 82, 217) !important; /* or any color you want */
 }
@@ -138,4 +147,5 @@
   border-radius: 8px !important;
   backdrop-filter: blur(12px);
   box-shadow: 10px 10px 39px rgba(0, 0, 0, 0.15);
+
 }
