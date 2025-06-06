@@ -221,7 +221,7 @@ export const Map = () => {
     setValue(finalData);
     setCompanyInfo(finalData);
   };
-  console.log(companyInfo, "final");
+  console.log(companyInfo, "final data");
 
   return (
     <div className="w-screen h-screen flex">
