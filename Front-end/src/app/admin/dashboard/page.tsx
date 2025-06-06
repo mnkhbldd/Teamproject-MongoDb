@@ -31,7 +31,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="flex gap-4 px-8 w-screen">
+      <div className="flex gap-4 px-8 w-screen p-10">
         <div className="flex gap-4">
           <div className="flex flex-col gap-4">
             <Card>
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="w-screen">
+        <div className="w-[60%] pr-8">
           <Card className="">
             <CardHeader className="pb-4">
               <CardTitle>Latest Campaign</CardTitle>
