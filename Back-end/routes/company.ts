@@ -5,6 +5,7 @@ import {
   deleteCompany,
   getCompanies,
   getCompaniesByUser,
+  getCompanyById,
   updateCompany,
 } from "../controllers/company";
 import { verifyClerkToken } from "../middleware/checkClerkToken";
@@ -29,6 +30,7 @@ companyRouter
       return getCompaniesByUser(reqWithUserId, res);
     }
   )
+  .get("/get-company/:companyId", getCompanyById)
   .put(
     "/update-company/:companyId",
     verifyClerkToken,

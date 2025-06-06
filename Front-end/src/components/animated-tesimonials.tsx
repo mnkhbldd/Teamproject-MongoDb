@@ -1,8 +1,9 @@
 "use client";
 
-import {IconArrowLeft, IconArrowRight} from "@tabler/icons-react";
-import {motion, AnimatePresence} from "motion/react";
-import {useEffect, useMemo, useState} from "react";
+import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type Testimonial = {
   quote: string;
@@ -19,13 +20,13 @@ const AnimatedTestimonials = ({
 }) => {
   const [active, setActive] = useState(0);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
-  };
+  }, [testimonials]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  }, [testimonials]);
 
   const isActive = (index: number) => {
     return index === active;
@@ -36,7 +37,7 @@ const AnimatedTestimonials = ({
       const interval = setInterval(handleNext, 5000);
       return () => clearInterval(interval);
     }
-  }, [autoplay]);
+  }, [autoplay, handleNext]);
 
   const rotations = useMemo(() => {
     return testimonials.map(() => Math.floor(Math.random() * 21) - 10);
@@ -79,7 +80,7 @@ const AnimatedTestimonials = ({
                   }}
                   className="absolute inset-0 origin-bottom"
                 >
-                  <img
+                  <Image
                     src={testimonial.src}
                     alt={testimonial.name}
                     width={500}
