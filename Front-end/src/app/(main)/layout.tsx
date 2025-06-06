@@ -1,3 +1,4 @@
+"use client";
 import { Inter } from "next/font/google";
 import { clsx } from "clsx";
 import NavBar from "@/components/navbar";

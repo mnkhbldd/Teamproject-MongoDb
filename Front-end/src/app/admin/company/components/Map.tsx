@@ -146,17 +146,17 @@ export const Map = () => {
     console.log(values);
   };
 
-  const HandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files, "targets");
-    if (e.target.files) {
-      setImage([...image, ...e.target.files]);
-      const filesArray = Array.from(e.target.files);
-      filesArray.map((el) => review.push(URL.createObjectURL(el)));
-      console.log(review, "re");
-    } else {
-      setReview([]);
-    }
-  };
+  // const HandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   console.log(e.target.files, "targets");
+  //   if (e.target.files) {
+  //     setImage([...image, ...e.target.files]);
+  //     const filesArray = Array.from(e.target.files);
+  //     filesArray.map((el) => review.push(URL.createObjectURL(el)));
+  //     console.log(review, "re");
+  //   } else {
+  //     setReview([]);
+  //   }
+  // };
 
   const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -168,11 +168,11 @@ export const Map = () => {
     }
   };
 
-  const removeImage = (indexToRemove: number) => {
-    setReview((prevItems) =>
-      prevItems.filter((_, index) => index !== indexToRemove)
-    );
-  };
+  // const removeImage = (indexToRemove: number) => {
+  //   setReview((prevItems) =>
+  //     prevItems.filter((_, index) => index !== indexToRemove)
+  //   );
+  // };
 
   return (
     <div className="w-screen h-screen flex rounded-lg">
@@ -190,18 +190,23 @@ export const Map = () => {
             ref={markerRef}
             position={[clicked[0], clicked[1]]}
           >
-            <Popup>
+            <Popup className="rounded-lg shadow-2xl ">
               <p className="text-black font-bold text-[18px] flex pb-2 h-0">
                 Are you sure 🤔
               </p>
               <div className="flex flex-col size-fit gap-3 items-end">
                 <h1 className=" text-[14px]">{address}</h1>
                 <Dialog>
-                  <DialogTrigger className="bg-red-400 text-white font-medium rounded-full flex size-fit px-4  py-2">
-                    continue
+                  <DialogTrigger>
+                    <div className="p-[3px] relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+                      <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                        continue
+                      </div>
+                    </div>
                   </DialogTrigger>
-                  <DialogContent className="flex flex-col size-fit min-w-[466px] backdrop-blur-lg bg-black/30 ">
-                    <DialogTitle className="text-[24px] text-purple-500">
+                  <DialogContent className="flex flex-col size-fit min-w-[466px] backdrop-blur-lg bg-[#111827]/30 ">
+                    <DialogTitle className="text-[24px] text-[#e3e8ffe6]">
                       Complete your profile page
                     </DialogTitle>
 
@@ -216,10 +221,12 @@ export const Map = () => {
                             name="companyLogo"
                             render={({ field }) => (
                               <FormItem className=" flex flex-col items-start w-full">
-                                <FormLabel>Company logo</FormLabel>
+                                <FormLabel className="text-[#e3e8ffe6]">
+                                  Company logo
+                                </FormLabel>
                                 <FormControl>
                                   <div className="relative flex justify-center items-center size-[160px]">
-                                    <div className="flex justify-center items-center border-2 border-[#E4E4E7] border-dashed size-[160px] rounded-full absolute z-20">
+                                    <div className="flex justify-center items-center border-2 border-[rgba(99,100,117)] border-dashed size-[160px] rounded-full absolute z-20">
                                       <Input
                                         type="file"
                                         accept="image/*"
@@ -231,7 +238,7 @@ export const Map = () => {
                                       />
                                     </div>
                                     <Camera
-                                      className={`z-10 text-[#18181B]/50 ${
+                                      className={`z-10 text-[white]/50 ${
                                         profileReview && "hidden"
                                       }`}
                                     />
@@ -322,7 +329,10 @@ export const Map = () => {
                         </div>
                         <Step1 control={form.control} />
                         <div className="pt-[20px] flex ">
-                          <Button className="w-full" type="submit">
+                          <Button
+                            className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-[#e3e8ffe6] transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 w-full"
+                            type="submit"
+                          >
                             Submit
                           </Button>
                         </div>
@@ -336,7 +346,7 @@ export const Map = () => {
         )}
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://tile.jawg.io/5811666f-ea6e-421b-a1a8-c220b61f6b36/{z}/{x}/{y}{r}.png?access-token=uqeYaHBOlPqp13ESsgteE53obi4o78aMNktTHsvSRtv6g2DhywRCEzEIelnC7vhx"
         />
         {data.map((el, index) => {
           return (

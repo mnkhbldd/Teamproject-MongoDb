@@ -1,6 +1,7 @@
 import { Field } from "./Field";
+import { Control, FieldValues } from "react-hook-form";
 
-export const Step1 = ({ control }: { control: any }) => {
+export const Step1 = ({ control }: { control: Control<FieldValues> }) => {
   return (
     <div className=" flex flex-col w-full gap-2">
       <Field

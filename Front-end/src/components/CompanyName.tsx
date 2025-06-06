@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const CompanyName = () => {
   return (
-    <div className="pt-8 w-full flex items-center gap-6">
+    <div className=" w-full flex items-center gap-6">
       <Avatar className="w-10 h-10">
         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
         <AvatarFallback>CN</AvatarFallback>

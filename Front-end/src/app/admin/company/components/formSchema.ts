@@ -30,7 +30,9 @@ export const formSchema = z.object({
     .refine(
       (files) =>
         Array.from(files).every((file) =>
-          ["image/jpeg", "image/png", "image/webp"].includes(file.type)
+          ["image/jpeg", "image/png", "image/webp"].includes(
+            (file as File).type
+          )
         ),
       {
         message: "Only JPG, PNG, or WEBP files are allowed.",
@@ -38,8 +40,8 @@ export const formSchema = z.object({
     ),
   companyLogo: z
     .any()
-    .refine((file) => {
-      return file instanceof FileList && file.length > 0;
+    .refine((file: FileList) => {
+      return file.length > 0;
     }, "Company logo is required")
     .refine((file) => {
       const allowedTypes = ["image/jpeg", "image/png", "image/webp"];

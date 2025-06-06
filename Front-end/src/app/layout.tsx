@@ -3,8 +3,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { dark } from "@clerk/themes";
-import { useEffect } from "react";
-import axiosInstance from "@/utils/axios";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,10 +19,15 @@ function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  useEffect(() => {
-    const response = axiosInstance.get("/user/get-current-user");
-    console.log(response);
-  });
+  // useEffect(() => {
+  //   const response = axiosInstance.get("/user/get-current-user", {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Clerk-Backend-Api-Key": process.env.NEXT_PUBLIC_CLERK_SECRET_KEY,
+  //     },
+  //   });
+  //   console.log(response);
+  // });
   return (
     <ClerkProvider
       appearance={{
