@@ -1,12 +1,11 @@
-// middleware/verifyClerkToken.ts
-import { NextFunction, Request, Response } from "express";
-import { createClerkClient } from "@clerk/backend";
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+import { verifyToken } from "@clerk/backend";
+import dotenv from "dotenv";
 
-const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+dotenv.config();
 
-interface RequestWithUserId extends Request {
-  userId: string;
+export interface RequestWithUserId extends Request {
+  userId?: string;
 }
 
 export const verifyClerkToken = async (
@@ -16,44 +15,31 @@ export const verifyClerkToken = async (
 ): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
-    const sessionToken = authHeader?.replace("Bearer ", "");
-    if (!sessionToken) {
-      res.status(401).json({
-        success: false,
-        message: "Authentication token missing",
-      });
+    const token = authHeader?.replace("Bearer ", "");
+
+    console.log(authHeader, "authHeader");
+
+    if (!token) {
+      res
+        .status(401)
+        .json({ success: false, message: "Authentication token missing" });
       return;
     }
 
-    const decoded: any = jwt.decode(sessionToken);
-    const sessionId = decoded?.sid;
-    if (!sessionId) {
-      res.status(401).json({
-        success: false,
-        message: "Invalid session token",
-      });
-      return;
-    }
+    const payload = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY!,
+    });
 
-    const session = await clerk.sessions.verifySession(sessionId, sessionToken);
-    const userId = session.userId;
-
-    if (!userId) {
-      res.status(401).json({
-        success: false,
-        message: "Authentication required",
-      });
+    const userId = payload.sub;
+    if (!userId || typeof userId !== "string") {
+      res.status(401).json({ success: false, message: "Invalid token" });
       return;
     }
 
     (req as RequestWithUserId).userId = userId;
     next();
   } catch (error) {
-    console.error(error);
-    res.status(401).json({
-      success: false,
-      message: "Authentication failed",
-    });
-    return;
+    console.error("Token verification failed:", error);
+    res.status(401).json({ success: false, message: "Authentication failed" });
   }
 };

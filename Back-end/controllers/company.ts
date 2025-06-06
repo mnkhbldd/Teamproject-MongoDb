@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import CompanyModel from "../model/company";
+import categoryModel from "../model/category";
 
 interface RequestWithUserId extends Request {
   userId: string;
@@ -15,12 +16,11 @@ export const createCompany = async (
     description,
     location,
     phoneNumber,
-    category,
+    categoryIds,
     socialMedia,
     images,
     companyLogo,
     companyCoverImage,
-    reviews,
   } = req.body;
 
   if (!userId) {
@@ -31,18 +31,29 @@ export const createCompany = async (
   }
 
   try {
+    const validCategories = await categoryModel.find({
+      _id: {
+        $in: categoryIds,
+      },
+    });
+
+    if (validCategories.length !== categoryIds.length) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid categories" })
+        .end();
+    }
     const newCompany = await CompanyModel.create({
       user: userId,
       name,
       description,
       location,
       phoneNumber,
-      category,
+      category: categoryIds,
       socialMedia,
       images,
       companyLogo,
       companyCoverImage,
-      reviews,
     });
     return res.status(200).json({ success: true, newCompany }).end();
   } catch (error) {

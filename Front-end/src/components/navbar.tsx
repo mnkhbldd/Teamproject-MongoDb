@@ -135,6 +135,16 @@ export default function NavBar() {
             </div>
           )}
         </div>
+        {/* {isAdmin ? (
+          <NavLink href="/AboutUs">
+            <span
+              className={`text-[15px] text-[rgba(99,100,117)] hover:text-white`}
+              style={twkLausanneFont}
+            >
+              Hello
+            </span>
+          </NavLink>
+        ) : null} */}
       </div>
     </div>
   );

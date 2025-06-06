@@ -11,6 +11,8 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import LogoIconMain from "@/components/LogoIcon";
 import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
+import { Link } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -77,7 +79,7 @@ export default function AdminLayout({
                 label: user.fullName!,
                 href: "#",
                 icon: (
-                  <img
+                  <Image
                     src={user.imageUrl!}
                     className="h-7 w-7 shrink-0 rounded-full"
                     width={50}
@@ -104,7 +106,7 @@ export const Logo = () => {
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="font-medium whitespace-pre text-black dark:text-white"
+        className="font-medium whitespace-pre text-[20px] text-black dark:text-white"
       >
         Freely
       </motion.span>
