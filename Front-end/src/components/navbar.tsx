@@ -12,6 +12,16 @@ const twkLausanneFont = {
   fontFamily: '"TWK Lausanne 400", "TWK Lausanne 400 Placeholder", sans-serif',
 } as React.CSSProperties;
 
+type User = {
+  clerkId: string;
+  email: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  photo: string;
+  isAdmin: boolean;
+};
+
 function NavLink({
   href,
   children,
@@ -40,6 +50,31 @@ interface User {
 }
 
 export default function NavBar() {
+  const { getToken, isSignedIn } = useAuth();
+  const [signedUser, setSignedUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!isSignedIn) return;
+
+      const token = await getToken();
+      if (!token) return;
+
+      try {
+        const res = await axiosInstance.get("/user/get-current-user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setSignedUser(res.data.user);
+        console.log("User from backend:", res.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [isSignedIn, getToken]);
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const { getToken, isSignedIn } = useAuth();
@@ -121,6 +156,17 @@ export default function NavBar() {
               style={twkLausanneFont}
             >
               Hello
+            </span>
+          </NavLink>
+        ) : null}
+
+        {signedUser?.isAdmin == false ? (
+          <NavLink href="/admin/dashboard">
+            <span
+              className={`text-[15px] text-[rgba(99,100,117)] hover:text-white`}
+              style={twkLausanneFont}
+            >
+              Admin Panel
             </span>
           </NavLink>
         ) : null}
