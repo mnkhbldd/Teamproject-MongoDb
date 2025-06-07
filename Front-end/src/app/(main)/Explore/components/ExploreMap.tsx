@@ -15,6 +15,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import axios from "axios";
+import axiosInstance from "@/utils/axios";
 
 const customIcon = L.icon({
   iconUrl:
@@ -100,7 +101,7 @@ export const ExploreMap = () => {
   useEffect(() => {
     const FetchData = async () => {
       try {
-        const res = await axios.get(
+        const res = await axiosInstance.get(
           "http://localhost:8000/company/get-companies"
         );
         const companies = Array.isArray(res.data)
