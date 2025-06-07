@@ -43,12 +43,14 @@ export async function POST(req: Request) {
     });
   }
 
-  // const { id } = evt.data;
+  const { id } = evt.data;
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const { id, email_addresses, image_url, username, first_name, last_name } =
+    const { email_addresses, image_url, username, first_name, last_name } =
       evt.data;
+
+    console.log("User created event data:", evt.data);
 
     if (!email_addresses || email_addresses.length === 0) {
       console.error("Error: No email addresses found in event data");
@@ -68,9 +70,15 @@ export async function POST(req: Request) {
     try {
       const newUser = await axiosInstance.post("/user/create-user", user);
 
+      console.log("New user created:", newUser.data);
+
       if (newUser && newUser.data && newUser.data._id) {
         try {
           const client = await clerkClient();
+          if (!id) {
+            console.error("Error: No user ID found in event data");
+            return new Response("Error: No user ID", { status: 400 });
+          }
           await client.users.updateUserMetadata(id, {
             publicMetadata: {
               userId: newUser.data._id,
