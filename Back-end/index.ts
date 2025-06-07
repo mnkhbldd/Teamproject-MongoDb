@@ -7,7 +7,7 @@ import companyRouter from "./routes/company";
 import reviewsRouter from "./routes/review";
 import bookingRouter from "./routes/booking";
 import categoryRouter from "./routes/category";
-import { clerkMiddleware } from "@clerk/express";
+// import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
 const publicRouter = express.Router();
@@ -29,7 +29,7 @@ app.get("/pp", (req, res) => {
 
 app.use(publicRouter);
 
-app.use(clerkMiddleware());
+// app.use(clerkMiddleware());
 
 app.use("/user", usersRouter);
 app.use("/company", companyRouter);
