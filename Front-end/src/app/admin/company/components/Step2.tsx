@@ -2,8 +2,9 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Control } from "react-hook-form";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
-import axios from "axios";
 import axiosInstance from "@/utils/axios";
+import { step2formSchema } from "./formSchema";
+import { z } from "zod";
 
 type Category = {
   _id: string;
@@ -11,10 +12,15 @@ type Category = {
   icons: string;
 };
 
-type Step2Props = {
-  control: Control<any>;
-  name: string;
-};
+// type Step2Props = {
+//   control: Control<typeof step2formSchema>;
+//   name: string;
+// };
+
+interface Step2Props {
+  control: Control<z.infer<typeof step2formSchema>>;
+  name: keyof z.infer<typeof step2formSchema>;
+}
 
 // const categoryIconsData: Category[] = [
 //   { id: 1, name: "Archery", icon: "🏹" },
@@ -77,11 +83,11 @@ export const Step2 = ({ control, name }: Step2Props) => {
       name={name}
       render={({ field }) => {
         const selected = categories.filter((c) =>
-          field.value?.includes(c._id || "")
+          field.value.includes(c._id || "")
         );
 
         const toggleSelect = (cat: Category) => {
-          const newValue = field.value?.includes(cat._id || "")
+          const newValue = field.value.includes(cat._id || "")
             ? field.value.filter((id: string) => id !== cat._id || "")
             : [...(field.value || []), cat._id];
           field.onChange(newValue);

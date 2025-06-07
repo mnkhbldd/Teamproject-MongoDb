@@ -1,17 +1,6 @@
 "use client";
 import Image from "next/image";
-import {
-  MapPin,
-  Star,
-  VibrateIcon as Volleyball,
-  ShoppingBasketIcon as Basketball,
-  Phone,
-  Facebook,
-  Instagram,
-  Twitter,
-  Dribbble,
-  Snail,
-} from "lucide-react";
+import { MapPin } from "lucide-react";
 
 import {
   Carousel,
@@ -24,8 +13,35 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
 
-export const CompanyDetailCard = ({ company }: { company: any }) => {
-  const [categoryIconsData, setCategoryIconsData] = useState([]);
+interface CategoryData {
+  id: number;
+  name: string;
+  icons: string;
+}
+
+interface Company {
+  _id: string;
+  name: string;
+  description: string;
+  location: {
+    address: string;
+    coordinate: [number, number];
+  };
+  phoneNumber: string;
+  categoryIds: string[];
+  socialMedia: {
+    Facebook: string;
+    instagram: string;
+    website: string;
+  };
+  images: string[];
+  companyLogo: string;
+}
+
+export const CompanyDetailCard = ({ company }: { company: Company }) => {
+  const [categoryIconsData, setCategoryIconsData] = useState<CategoryData[]>(
+    []
+  );
 
   useEffect(() => {
     const FetchData = async () => {
@@ -74,7 +90,7 @@ export const CompanyDetailCard = ({ company }: { company: any }) => {
                 <MapPin className="size-5 inline text-[#e3e8ffe6]" />
               </span>
               {"   "}
-              {company.location[0].address}
+              {company.location.address}
             </p>
           </div>
           <div className="w-full h-[1px] bg-gray-200">
@@ -90,13 +106,16 @@ export const CompanyDetailCard = ({ company }: { company: any }) => {
                   } as React.CSSProperties
                 }
               >
-                {categoryIconsData.map((value, index) => {
+                {categoryIconsData.map((value) => {
                   return (
                     <div
-                      className="bg-[#e3e8ffe6] w-[32px] h-[32px] flex items-center justify-center rounded-full p-3"
-                      key={index}
+                      key={value.id}
+                      className="flex items-center border rounded-full px-2 w-fit"
                     >
-                      {value}
+                      <span className="text-lg">{value.icons}</span>
+                      <span className="text-[#e3e8ffe6] text-[12px]  hover:text-black">
+                        {value.name}
+                      </span>
                     </div>
                   );
                 })}

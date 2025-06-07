@@ -7,14 +7,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Control } from "react-hook-form";
+import { z } from "zod";
+import { formSchema } from "./formSchema";
+
 export const Field = ({
   control,
   name,
   LabelName,
   inputType,
 }: {
-  control: any;
-  name: string;
+  control: Control<z.infer<typeof formSchema>>;
+  name: keyof z.infer<typeof formSchema>;
   LabelName: string;
   inputType?: boolean;
 }) => {

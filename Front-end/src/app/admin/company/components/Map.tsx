@@ -99,11 +99,10 @@ export const Map = () => {
       Partial<z.infer<typeof step2formSchema>>
   >({});
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [selectedProfile, setSelectedProfile] = useState<File | undefined>();
   const [profileReview, setProfileReview] = useState<string>("");
   const [imagesReview, setImagesReview] = useState<string[]>([]);
   const [isNext, setIsNext] = useState(false);
-  const [companyInfo, setCompanyInfo] = useState<CompanyInfoType>();
+  const [companyInfo] = useState<CompanyInfoType>();
   const markerRef = useRef<LeafletMarker | null>(null);
 
   useEffect(() => {
@@ -168,7 +167,7 @@ export const Map = () => {
   const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setSelectedProfile(file);
+    form.setValue('companyLogo', file);
     setProfileReview(URL.createObjectURL(file));
   };
 
@@ -191,16 +190,16 @@ export const Map = () => {
 
     setImagesReview(updatedPreviews);
     setSelectedImages(updatedFiles);
-    Step2form.setValue("images", updatedFiles as any);
+    Step2form.setValue("images", updatedFiles as File[]);
   };
 
   const handlNextStep = () => setIsNext(true);
   const handPreStep = () => setIsNext(false);
 
   const onnext = async (values: z.infer<typeof formSchema>) => {
-    const { companyLogo, ...rest } = values;
-    const uploadedLogoUrl = await handleProfileToCloud(selectedProfile);
-    setValue({ ...rest, companyLogo: uploadedLogoUrl });
+    const { companyLogo } = values;
+    const uploadedLogoUrl = await handleProfileToCloud(companyLogo);
+    setValue({ ...values, companyLogo: uploadedLogoUrl });
     handlNextStep();
   };
 
@@ -319,7 +318,7 @@ export const Map = () => {
                                                         className="w-fit flex flex-col items-end gap-2"
                                                       >
                                                         <Image
-                                                          className="w-full h-[250px] rounded-md"
+                                                          className="w-full h-[250px] rounded-md object-cover "
                                                           src={el}
                                                           alt={`preview-${index}`}
                                                           width={430}
