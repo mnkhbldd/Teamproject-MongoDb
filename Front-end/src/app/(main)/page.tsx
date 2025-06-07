@@ -1,20 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import React from "react";
 import gsap from "gsap";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
-import { Button } from "@/components/ui/button";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
-import { HeroParallax } from "@/components/hero-parallax";
-import axiosInstance from "@/utils/axios";
-import { BackgroundBeams } from "@/components/background-beams";
-import { Carousel } from "@/components/ui/carousel";
-import { CarouselCat } from "./components/Carousel";
 import { Package } from "./components/Package";
 import { Placesdata } from "./components/Placesdata";
-import { Boxedbg } from "./components/Boxedbg";
+
+import { Animatedbg } from "./components/Animationbg-Demo";
 
 export default function Home() {
   const [companies, setCompanies] = useState([]);
@@ -171,9 +166,10 @@ export default function Home() {
         <div className="flex justify-center  items-center w-full">
           <p className=" text-[62px] text-white font-bold ">Packages</p>
         </div>
-        <div className="flex flex-col">
-          <Boxedbg />
+        <div className="flex flex-col ">
           <Package />
+          <div className="w-full h-[200px] bg-gradient-to-b from-gray-700 via-slate-700 to-slate-800"></div>
+          <Animatedbg />
         </div>
       </div>
     </div>
