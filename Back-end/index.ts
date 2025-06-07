@@ -10,6 +10,7 @@ import categoryRouter from "./routes/category";
 import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
+const publicRouter = express.Router();
 
 configDotenv();
 
@@ -21,16 +22,19 @@ app.use(cors());
 
 app.use(json());
 
+app.use("/category", categoryRouter);
+app.get("/pp", (req, res) => {
+  res.send("hello world");
+});
+
+app.use(publicRouter);
+
+app.use(clerkMiddleware());
+
 app.use("/user", usersRouter);
 app.use("/company", companyRouter);
 app.use("/review", reviewsRouter);
 app.use("/booking", bookingRouter);
-app.use("/category", categoryRouter);
-app.use(clerkMiddleware());
-
-app.get("/pp", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.listen(port, () => {
   console.log(`Server running at PORT: ${port}`);

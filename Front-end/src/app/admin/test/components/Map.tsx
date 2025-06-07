@@ -50,6 +50,7 @@ import {
   uploadImageToCloudinary,
   uploadToCloudinary,
 } from "../utils/imageUpload";
+import axiosInstance from "@/utils/axios";
 
 const customIcon = L.icon({
   iconUrl:
@@ -209,8 +210,10 @@ export const Map = () => {
     const updatedValues = {
       ...values,
       images: imageUrls,
-      address: address,
-      location: clicked,
+      location: {
+        address: address,
+        coordinate: clicked,
+      },
     };
 
     const finalData: CompanyInfoType = {
@@ -219,17 +222,30 @@ export const Map = () => {
     };
 
     setValue(finalData);
-    setCompanyInfo(finalData);
+
+    const res = await axiosInstance.post("/company/create-company", {
+      name: finalData.name,
+      description: finalData.description,
+      location: {
+        address: address,
+        coordinate: clicked,
+      },
+      phoneNumber: finalData.phoneNumber,
+      categoryIds: finalData.categories,
+      socialMedia: {
+        Facebook: finalData.Facebook,
+        instagram: finalData.instagram,
+        website: finalData.website,
+      },
+      images: finalData.images,
+      companyLogo: finalData.companyLogo,
+    });
+    console.log(res.data, "created company");
   };
   console.log(companyInfo, "final data");
 
   return (
     <div className="w-screen h-screen flex">
-      <div className="h-full w-[40%] bg-gradient-to-br from-black via-purple-950 to-black">
-        <a href={`https://www.google.com/maps/search/${address}`}>
-          linkruu osroh
-        </a>
-      </div>
       <MapContainer
         className=" size-full z-10 "
         center={[47.92, 106.91]}
@@ -266,7 +282,7 @@ export const Map = () => {
                     </DialogTitle>
                     <>
                       {isNext ? (
-                        <div>
+                        <div className="w-full">
                           <Form {...Step2form}>
                             <form
                               onSubmit={Step2form.handleSubmit(onSubmit)}
@@ -277,21 +293,21 @@ export const Map = () => {
                                   control={Step2form.control}
                                   name="images"
                                   render={({ field }) => (
-                                    <FormItem className="flex-col flex items-start w-full pb-[20px]">
-                                      <FormLabel className="text-[#e3e8ffe6]">
+                                    <FormItem className="flex-col flex items-start pb-[20px]">
+                                      <FormLabel className="text-[#e3e8ffe6] ">
                                         Add detail images 10/
                                         {imagesReview.length}
                                       </FormLabel>
                                       <FormControl>
-                                        <div className="flex flex-col items-end justify-end gap-2">
+                                        <div className="flex flex-col items-end justify-end gap-2 w-full">
                                           <div className="flex gap-3 size-fit">
                                             {imagesReview.length === 0 ? (
-                                              <div className="flex justify-center items-center border-2 border-[#E4E4E7] border-dashed w-[500px] h-[250px] text-[14px] rounded-md">
+                                              <div className="flex justify-center items-center border-2 border-[#E4E4E7] border-dashed w-[460px] h-[250px] text-[14px] rounded-md">
                                                 Add images, limit is 10 🤔
                                               </div>
                                             ) : (
-                                              <Carousel className="w-[500px] flex justify-center items-center">
-                                                <CarouselPrevious className="absolute z-20" />
+                                              <Carousel className="w-full flex justify-center items-center">
+                                                <CarouselPrevious className="absolute z-20 left-2" />
                                                 <CarouselContent>
                                                   {imagesReview.map(
                                                     (
@@ -303,7 +319,7 @@ export const Map = () => {
                                                         className="w-fit flex flex-col items-end gap-2"
                                                       >
                                                         <Image
-                                                          className="w-[500px] h-[250px] rounded-md"
+                                                          className="w-full h-[250px] rounded-md"
                                                           src={el}
                                                           alt={`preview-${index}`}
                                                           width={430}
@@ -319,7 +335,7 @@ export const Map = () => {
                                                     )
                                                   )}
                                                 </CarouselContent>
-                                                <CarouselNext className="absolute z-20" />
+                                                <CarouselNext className="absolute z-20 right-2" />
                                               </Carousel>
                                             )}
                                           </div>
@@ -332,9 +348,9 @@ export const Map = () => {
                                           >
                                             <FormMessage />
                                             <div className="relative">
-                                              <Button className="flex px-4 py-2 rounded-md z-10">
+                                              <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
                                                 Add image
-                                              </Button>
+                                              </button>
                                               <Input
                                                 type="file"
                                                 multiple
@@ -381,16 +397,20 @@ export const Map = () => {
                               />
                             </form>
                           </Form>
-                          <div className=" w-[500px] justify-between flex pt-5">
-                            <Button onClick={() => handPreStep()} type="button">
+                          <div className=" w-full justify-between flex pt-5">
+                            <button
+                              onClick={() => handPreStep()}
+                              className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+                            >
                               <ChevronLeft />
-                            </Button>
-                            <Button
-                              className="bg-green-400"
+                            </button>
+
+                            <button
                               onClick={() => Step2form.handleSubmit(onSubmit)()}
+                              className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
                             >
                               Submit
-                            </Button>
+                            </button>
                           </div>
                         </div>
                       ) : (

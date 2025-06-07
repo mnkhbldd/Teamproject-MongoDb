@@ -20,7 +20,6 @@ export const createCompany = async (
     socialMedia,
     images,
     companyLogo,
-    companyCoverImage,
   } = req.body;
 
   if (!userId) {
@@ -53,7 +52,6 @@ export const createCompany = async (
       socialMedia,
       images,
       companyLogo,
-      companyCoverImage,
     });
     return res.status(200).json({ success: true, newCompany }).end();
   } catch (error) {
