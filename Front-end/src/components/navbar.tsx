@@ -4,7 +4,7 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { SignedIn, useAuth, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import LogoIconMain from "./LogoIcon";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
 
@@ -72,8 +72,14 @@ export default function NavBar() {
     fetchUser();
   }, [isSignedIn, getToken]);
 
+  const pathName = usePathname();
+
   return (
-    <div className="w-full flex justify-center backdrop-blur-lg bg-[#111827]/30 border-t border-b border-[rgba(255,255,255,0.1)] h-[50px] fixed z-50 ">
+    <div
+      className={`w-full flex justify-center backdrop-blur-lg bg-[#111827]/30 border-t border-b border-[rgba(255,255,255,0.1)] h-[50px] fixed z-50 ${
+        pathName === "/Explore" ? "bg-black" : ""
+      }`}
+    >
       <div className="flex items-center justify-between w-[1080px]">
         <div className="flex items-center gap-[15px]">
           <LogoIconMain />

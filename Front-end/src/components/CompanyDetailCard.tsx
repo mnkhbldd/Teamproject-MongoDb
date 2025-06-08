@@ -54,7 +54,7 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
   }, []);
   return (
     <div className="w-full">
-      <div className="w-full h-fit bg-gradient-to-b from-black to-gray-800 rounded-[12px] shadow-lg border-2 bg-[#e3e8ffe6]  flex">
+      <div className="w-full h-fi rounded-[12px] shadow-lg border-2  backdrop-blur-lg bg-[#111827]/30  flex">
         <Carousel className="w-[50%] h-fit">
           <CarouselContent className="w-full h-fit rounded-[12px]">
             {company.images.map((image: string, index: number) => (

@@ -112,7 +112,6 @@ const ExploreMap = () => {
           return;
         }
 
-
         const formatted = companies
           .filter(
             (company: Company) =>
@@ -130,7 +129,7 @@ const ExploreMap = () => {
               iconSize: [60, 60],
               iconAnchor: [30, 60],
               popupAnchor: [0, -60],
-              className: "rounded-full border shadow-md",
+              className: "rounded-full object-cover border shadow-md",
             }),
           }));
 
