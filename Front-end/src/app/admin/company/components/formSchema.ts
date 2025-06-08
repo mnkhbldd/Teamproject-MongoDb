@@ -23,17 +23,16 @@ export const formSchema = z.object({
     .string({ required_error: "url required" })
     .url({ message: "enter valid URL" }),
   companyLogo: z
-    .any()
-    .refine((file) => {
-      return file instanceof FileList && file.length > 0;
-    }, "Company logo is required")
-    .refine((file) => {
+    .instanceof(FileList)
+    .refine((files) => files?.length > 0, "Company logo is required")
+    .refine((files) => {
+      const file = files[0];
       const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-      return file instanceof FileList && allowedTypes.includes(file[0]?.type);
+      return file && allowedTypes.includes(file.type);
     }, "Only JPG, PNG, or WEBP files are allowed")
-    .refine((file) => {
+    .refine((files) => {
       const maxSize = 2 * 1024 * 1024;
-      return file instanceof FileList && file[0]?.size <= maxSize;
+      return files[0]?.size <= maxSize;
     }, "Image must be smaller than 2MB"),
 });
 

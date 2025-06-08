@@ -23,10 +23,10 @@ interface Company {
   _id: string;
   name: string;
   description: string;
-  location: {
+  location: Array<{
     address: string;
     coordinate: [number, number];
-  };
+  }>;
   phoneNumber: string;
   categoryIds: string[];
   socialMedia: {
@@ -90,7 +90,7 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
                 <MapPin className="size-5 inline text-[#e3e8ffe6]" />
               </span>
               {"   "}
-              {company.location.address}
+              {company.location[0].address}
             </p>
           </div>
           <div className="w-full h-[1px] bg-gray-200">
@@ -106,10 +106,10 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
                   } as React.CSSProperties
                 }
               >
-                {categoryIconsData.map((value) => {
+                {categoryIconsData.map((value, index) => {
                   return (
                     <div
-                      key={value.id}
+                      key={index}
                       className="flex items-center border rounded-full px-2 w-fit"
                     >
                       <span className="text-lg">{value.icons}</span>

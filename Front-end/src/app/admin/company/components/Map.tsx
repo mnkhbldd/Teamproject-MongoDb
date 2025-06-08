@@ -143,8 +143,10 @@ export const Map = () => {
     return null;
   }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  type FormValues = z.infer<typeof formSchema>;
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: "",
       description: "",
@@ -152,7 +154,7 @@ export const Map = () => {
       instagram: "",
       website: "",
       phoneNumber: "",
-      companyLogo: [] as unknown as File[],
+      companyLogo: undefined as unknown as FileList,
     },
   });
 
@@ -165,10 +167,11 @@ export const Map = () => {
   });
 
   const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    form.setValue('companyLogo', file);
-    setProfileReview(URL.createObjectURL(file));
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    form.setValue("companyLogo", files, { shouldValidate: true });
+    setProfileReview(URL.createObjectURL(files[0]));
   };
 
   const handleProfileToCloud = async (file: File | undefined) => {
@@ -198,8 +201,10 @@ export const Map = () => {
 
   const onnext = async (values: z.infer<typeof formSchema>) => {
     const { companyLogo } = values;
-    const uploadedLogoUrl = await handleProfileToCloud(companyLogo);
-    setValue({ ...values, companyLogo: uploadedLogoUrl });
+    // Get the first file from FileList
+    const logoFile = companyLogo?.[0];
+    const uploadedLogoUrl = await handleProfileToCloud(logoFile);
+    setValue({ ...values, companyLogo: uploadedLogoUrl as any });
     handlNextStep();
   };
 
@@ -305,37 +310,45 @@ export const Map = () => {
                                                 Add images, limit is 10 🤔
                                               </div>
                                             ) : (
-                                              <Carousel className="w-full flex justify-center items-center">
-                                                <CarouselPrevious className="absolute z-20 left-2" />
-                                                <CarouselContent>
-                                                  {imagesReview.map(
-                                                    (
-                                                      el: string,
-                                                      index: number
-                                                    ) => (
-                                                      <CarouselItem
-                                                        key={index}
-                                                        className="w-fit flex flex-col items-end gap-2"
-                                                      >
-                                                        <Image
-                                                          className="w-full h-[250px] rounded-md object-cover "
-                                                          src={el}
-                                                          alt={`preview-${index}`}
-                                                          width={430}
-                                                          height={250}
-                                                        />
-                                                        <X
-                                                          onClick={() =>
-                                                            removeImage(index)
-                                                          }
-                                                          className="text-red-500 absolute cursor-pointer"
-                                                        />
-                                                      </CarouselItem>
-                                                    )
-                                                  )}
-                                                </CarouselContent>
-                                                <CarouselNext className="absolute z-20 right-2" />
-                                              </Carousel>
+                                              <div className="relative w-full">
+                                                <Carousel className="w-[460px]">
+                                                  <CarouselContent className="w-full ml-0">
+                                                    {imagesReview.map(
+                                                      (
+                                                        el: string,
+                                                        index: number
+                                                      ) => (
+                                                        <CarouselItem
+                                                          key={index}
+                                                          className="pl-0"
+                                                        >
+                                                          <div className="relative">
+                                                            <Image
+                                                              className="h-[250px] w-full rounded-md object-cover"
+                                                              src={el}
+                                                              alt={`preview-${index}`}
+                                                              width={800}
+                                                              height={250}
+                                                            />
+                                                            <button
+                                                              onClick={() =>
+                                                                removeImage(
+                                                                  index
+                                                                )
+                                                              }
+                                                              className="absolute top-2 right-2 bg-white/80 hover:bg-white p-1.5 rounded-full shadow-md transition-colors"
+                                                            >
+                                                              <X className="w-4 h-4 text-red-500" />
+                                                            </button>
+                                                          </div>
+                                                        </CarouselItem>
+                                                      )
+                                                    )}
+                                                  </CarouselContent>
+                                                  <CarouselPrevious className="left-2" />
+                                                  <CarouselNext className="right-2" />
+                                                </Carousel>
+                                              </div>
                                             )}
                                           </div>
 
@@ -422,9 +435,9 @@ export const Map = () => {
                               control={form.control}
                               name="companyLogo"
                               render={({ field }) => (
-                                <FormItem className=" flex flex-col items-start w-full pb-[20px]">
+                                <FormItem className="flex flex-col items-start w-full pb-[20px]">
                                   <FormLabel className="text-[#e3e8ffe6]">
-                                    Company logo
+                                    Company Logo
                                   </FormLabel>
                                   <FormControl>
                                     <div className="relative flex justify-center items-center size-[160px]">
@@ -432,11 +445,24 @@ export const Map = () => {
                                         <Input
                                           type="file"
                                           accept="image/*"
+                                          className="rounded-full opacity-0 size-[160px] cursor-pointer"
                                           onChange={(e) => {
-                                            field.onChange(e.target.files);
+                                            const files = e.target.files;
+                                            if (!files || files.length === 0)
+                                              return;
+
+                                            // Create a new DataTransfer object to properly set the files
+                                            const dataTransfer =
+                                              new DataTransfer();
+                                            dataTransfer.items.add(files[0]);
+
+                                            // Update the input's files
+                                            e.target.files = dataTransfer.files;
+
+                                            // Update form state and preview
+                                            field.onChange(dataTransfer.files);
                                             handleProfileImage(e);
                                           }}
-                                          className="rounded-full opacity-0 size-[160px]"
                                         />
                                       </div>
                                       <Camera
@@ -446,7 +472,7 @@ export const Map = () => {
                                       />
                                       {profileReview && (
                                         <Image
-                                          className="size-[160px] absolute z-10 rounded-full"
+                                          className="size-[160px] absolute z-10 rounded-full object-cover"
                                           src={profileReview}
                                           alt="preview"
                                           width={160}
