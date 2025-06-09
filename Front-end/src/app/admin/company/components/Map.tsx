@@ -146,7 +146,7 @@ export const Map = () => {
   type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema) as any,
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -201,10 +201,10 @@ export const Map = () => {
 
   const onnext = async (values: z.infer<typeof formSchema>) => {
     const { companyLogo } = values;
-    // Get the first file from FileList
+
     const logoFile = companyLogo?.[0];
     const uploadedLogoUrl = await handleProfileToCloud(logoFile);
-    setValue({ ...values, companyLogo: uploadedLogoUrl as any });
+    setValue({ ...values, companyLogo: uploadedLogoUrl as FileList });
     handlNextStep();
   };
 

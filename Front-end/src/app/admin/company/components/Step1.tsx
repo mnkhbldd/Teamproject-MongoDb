@@ -4,7 +4,11 @@ import { Control } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "./formSchema";
 
-export const Step1 = ({ control }: { control: Control<z.infer<typeof formSchema>> }) => {
+export const Step1 = ({
+  control,
+}: {
+  control: Control<z.infer<typeof formSchema>>;
+}) => {
   return (
     <div className=" flex flex-col w-full gap-2">
       <Field
