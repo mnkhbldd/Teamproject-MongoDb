@@ -50,14 +50,16 @@ export const getCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find().sort({ group: 1, name: 1 });
+    console.log("Fetching categories...");
+    const categories = await Category.find().sort({ name: 1 });
+    console.log("Categories found:", categories.length);
+
     res.status(200).json({
       success: true,
-      count: categories.length,
       data: categories,
     });
   } catch (error) {
-    console.error("Error fetching categories:", error);
+    console.error("Error getting categories:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

@@ -20,7 +20,6 @@ export const createCompany = async (
     socialMedia,
     images,
     companyLogo,
-    companyCoverImage,
   } = req.body;
 
   if (!userId) {
@@ -53,7 +52,6 @@ export const createCompany = async (
       socialMedia,
       images,
       companyLogo,
-      companyCoverImage,
     });
     return res.status(200).json({ success: true, newCompany }).end();
   } catch (error) {
@@ -103,6 +101,26 @@ export const updateCompany = async (
       req.body,
       { new: true }
     );
+    if (!company) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Company not found" })
+        .end();
+    }
+    return res.status(200).json({ success: true, company }).end();
+  } catch (error) {
+    console.error(error, "err");
+    return res.status(400).json({ success: false, message: error }).end();
+  }
+};
+
+export const getCompanyById = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  const companyId = req.params.companyId;
+  try {
+    const company = await CompanyModel.findById(companyId);
     if (!company) {
       return res
         .status(404)

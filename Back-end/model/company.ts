@@ -6,12 +6,6 @@ const socialMediaSchema = new mongoose.Schema({
   website: { type: String },
 });
 
-const reviewSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  starCount: { type: Number, required: true },
-  comment: { type: String, required: true },
-});
-
 const locationSchema = new mongoose.Schema({
   coordinate: {
     type: [Number],
@@ -26,13 +20,13 @@ const companySchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   location: [locationSchema],
-  phoneNumber: { type: Number },
-  category: { type: Schema.Types.ObjectId, ref: "Category" },
+  phoneNumber: { type: String, required: true },
+  category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   socialMedia: [socialMediaSchema],
   images: [{ type: String }],
+
   companyLogo: String,
   companyCoverImage: String,
-  reviews: [reviewSchema],
 });
 
 const CompanyModel = mongoose.model("Company", companySchema);

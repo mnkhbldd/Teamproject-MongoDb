@@ -17,8 +17,6 @@ export const verifyClerkToken = async (
     const authHeader = req.headers.authorization;
     const token = authHeader?.replace("Bearer ", "");
 
-    console.log(authHeader, "authHeader");
-
     if (!token) {
       res
         .status(401)

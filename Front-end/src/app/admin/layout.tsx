@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import LogoIconMain from "@/components/LogoIcon";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import { Link } from "lucide-react";
 
 export default function AdminLayout({
   children,

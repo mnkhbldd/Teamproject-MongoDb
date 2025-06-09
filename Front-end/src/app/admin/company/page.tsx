@@ -1,7 +1,11 @@
 import { Map } from "./components/Map";
 
-const AdminCompany = () => {
-  return <Map />;
-};
+function MyApp() {
+  return (
+    <div>
+      <Map />
+    </div>
+  );
+}
 
-export default AdminCompany;
+export default MyApp;

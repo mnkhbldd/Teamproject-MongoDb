@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import {SparklesCore} from "@/components/sparkles";
-import {ColourfulText} from "@/components/colourful-text";
-import {FocusCards} from "@/components/focus-cards";
+import { SparklesCore } from "@/components/sparkles";
+import { ColourfulText } from "@/components/colourful-text";
+import { FocusCards } from "@/components/focus-cards";
 import dynamic from "next/dynamic";
 
 const AnimatedTestimonials = dynamic(
   () => import("@/components/animated-tesimonials"), // Adjust the path to where your component lives
-  {ssr: false}
+  { ssr: false }
 );
 
 const AboutUs = () => {

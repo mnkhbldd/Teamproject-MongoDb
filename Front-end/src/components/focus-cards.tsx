@@ -1,7 +1,8 @@
 "use client";
 
-import React, {useState} from "react";
-import {cn} from "@/lib/utils";
+import React, { useState } from "react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export const Card = React.memo(
   ({
@@ -10,7 +11,7 @@ export const Card = React.memo(
     hovered,
     setHovered,
   }: {
-    card: any;
+    card: Card;
     index: number;
     hovered: number | null;
     setHovered: React.Dispatch<React.SetStateAction<number | null>>;
@@ -23,7 +24,9 @@ export const Card = React.memo(
         hovered !== null && hovered !== index && "blur-sm scale-[0.98]"
       )}
     >
-      <img
+      <Image
+        width={1538}
+        height={1367}
         src={card.src}
         alt={card.title}
         className="object-cover absolute h-60 md:h-96"
@@ -49,7 +52,7 @@ type Card = {
   src: string;
 };
 
-export function FocusCards({cards}: {cards: Card[]}) {
+export function FocusCards({ cards }: { cards: Card[] }) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
