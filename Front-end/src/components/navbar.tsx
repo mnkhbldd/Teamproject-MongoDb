@@ -1,21 +1,26 @@
 "use client";
 import { ArrowRight, ChevronDown } from "lucide-react";
 
-import {
-  SignedIn,
-  useOrganization,
-  useOrganizationList,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedIn, useAuth, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import LogoIconMain from "./LogoIcon";
-import { useRouter } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import axiosInstance from "@/utils/axios";
 
 const twkLausanneFont = {
   fontFamily: '"TWK Lausanne 400", "TWK Lausanne 400 Placeholder", sans-serif',
 } as React.CSSProperties;
+
+type User = {
+  clerkId: string;
+  email: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  photo: string;
+  isAdmin: boolean;
+};
 
 function NavLink({
   href,
@@ -38,10 +43,43 @@ function NavLink({
 }
 
 export default function NavBar() {
+  const { getToken, isSignedIn } = useAuth();
+  const [signedUser, setSignedUser] = useState<User | null>(null);
+
   const { user, isLoaded } = useUser();
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!isSignedIn) return;
+
+      const token = await getToken();
+      if (!token) return;
+
+      try {
+        const res = await axiosInstance.get("/user/get-current-user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setSignedUser(res.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [isSignedIn, getToken]);
+
+  const pathName = usePathname();
+
   return (
-    <div className="w-full flex justify-center bg-[rgba(13, 13, 18, 0.4)] border-t border-b border-[rgba(255,255,255,0.1)] h-[50px] fixed z-50 ">
+    <div
+      className={`w-full flex justify-center backdrop-blur-lg bg-[#111827]/30 border-t border-b border-[rgba(255,255,255,0.1)] h-[50px] fixed z-50 ${
+        pathName === "/Explore" ? "bg-black" : ""
+      }`}
+    >
       <div className="flex items-center justify-between w-[1080px]">
         <div className="flex items-center gap-[15px]">
           <LogoIconMain />
@@ -85,6 +123,17 @@ export default function NavBar() {
             About Us
           </span>
         </NavLink>
+
+        {signedUser?.isAdmin == false ? (
+          <NavLink href="/admin/dashboard">
+            <span
+              className={`text-[15px] text-[rgba(99,100,117)] hover:text-white`}
+              style={twkLausanneFont}
+            >
+              Admin Panel
+            </span>
+          </NavLink>
+        ) : null}
 
         <div className="flex items-center gap-4">
           {user ? (
@@ -142,16 +191,6 @@ export default function NavBar() {
             </div>
           )}
         </div>
-        {/* {isAdmin ? (
-          <NavLink href="/AboutUs">
-            <span
-              className={`text-[15px] text-[rgba(99,100,117)] hover:text-white`}
-              style={twkLausanneFont}
-            >
-              Hello
-            </span>
-          </NavLink>
-        ) : null} */}
       </div>
     </div>
   );

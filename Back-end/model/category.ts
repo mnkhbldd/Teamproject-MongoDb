@@ -10,6 +10,10 @@ const categorySchema = new mongoose.Schema({
     enum: ["Type", "Difficulty", "Activity"],
     required: true,
   },
+  icons: {
+    type: String,
+    required: true,
+  },
   createdAt: { type: Date, default: Date.now, required: true },
   updatedAt: { type: Date, default: Date.now, required: true },
 });

@@ -1,21 +1,28 @@
 import axios from "axios";
+
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
+  baseURL: "https://teamproject-mongodb.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    const tokenRes = await fetch("/api/webhooks/clerk");
-    const { token } = await tokenRes.json();
+if (typeof window !== "undefined") {
+  axiosInstance.interceptors.request.use(
+    async (config) => {
+      try {
+        const tokenRes = await fetch("/api/webhooks/clerk");
+        const { token } = await tokenRes.json();
 
-    config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+        config.headers.Authorization = `Bearer ${token}`;
+      } catch (err) {
+        console.error("Token fetch failed:", err);
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+}
 
 axiosInstance.interceptors.response.use(
   (response) => response,

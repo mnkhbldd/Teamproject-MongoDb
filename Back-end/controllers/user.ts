@@ -86,16 +86,20 @@ interface RequestWithUserId extends Request {
   userId: string;
 }
 
-export const getCurrentUser = async (
-  req: RequestWithUserId,
-  res: Response
-): Promise<any> => {
+export const getCurrentUser = async (req: RequestWithUserId, res: Response) => {
   try {
-    const userId = req.userId;
-    const user = await User.findById(userId);
-    return res.status(200).send({ success: true, user: user }).end();
+    const clerkId = req.userId;
+    const user = await User.findOne({ clerkId });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    return res.status(200).json({ success: true, user });
   } catch (error) {
-    console.error(error, "err");
-    return res.status(400).send({ success: false, message: error }).end();
+    console.error("getCurrentUser error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };

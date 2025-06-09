@@ -22,31 +22,42 @@ export const formSchema = z.object({
   website: z
     .string({ required_error: "url required" })
     .url({ message: "enter valid URL" }),
+  companyLogo: z
+    .instanceof(FileList)
+    .refine((files) => files?.length > 0, "Company logo is required")
+    .refine((files) => {
+      const file = files[0];
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+      return file && allowedTypes.includes(file.type);
+    }, "Only JPG, PNG, or WEBP files are allowed")
+    .refine((files) => {
+      const maxSize = 2 * 1024 * 1024;
+      return files[0]?.size <= maxSize;
+    }, "Image must be smaller than 2MB"),
+});
+
+export const step2formSchema = z.object({
   images: z
     .any()
-    .refine((files) => files instanceof FileList && files.length > 0, {
-      message: "At least one image is required.",
+    .refine((files) => files?.length > 0, {
+      message: "Please upload at least one image.",
     })
     .refine(
       (files) =>
-        Array.from(files).every((file) =>
-          ["image/jpeg", "image/png", "image/webp"].includes(file.type)
+        files &&
+        typeof files === "object" &&
+        "length" in files &&
+        Array.from(files).every(
+          (file) =>
+            file instanceof File &&
+            ["image/jpeg", "image/png", "image/webp"].includes(file.type)
         ),
       {
         message: "Only JPG, PNG, or WEBP files are allowed.",
       }
-    ),
-  companyLogo: z
-    .any()
-    .refine((file) => {
-      return file instanceof FileList && file.length > 0;
-    }, "Company logo is required")
-    .refine((file) => {
-      const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-      return file instanceof FileList && allowedTypes.includes(file[0]?.type);
-    }, "Only JPG, PNG, or WEBP files are allowed")
-    .refine((file) => {
-      const maxSize = 2 * 1024 * 1024;
-      return file instanceof FileList && file[0]?.size <= maxSize;
-    }, "Image must be smaller than 2MB"),
+    )
+    .refine((files) => files?.length <= 10, {
+      message: "You can upload a maximum of 10 images.",
+    }),
+  categories: z.array(z.string()).min(1, "Please select at least one category"),
 });
