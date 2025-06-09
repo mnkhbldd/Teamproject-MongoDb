@@ -11,14 +11,7 @@ export const createBooking = async (
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      companyId,
-      bookingDate,
-      startTime,
-      endTime,
-      numberOfPeople,
-      specialRequests,
-    } = req.body;
+    const { companyId, bookingDate, startTime, endTime } = req.body;
 
     const userId = req.userId;
 
@@ -36,8 +29,6 @@ export const createBooking = async (
       bookingDate,
       startTime,
       endTime,
-      numberOfPeople,
-      specialRequests,
     });
 
     res.status(200).json({

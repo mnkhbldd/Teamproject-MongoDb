@@ -6,7 +6,7 @@ import { BackgroundBeamsWithCollision } from "@/components/background-beams-with
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
 import { AnimatedFooter } from "@/components/NextFooter";
-
+import { BookingDate } from "../admin/company/components/BookingDate";
 
 export default function Home() {
   const words =
@@ -48,6 +48,10 @@ export default function Home() {
           </div>
         </div>
       </BackgroundBeamsWithCollision>
+
+      <div className="w-full h-fit bg-white">
+        <BookingDate />
+      </div>
 
       <div className="w-full h-[80px] bg-gray-900 flex items-center justify-center">
         <div className="flex items-center justify-center w-full gap-30">
