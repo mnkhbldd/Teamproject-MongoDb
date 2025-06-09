@@ -5,6 +5,8 @@ import React from "react";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
+import { AnimatedFooter } from "@/components/NextFooter";
+
 
 export default function Home() {
   const words =
@@ -105,17 +107,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* <div className="fixed bottom-4 right-4 p-4 bg-gray-900/80 backdrop-blur-lg rounded-lg border border-gray-800">
-        {loading && <p className="text-white">Loading user data...</p>}
-        {error && <p className="text-red-400">Error: {error.message}</p>}
-        {user && (
-          <div>
-            <p className="text-white">Welcome, {user.firstName || "User"}</p>
-            <p className="text-gray-400">Email: {user.email}</p>
-          </div>
-        )}
-      </div> */}
+      <AnimatedFooter />
     </div>
   );
 }
