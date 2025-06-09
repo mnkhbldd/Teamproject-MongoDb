@@ -1,5 +1,6 @@
 import React from "react";
 import { MapPin } from "lucide-react";
+import Image from "next/image";
 
 type ListingCardProps = {
   imageUrl: string;
@@ -14,9 +15,10 @@ export const MiniInfoCard = ({
 }: ListingCardProps) => {
   return (
     <div className=" max-w-md">
-      <img
+      <Image
         src={imageUrl}
         alt={name}
+        fill
         className="w-full h-[170px] object-cover rounded-t-md"
       />
 

@@ -19,7 +19,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { MapPin, X } from "lucide-react";
+import { MapPin } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import axiosInstance from "@/utils/axios";
 import { MiniInfoCard } from "./MiniInfoCard";
