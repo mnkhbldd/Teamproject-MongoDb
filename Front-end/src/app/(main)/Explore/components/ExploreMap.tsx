@@ -11,7 +11,14 @@ import {
 import L from "leaflet";
 import type { Marker as LeafletMarker } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { MapPin, X } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import axiosInstance from "@/utils/axios";
@@ -63,7 +70,7 @@ const MarkerWithPopup = ({
 }: {
   position: [number, number];
   icon: L.Icon;
-  children;
+  children: ReactNode;
 }) => {
   const map = useMap();
 
