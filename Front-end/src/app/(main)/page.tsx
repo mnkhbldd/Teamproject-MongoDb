@@ -2,9 +2,10 @@
 
 import React from "react";
 
-import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
-import { TextGenerateEffect } from "@/components/text-generate-effect";
+import {BackgroundBeamsWithCollision} from "@/components/background-beams-with-collision";
+import {TextGenerateEffect} from "@/components/text-generate-effect";
 import Image from "next/image";
+import {SportsHallList} from "@/components/SimilarSectionComponent";
 
 export default function Home() {
   const words =
