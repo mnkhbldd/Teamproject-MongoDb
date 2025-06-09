@@ -51,6 +51,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "hips.hearstapps.com",
+      },
     ],
   },
 };

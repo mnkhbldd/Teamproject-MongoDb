@@ -85,10 +85,10 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
         <div className="w-[50%] p-2 flex flex-col gap-2">
           <div className="flex gap-2 items-center">
             <Avatar>
-              <AvatarImage src={company.companyLogo} />
+              <AvatarImage src={company.companyLogo} className="object-cover" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <p className="text-[14px] text-[#e3e8ffe6] font-semibold">
+            <p className="text-[14px] cover text-[#e3e8ffe6] font-semibold">
               {company.name}
             </p>
           </div>

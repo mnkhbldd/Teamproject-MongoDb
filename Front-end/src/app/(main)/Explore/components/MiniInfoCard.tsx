@@ -18,8 +18,9 @@ export const MiniInfoCard = ({
       <Image
         src={imageUrl}
         alt={name}
-        fill
-        className="w-full h-[170px] object-cover rounded-t-md"
+        width={500}
+        height={500}
+        className="w-full h-[170px] object-cover rounded-md"
       />
 
       <div>
