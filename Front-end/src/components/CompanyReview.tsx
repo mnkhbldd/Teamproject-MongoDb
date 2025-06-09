@@ -27,7 +27,7 @@ export const CompanyReview = () => {
       <div className="space-y-3">
         <StarRating rating={5} />
         <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
-          This is wanderful course for bigenar. It's great for Light photo be
+          This is wanderful course for bigenar. It&apos;s great for Light photo be
           very high professional.
         </p>
       </div>

@@ -53,7 +53,9 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
         );
 
         setCategoryIconsData(filteredCategories);
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     FetchData();
