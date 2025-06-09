@@ -11,10 +11,18 @@ import {
 import L from "leaflet";
 import type { Marker as LeafletMarker } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { MapPin } from "lucide-react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { MapPin, X } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import axiosInstance from "@/utils/axios";
+import { MiniInfoCard } from "./MiniInfoCard";
 
 const customIcon = L.icon({
   iconUrl:
@@ -57,11 +65,11 @@ const initialData = [
 const MarkerWithPopup = ({
   position,
   icon,
-  title,
+  children,
 }: {
   position: [number, number];
   icon: L.Icon;
-  title: string;
+  children: ReactNode;
 }) => {
   const map = useMap();
 
@@ -78,7 +86,7 @@ const MarkerWithPopup = ({
         },
       }}
     >
-      <Popup>{title}</Popup>
+      <Popup>{children}</Popup>
     </Marker>
   );
 };
@@ -208,8 +216,13 @@ const ExploreMap = () => {
             key={index}
             position={[el.latLng[0], el.latLng[1]]}
             icon={el.icon}
-            title={el.title}
-          />
+          >
+            <MiniInfoCard
+              imageUrl="https://hips.hearstapps.com/hmg-prod/images/cristiano-ronaldo-of-portugal-reacts-as-he-looks-on-during-news-photo-1725633476.jpg?crop=0.666xw:1.00xh;0.180xw,0&resize=640:*"
+              name="Трансбус спорт заал"
+              location="СХД, Баруун салааны эцсийн автобусны буудлын хойно төв зам дагуу"
+            />
+          </MarkerWithPopup>
         ))}
       </MapContainer>
     </div>
