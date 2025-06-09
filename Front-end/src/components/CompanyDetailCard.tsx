@@ -12,7 +12,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
-import axios from "axios";
 
 interface CategoryData {
   _id: string;
@@ -47,7 +46,7 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
   useEffect(() => {
     const FetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/category/");
+        const res = await axiosInstance.get("/category/");
 
         const filteredCategories = res.data.data.filter(
           (category: CategoryData) => company.category.includes(category._id)
