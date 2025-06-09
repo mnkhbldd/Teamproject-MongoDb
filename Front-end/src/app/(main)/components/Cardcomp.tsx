@@ -23,36 +23,35 @@ export const AnimatedCards = () => {
   const cards = [
     {
       id: 1,
-      title: "Scale & Glow",
+      title: "nis nis",
       description:
-        "This card scales up and adds a subtle glow effect when hovered.",
+        "Lorem ipsum duptate, modatiosunt nostrum hic commodi quas ducimus placeat?",
       image: "/zazaz.jpg",
       icon: <Star className="h-5 w-5" />,
       color: "from-pink-500 to-rose-500",
     },
     {
       id: 2,
-      title: "Tilt Effect",
+      title: "Tilt uu;2i",
       description:
-        "This card tilts slightly in the direction of your cursor for a 3D effect.",
+        "Lorem ipsum d consequatur sapiente laborumae perspiciatis minus veniam?",
       image: "/img4.jpg",
       icon: <Heart className="h-5 w-5" />,
       color: "from-purple-500 to-indigo-500",
     },
     {
       id: 3,
-      title: "Content Reveal",
-      description:
-        "Hover to reveal additional content with a smooth transition.",
+      title: "Cooenadsrj",
+      description: "Hover to refdsaopjprew dsaj pema oth transition.",
       image: "/img.jpg",
       icon: <Bookmark className="h-5 w-5" />,
       color: "from-amber-500 to-orange-500",
     },
     {
       id: 4,
-      title: "Particle Effect",
+      title: "nod",
       description:
-        "This card features animated particles that respond to hover.",
+        "Tfdsafj pkewa  rjewajdsma kf dskafhjosa hifodsnalkfh slkafdlk hover.",
       image: "/img6.jpg",
       icon: <Zap className="h-5 w-5" />,
       color: "from-emerald-500 to-teal-500",
@@ -93,7 +92,7 @@ export const AnimatedCards = () => {
             </CardHeader>
             <CardFooter className="mt-auto">
               <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                See More <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </CardFooter>
           </Card>
@@ -136,7 +135,7 @@ export const AnimatedCards = () => {
             </CardHeader>
             <CardFooter className="mt-auto">
               <Button className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                See More <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </CardFooter>
           </Card>
@@ -175,7 +174,7 @@ export const AnimatedCards = () => {
                 className="w-full"
               >
                 <Button className="bg-gradient-to-r  from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
-                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                  See More <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </motion.div>
             </CardFooter>
@@ -211,7 +210,7 @@ export const AnimatedCards = () => {
             </CardHeader>
             <CardFooter className="mt-auto">
               <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                See More <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </CardFooter>
           </Card>

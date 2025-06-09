@@ -32,16 +32,16 @@ export const Animatedbg = () => {
       </div>
 
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white/100 rounded-full animate-float-tiny"></div>
+        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white/100 rounded-full animate-tiny-delayed"></div>
         <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white/90 rounded-full animate-float-tiny"></div>
         <div className="absolute bottom-1/3 left-1/5 w-1 h-1 bg-white/70 rounded-full animate-float-tiny"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-1 h-1 bg-white/79 rounded-full animate-float-tiny"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-1 h-1 bg-white/79 rounded-full animate-tiny-delayed"></div>
         <div className="absolute top-1/2 left-1/6 w-1 h-1 bg-white/49 rounded-full animate-float-tiny-delayed"></div>
         <div className="absolute top-3/4 right-1/6 w-1 h-1 bg-white/90 rounded-full animate-float-tiny"></div>
 
         <div className="absolute top-1/5 right-1/5 w-2 h-2 bg-white/80 rounded-full animate-float-tiny"></div>
         <div className="absolute bottom-1/5 left-1/3 w-2 h-2 bg-white/60 rounded-full animate-float-tiny"></div>
-        <div className="absolute top-2/3 right-2/3 w-2 h-2 bg-white/70 rounded-full animate-float-tiny"></div>
+        <div className="absolute top-2/3 right-2/3 w-2 h-2 bg-white/70 rounded-full animate-tiny-delayed"></div>
 
         <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent animate-slide-subtle"></div>
         <div className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent animate-slide-subtle-delayed"></div>
