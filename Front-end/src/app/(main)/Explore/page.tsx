@@ -1,6 +1,7 @@
 "use client";
-import { ExploreMap } from "@/app/(main)/Explore/components/ExploreMap";
+
 import { SideBarExplore } from "@/app/(main)/Explore/components/SideBarExplore";
+import ExploreMap from "./components/ExploreMap";
 
 type CategoryData = {
   id: number;

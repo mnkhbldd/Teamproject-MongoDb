@@ -12,10 +12,11 @@ import L from "leaflet";
 import type { Marker as LeafletMarker } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, X } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
-import axios from "axios";
 import axiosInstance from "@/utils/axios";
+import { Button } from "@/components/ui/button";
+import { MiniInfoCard } from "./MiniInfoCard";
 
 const customIcon = L.icon({
   iconUrl:
@@ -25,6 +26,7 @@ const customIcon = L.icon({
   popupAnchor: [0, -32],
   className: " rounded-full",
 });
+
 const customIcon2 = L.icon({
   iconUrl:
     "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds",
@@ -33,6 +35,7 @@ const customIcon2 = L.icon({
   popupAnchor: [0, -32],
   className: " rounded-full",
 });
+
 const MarkerIcon = new L.DivIcon({
   className: "custom-div-icon",
   html: ReactDOMServer.renderToString(
@@ -53,24 +56,14 @@ const initialData = [
   },
 ];
 
-interface Company {
-  _id: string;
-  name: string;
-  description: string;
-  location: {
-    type: string;
-    coordinates: string[];
-  }[];
-}
-
 const MarkerWithPopup = ({
   position,
   icon,
-  title,
+  children,
 }: {
   position: [number, number];
   icon: L.Icon;
-  title: string;
+  children;
 }) => {
   const map = useMap();
 
@@ -87,23 +80,31 @@ const MarkerWithPopup = ({
         },
       }}
     >
-      <Popup>{title}</Popup>
+      <Popup>{children}</Popup>
     </Marker>
   );
 };
 
-export const ExploreMap = () => {
+interface Company {
+  _id: string;
+  name: string;
+  description: string;
+  location: {
+    type: string;
+    coordinate: string[];
+  }[];
+  companyLogo: string;
+}
+
+const ExploreMap = () => {
   const [clicked, setClicked] = useState<number[]>([0, 0]);
-  const [address, setAddress] = useState("");
+  const [, setAddress] = useState("");
   const [data, setData] = useState(initialData);
-  const [company, setCompany] = useState<Company[]>([]);
 
   useEffect(() => {
     const FetchData = async () => {
       try {
-        const res = await axiosInstance.get(
-          "http://localhost:8000/company/get-companies"
-        );
+        const res = await axiosInstance.get("/company/get-companies");
         const companies = Array.isArray(res.data)
           ? res.data
           : res.data.companies || [];
@@ -115,14 +116,14 @@ export const ExploreMap = () => {
 
         const formatted = companies
           .filter(
-            (company: any) =>
+            (company: Company) =>
               company.location?.[0]?.coordinate?.length === 2 &&
               company.companyLogo
           )
-          .map((company: any) => ({
+          .map((company: Company) => ({
             latLng: [
-              company.location[0].coordinate[0],
-              company.location[0].coordinate[1],
+              Number(company.location[0].coordinate[0]),
+              Number(company.location[0].coordinate[1]),
             ],
             title: company.name,
             icon: L.icon({
@@ -130,12 +131,11 @@ export const ExploreMap = () => {
               iconSize: [60, 60],
               iconAnchor: [30, 60],
               popupAnchor: [0, -60],
-              className: "rounded-full border shadow-md",
+              className: "rounded-full object-cover border shadow-md",
             }),
           }));
 
         setData([...initialData, ...formatted]);
-        setCompany(companies);
       } catch (error) {
         console.log("Error fetching companies:", error);
       }
@@ -147,7 +147,7 @@ export const ExploreMap = () => {
   const markerRef = useRef<LeafletMarker>(null);
   useEffect(() => {
     if (markerRef!.current) {
-      markerRef!.current!.openPopup();
+      markerRef.current.openPopup();
     }
   }, [clicked]);
 
@@ -210,10 +210,17 @@ export const ExploreMap = () => {
             key={index}
             position={[el.latLng[0], el.latLng[1]]}
             icon={el.icon}
-            title={el.title}
-          />
+          >
+            <MiniInfoCard
+              imageUrl="https://hips.hearstapps.com/hmg-prod/images/cristiano-ronaldo-of-portugal-reacts-as-he-looks-on-during-news-photo-1725633476.jpg?crop=0.666xw:1.00xh;0.180xw,0&resize=640:*"
+              name="Трансбус спорт заал"
+              location="СХД, Баруун салааны эцсийн автобусны буудлын хойно төв зам дагуу"
+            />
+          </MarkerWithPopup>
         ))}
       </MapContainer>
     </div>
   );
 };
+
+export default ExploreMap;
