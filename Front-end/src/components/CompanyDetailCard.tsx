@@ -45,13 +45,23 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
 
   useEffect(() => {
     const FetchData = async () => {
-      const res = await axiosInstance.get("/category/");
-
-      setCategoryIconsData(res.data.data);
-      console.log(res.data.data, "category");
+      try {
+        const res = await axiosInstance.get("/category/");
+        console.log(res.data.data, "category");
+        const filteredCategories = res.data.data.filter(
+          (category: CategoryData) =>
+            company.categoryIds.includes(category.id.toString())
+        );
+        setCategoryIconsData(filteredCategories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
-    FetchData();
-  }, []);
+
+    if (company?.categoryIds?.length) {
+      FetchData();
+    }
+  }, [company?.categoryIds]);
   return (
     <div className="w-full">
       <div className="w-full h-fi rounded-[12px] shadow-lg border-2  backdrop-blur-lg bg-[#111827]/30  flex">
@@ -106,19 +116,23 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
                   } as React.CSSProperties
                 }
               >
-                {categoryIconsData.map((value, index) => {
-                  return (
+                {categoryIconsData.length > 0 ? (
+                  categoryIconsData.map((value, index) => (
                     <div
                       key={index}
                       className="flex items-center border rounded-full px-2 w-fit"
                     >
                       <span className="text-lg">{value.icons}</span>
-                      <span className="text-[#e3e8ffe6] text-[12px]  hover:text-black">
+                      <span className="text-[#e3e8ffe6] text-[12px] hover:text-black">
                         {value.name}
                       </span>
                     </div>
-                  );
-                })}
+                  ))
+                ) : (
+                  <p className="text-[#e3e8ffe6] text-[12px]">
+                    No categories found
+                  </p>
+                )}
               </div>
             </div>
           </div>
