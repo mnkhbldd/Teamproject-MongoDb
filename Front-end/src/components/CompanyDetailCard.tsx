@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
 
 interface CategoryData {
-  id: number;
+  _id: string;
   name: string;
   icons: string;
 }
@@ -28,7 +28,7 @@ interface Company {
     coordinate: [number, number];
   }>;
   phoneNumber: string;
-  categoryIds: string[];
+  category: string[];
   socialMedia: {
     Facebook: string;
     instagram: string;
@@ -47,21 +47,19 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
     const FetchData = async () => {
       try {
         const res = await axiosInstance.get("/category/");
-        console.log(res.data.data, "category");
+
         const filteredCategories = res.data.data.filter(
-          (category: CategoryData) =>
-            company.categoryIds.includes(category.id.toString())
+          (category: CategoryData) => company.category.includes(category._id)
         );
+
         setCategoryIconsData(filteredCategories);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error(error);
       }
     };
 
-    if (company?.categoryIds?.length) {
-      FetchData();
-    }
-  }, [company?.categoryIds]);
+    FetchData();
+  }, [company?.category]);
   return (
     <div className="w-full">
       <div className="w-full h-fi rounded-[12px] shadow-lg border-2  backdrop-blur-lg bg-[#111827]/30  flex">
