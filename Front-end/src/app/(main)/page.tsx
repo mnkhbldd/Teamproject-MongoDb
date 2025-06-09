@@ -6,10 +6,11 @@ import gsap from "gsap";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
-import { Package } from "./components/Package";
+
 import { Placesdata } from "./components/Placesdata";
 
 import { Animatedbg } from "./components/Animationbg-Demo";
+import { AnimatedCards } from "./components/Cardcomp";
 
 export default function Home() {
   const [companies, setCompanies] = useState([]);
@@ -167,7 +168,7 @@ export default function Home() {
           <p className=" text-[62px] text-white font-bold ">Packages</p>
         </div>
         <div className="flex flex-col ">
-          <Package />
+          <AnimatedCards />
           <div className="w-full h-[200px] bg-gradient-to-b from-gray-700 via-slate-700 to-slate-800"></div>
           <Animatedbg />
         </div>
