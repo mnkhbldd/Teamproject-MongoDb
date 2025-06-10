@@ -1,6 +1,7 @@
 import React from "react";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
+import { Popup } from "react-leaflet";
 
 type ListingCardProps = {
   imageUrl: string;
@@ -14,7 +15,7 @@ export const MiniInfoCard = ({
   location,
 }: ListingCardProps) => {
   return (
-    <div className=" max-w-md">
+    <Popup className=" max-w-md">
       <Image
         src={imageUrl}
         alt={name}
@@ -35,6 +36,6 @@ export const MiniInfoCard = ({
           see more
         </div>
       </div>
-    </div>
+    </Popup>
   );
 };
