@@ -12,12 +12,14 @@ export const Step1 = ({
   return (
     <div className=" flex flex-col w-full gap-2">
       <Field
+        placeholder="enter name here"
         inputType={true}
         name="name"
         LabelName="Company name"
         control={control}
       />
       <Field
+        placeholder="write about your company"
         inputType={false}
         name="description"
         LabelName="description"
@@ -25,12 +27,14 @@ export const Step1 = ({
       />
       <div className=" flex gap-2">
         <Field
+          placeholder="enter phone number here"
           inputType={true}
           name="phoneNumber"
           LabelName="Phone number"
           control={control}
         />
         <Field
+          placeholder="enter website url here"
           inputType={true}
           name="website"
           LabelName="Social media URL"
@@ -39,12 +43,14 @@ export const Step1 = ({
       </div>
       <div className="flex gap-2">
         <Field
+          placeholder="enter instagram here"
           inputType={true}
           name="instagram"
           LabelName="Instagram"
           control={control}
         />
         <Field
+          placeholder="enter facebook here"
           inputType={true}
           name="Facebook"
           LabelName="Facebook"

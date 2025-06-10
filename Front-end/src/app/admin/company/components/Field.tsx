@@ -17,6 +17,7 @@ export const Field = ({
   name,
   LabelName,
   inputType,
+  placeholder,
   isFileInput = false,
 }: {
   control: Control<z.infer<typeof formSchema>>;
@@ -24,6 +25,7 @@ export const Field = ({
   LabelName: string;
   inputType?: boolean;
   isFileInput?: boolean;
+  placeholder: string;
 }) => {
   return (
     <FormField
@@ -50,7 +52,7 @@ export const Field = ({
                   "focus-visible:border-[#18BA51] border-solid border border-[#e3e8ffe6]"
                 }`}
                 type="text"
-                placeholder="Enter your name here"
+                placeholder={placeholder}
                 value={value as string}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -63,7 +65,7 @@ export const Field = ({
                   value?.length >= 2 &&
                   "focus-visible:border-[#18BA51] border-solid border border-[#e3e8ffe6]"
                 }`}
-                placeholder="Enter your name here"
+                placeholder={placeholder}
                 value={value as string}
                 onChange={onChange}
                 onBlur={onBlur}

@@ -23,7 +23,9 @@ export const formSchema = z.object({
     .string({ required_error: "url required" })
     .url({ message: "enter valid URL" }),
   companyLogo: z
-    .instanceof(FileList)
+    .custom<FileList>((value) => value instanceof FileList, {
+      message: "Company logo is required",
+    })
     .refine((files) => files?.length > 0, "Company logo is required")
     .refine((files) => {
       const file = files[0];

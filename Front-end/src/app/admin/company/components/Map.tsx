@@ -51,6 +51,7 @@ import {
   uploadToCloudinary,
 } from "../utils/imageUpload";
 import axiosInstance from "@/utils/axios";
+import { toast, Toaster } from "sonner";
 
 const customIcon = L.icon({
   iconUrl:
@@ -102,8 +103,9 @@ export const Map = () => {
   const [profileReview, setProfileReview] = useState<string>("");
   const [imagesReview, setImagesReview] = useState<string[]>([]);
   const [isNext, setIsNext] = useState(false);
-  const [companyInfo] = useState<CompanyInfoType>();
   const markerRef = useRef<LeafletMarker | null>(null);
+  const [isLoading, setIsloading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (markerRef.current) {
@@ -200,15 +202,18 @@ export const Map = () => {
   const handPreStep = () => setIsNext(false);
 
   const onnext = async (values: z.infer<typeof formSchema>) => {
+    setIsloading(true);
     const { companyLogo } = values;
 
     const logoFile = companyLogo?.[0];
     const uploadedLogoUrl = await handleProfileToCloud(logoFile);
     setValue({ ...values, companyLogo: uploadedLogoUrl as FileList });
+    setIsloading(false);
     handlNextStep();
   };
 
   const onSubmit = async (values: z.infer<typeof step2formSchema>) => {
+    setIsloading(true);
     const imageUrls = await uploadToCloudinary(selectedImages);
 
     const updatedValues = {
@@ -245,11 +250,14 @@ export const Map = () => {
       companyLogo: finalData.companyLogo,
     });
     console.log(res.data, "created company");
+    setIsloading(false);
+    toast("company has been created.");
+    setOpen(false);
   };
-  console.log(companyInfo, "final data");
 
   return (
     <div className="w-screen h-screen flex">
+      <Toaster />
       <MapContainer
         className=" size-full z-10 "
         center={[47.92, 106.91]}
@@ -266,7 +274,7 @@ export const Map = () => {
               </p>
               <div className="flex flex-col size-fit gap-3 items-end ">
                 <h1 className=" text-[14px]">{address}</h1>
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger>
                     <div className="p-[3px] relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
@@ -276,7 +284,7 @@ export const Map = () => {
                     </div>
                   </DialogTrigger>
                   <DialogContent
-                    className="flex flex-col size-fit min-w-[466px] backdrop-blur-lg bg-[#111827]/30 "
+                    className={`flex flex-col size-fit min-w-[466px] backdrop-blur-lg bg-[#111827]/30 `}
                     onInteractOutside={(e) => {
                       e.preventDefault();
                     }}
@@ -292,121 +300,132 @@ export const Map = () => {
                               onSubmit={Step2form.handleSubmit(onSubmit)}
                               className="w-full"
                             >
-                              <div className=" flex flex-col gap-5">
-                                <FormField
-                                  control={Step2form.control}
-                                  name="images"
-                                  render={({ field }) => (
-                                    <FormItem className="flex-col flex items-start pb-[20px]">
-                                      <FormLabel className="text-[#e3e8ffe6] ">
-                                        Add detail images 10/
-                                        {imagesReview.length}
-                                      </FormLabel>
-                                      <FormControl>
-                                        <div className="flex flex-col items-end justify-end gap-2 w-full">
-                                          <div className="flex gap-3 size-fit">
-                                            {imagesReview.length === 0 ? (
-                                              <div className="flex justify-center items-center border-2 border-[#E4E4E7] border-dashed w-[460px] h-[250px] text-[14px] rounded-md">
-                                                Add images, limit is 10 🤔
-                                              </div>
-                                            ) : (
-                                              <div className="relative w-full">
-                                                <Carousel className="w-[460px]">
-                                                  <CarouselContent className="w-full ml-0">
-                                                    {imagesReview.map(
-                                                      (
-                                                        el: string,
-                                                        index: number
-                                                      ) => (
-                                                        <CarouselItem
-                                                          key={index}
-                                                          className="pl-0"
-                                                        >
-                                                          <div className="relative">
-                                                            <Image
-                                                              className="h-[250px] w-full rounded-md object-cover"
-                                                              src={el}
-                                                              alt={`preview-${index}`}
-                                                              width={800}
-                                                              height={250}
-                                                            />
-                                                            <button
-                                                              onClick={() =>
-                                                                removeImage(
-                                                                  index
-                                                                )
-                                                              }
-                                                              className="absolute top-2 right-2 bg-white/80 hover:bg-white p-1.5 rounded-full shadow-md transition-colors"
-                                                            >
-                                                              <X className="w-4 h-4 text-red-500" />
-                                                            </button>
-                                                          </div>
-                                                        </CarouselItem>
-                                                      )
-                                                    )}
-                                                  </CarouselContent>
-                                                  <CarouselPrevious className="left-2" />
-                                                  <CarouselNext className="right-2" />
-                                                </Carousel>
-                                              </div>
-                                            )}
-                                          </div>
+                              <div
+                                className={` ${isLoading ? "blur-xs" : null}`}
+                              >
+                                <div className=" flex flex-col gap-5">
+                                  <FormField
+                                    control={Step2form.control}
+                                    name="images"
+                                    render={({ field }) => (
+                                      <FormItem className="flex-col flex items-start pb-[20px]">
+                                        <FormLabel className="text-[#e3e8ffe6] ">
+                                          Add detail images 10/
+                                          {imagesReview.length}
+                                        </FormLabel>
+                                        <FormControl>
+                                          <div className="flex flex-col items-end justify-end gap-2 w-full">
+                                            <div className="flex gap-3 size-fit">
+                                              {imagesReview.length === 0 ? (
+                                                <div className="flex justify-center items-center border-2 border-[#E4E4E7] border-dashed w-[460px] h-[250px] text-[14px] rounded-md">
+                                                  Add images, limit is 10 🤔
+                                                </div>
+                                              ) : (
+                                                <div className="relative w-full">
+                                                  <Carousel className="w-[460px]">
+                                                    <CarouselContent className="w-full ml-0">
+                                                      {imagesReview.map(
+                                                        (
+                                                          el: string,
+                                                          index: number
+                                                        ) => (
+                                                          <CarouselItem
+                                                            key={index}
+                                                            className="pl-0"
+                                                          >
+                                                            <div className="relative">
+                                                              <Image
+                                                                className="h-[250px] w-full rounded-md object-cover"
+                                                                src={el}
+                                                                alt={`preview-${index}`}
+                                                                width={800}
+                                                                height={250}
+                                                              />
+                                                              <button
+                                                                onClick={() =>
+                                                                  removeImage(
+                                                                    index
+                                                                  )
+                                                                }
+                                                                className="absolute top-2 right-2 bg-white/80 hover:bg-white p-1.5 rounded-full shadow-md transition-colors"
+                                                              >
+                                                                <X className="w-4 h-4 text-red-500" />
+                                                              </button>
+                                                            </div>
+                                                          </CarouselItem>
+                                                        )
+                                                      )}
+                                                    </CarouselContent>
+                                                    <CarouselPrevious className="left-2" />
+                                                    <CarouselNext className="right-2" />
+                                                  </Carousel>
+                                                </div>
+                                              )}
+                                            </div>
 
-                                          <div
-                                            className={`flex items-center justify-end gap-40 w-full ${
-                                              imagesReview.length === 10 &&
-                                              "hidden"
-                                            }`}
-                                          >
-                                            <FormMessage />
-                                            <div className="relative">
-                                              <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-                                                Add image
-                                              </button>
-                                              <Input
-                                                type="file"
-                                                multiple
-                                                accept="image/*"
-                                                className="opacity-0 w-20 h-full absolute top-0 left-0 z-20 cursor-pointer text-[#e3e8ffe6]"
-                                                onChange={(e) => {
-                                                  const files = Array.from(
-                                                    e.target.files || []
-                                                  ).slice(0, 10);
+                                            <div
+                                              className={`flex items-center justify-end gap-40 w-full ${
+                                                imagesReview.length === 10 &&
+                                                "hidden"
+                                              }`}
+                                            >
+                                              <FormMessage />
+                                              <div className="relative">
+                                                <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                                                  Add image
+                                                </button>
+                                                <Input
+                                                  type="file"
+                                                  multiple
+                                                  accept="image/*"
+                                                  className="opacity-0 w-20 h-full absolute top-0 left-0 z-20 cursor-pointer text-[#e3e8ffe6]"
+                                                  onChange={(e) => {
+                                                    const files = Array.from(
+                                                      e.target.files || []
+                                                    ).slice(0, 10);
 
-                                                  const fileURLs = files.map(
-                                                    (file) =>
-                                                      URL.createObjectURL(file)
-                                                  );
-                                                  setImagesReview((prev) => [
-                                                    ...prev,
-                                                    ...fileURLs,
-                                                  ]);
-                                                  setSelectedImages((prev) => [
-                                                    ...prev,
-                                                    ...files,
-                                                  ]);
-                                                  Step2form.setValue("images", [
-                                                    ...selectedImages,
-                                                    ...files,
-                                                  ]);
-                                                  field.onChange([
-                                                    ...selectedImages,
-                                                    ...files,
-                                                  ]);
-                                                }}
-                                              />
+                                                    const fileURLs = files.map(
+                                                      (file) =>
+                                                        URL.createObjectURL(
+                                                          file
+                                                        )
+                                                    );
+                                                    setImagesReview((prev) => [
+                                                      ...prev,
+                                                      ...fileURLs,
+                                                    ]);
+                                                    setSelectedImages(
+                                                      (prev) => [
+                                                        ...prev,
+                                                        ...files,
+                                                      ]
+                                                    );
+                                                    Step2form.setValue(
+                                                      "images",
+                                                      [
+                                                        ...selectedImages,
+                                                        ...files,
+                                                      ]
+                                                    );
+                                                    field.onChange([
+                                                      ...selectedImages,
+                                                      ...files,
+                                                    ]);
+                                                  }}
+                                                />
+                                              </div>
                                             </div>
                                           </div>
-                                        </div>
-                                      </FormControl>
-                                    </FormItem>
-                                  )}
+                                        </FormControl>
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                                <Step2
+                                  control={Step2form.control}
+                                  name="categories"
                                 />
                               </div>
-                              <Step2
-                                control={Step2form.control}
-                                name="categories"
-                              />
                             </form>
                           </Form>
                           <div className=" w-full justify-between flex pt-5">
@@ -419,9 +438,11 @@ export const Map = () => {
 
                             <button
                               onClick={() => Step2form.handleSubmit(onSubmit)()}
-                              className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+                              className={`inline-flex h-12 animate-shimmer ${
+                                isLoading ? "animate-pulse" : null
+                              } items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50`}
                             >
-                              Submit
+                              {isLoading ? "submitting" : "submit"}
                             </button>
                           </div>
                         </div>
@@ -431,68 +452,72 @@ export const Map = () => {
                             onSubmit={form.handleSubmit(onnext)}
                             className="w-full"
                           >
-                            <FormField
-                              control={form.control}
-                              name="companyLogo"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-col items-start w-full pb-[20px]">
-                                  <FormLabel className="text-[#e3e8ffe6]">
-                                    Company Logo
-                                  </FormLabel>
-                                  <FormControl>
-                                    <div className="relative flex justify-center items-center size-[160px]">
-                                      <div className="flex justify-center items-center border-2 border-[#E4E4E7] border-dashed size-[160px] rounded-full absolute z-20">
-                                        <Input
-                                          type="file"
-                                          accept="image/*"
-                                          className="rounded-full opacity-0 size-[160px] cursor-pointer"
-                                          onChange={(e) => {
-                                            const files = e.target.files;
-                                            if (!files || files.length === 0)
-                                              return;
+                            <div className={` ${isLoading ? "blur-xs" : null}`}>
+                              <FormField
+                                control={form.control}
+                                name="companyLogo"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-col items-start w-full pb-[20px]">
+                                    <FormLabel className="text-[#e3e8ffe6]">
+                                      Company Logo
+                                    </FormLabel>
+                                    <FormControl>
+                                      <div className="relative flex justify-center items-center size-[160px]">
+                                        <div className="flex justify-center items-center border-2 border-[#E4E4E7] border-dashed size-[160px] rounded-full absolute z-20">
+                                          <Input
+                                            type="file"
+                                            accept="image/*"
+                                            className="rounded-full opacity-0 size-[160px] cursor-pointer"
+                                            onChange={(e) => {
+                                              const files = e.target.files;
+                                              if (!files || files.length === 0)
+                                                return;
 
-                                            // Create a new DataTransfer object to properly set the files
-                                            const dataTransfer =
-                                              new DataTransfer();
-                                            dataTransfer.items.add(files[0]);
+                                              const dataTransfer =
+                                                new DataTransfer();
+                                              dataTransfer.items.add(files[0]);
 
-                                            // Update the input's files
-                                            e.target.files = dataTransfer.files;
+                                              e.target.files =
+                                                dataTransfer.files;
 
-                                            // Update form state and preview
-                                            field.onChange(dataTransfer.files);
-                                            handleProfileImage(e);
-                                          }}
+                                              field.onChange(
+                                                dataTransfer.files
+                                              );
+                                              handleProfileImage(e);
+                                            }}
+                                          />
+                                        </div>
+                                        <Camera
+                                          className={`z-10 text-[#e3e8ffe6]/50 ${
+                                            profileReview && "hidden"
+                                          }`}
                                         />
+                                        {profileReview && (
+                                          <Image
+                                            className="size-[160px] absolute z-10 rounded-full object-cover"
+                                            src={profileReview}
+                                            alt="preview"
+                                            width={160}
+                                            height={160}
+                                          />
+                                        )}
                                       </div>
-                                      <Camera
-                                        className={`z-10 text-[#e3e8ffe6]/50 ${
-                                          profileReview && "hidden"
-                                        }`}
-                                      />
-                                      {profileReview && (
-                                        <Image
-                                          className="size-[160px] absolute z-10 rounded-full object-cover"
-                                          src={profileReview}
-                                          alt="preview"
-                                          width={160}
-                                          height={160}
-                                        />
-                                      )}
-                                    </div>
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <Step1 control={form.control} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <Step1 control={form.control} />
+                            </div>
 
                             <div className=" flex pt-5">
                               <Button
-                                className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-[#e3e8ffe6] transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 w-full"
+                                className={` ${
+                                  isLoading ? "animate-pulse blur-none" : null
+                                } inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-[#e3e8ffe6] transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 w-full`}
                                 type="submit"
                               >
-                                Submit
+                                {isLoading ? "please wait" : "continue"}
                               </Button>
                             </div>
                           </form>

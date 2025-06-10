@@ -53,7 +53,7 @@ export const CompanyDetail = () => {
   };
   useEffect(() => {
     getCompanyId();
-  }, []);
+  }, [id]);
   console.log(data, "data");
 
   return (
