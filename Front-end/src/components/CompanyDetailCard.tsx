@@ -38,7 +38,13 @@ interface Company {
   companyLogo: string;
 }
 
-export const CompanyDetailCard = ({ company }: { company: Company }) => {
+export const CompanyDetailCard = ({
+  company,
+  onclick,
+}: {
+  company: Company;
+  onclick: () => void;
+}) => {
   const [categoryIconsData, setCategoryIconsData] = useState<CategoryData[]>(
     []
   );
@@ -61,8 +67,8 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
     FetchData();
   }, [company?.category]);
   return (
-    <div className="w-full">
-      <div className="w-full h-fi rounded-[12px] shadow-lg border-2  backdrop-blur-lg bg-[#111827]/30  flex">
+    <div onClick={onclick} className="w-full">
+      <div className="w-full h-fit rounded-[12px] shadow-lg border-2  backdrop-blur-lg bg-[#111827]/30  flex">
         <Carousel className="w-[50%] h-fit">
           <CarouselContent className="w-full h-fit rounded-[12px]">
             {company.images.map((image: string, index: number) => (
@@ -97,7 +103,6 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
               <span>
                 <MapPin className="size-5 inline text-[#e3e8ffe6]" />
               </span>
-              {"   "}
               {company.location[0].address}
             </p>
           </div>

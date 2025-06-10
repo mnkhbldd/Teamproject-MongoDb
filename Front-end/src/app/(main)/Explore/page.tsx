@@ -1,15 +1,16 @@
 "use client";
 
 import { SideBarExplore } from "@/app/(main)/Explore/components/SideBarExplore";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const MapWrapper = dynamic(
-  () => import('./components/MapWrapper'),
-  { 
-    ssr: false,
-    loading: () => <div className="w-full h-full bg-gray-100 flex items-center justify-center">Loading map...</div>
-  }
-);
+const MapWrapper = dynamic(() => import("./components/MapWrapper"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+      Loading map...
+    </div>
+  ),
+});
 
 export default function ExplorePage() {
   return (

@@ -99,7 +99,7 @@ export const BookingDate = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4">
+    <div className="w-full">
       <div className="mb-8 p-4 bg-gray-100 rounded-lg">
         <h3 className="text-lg font-semibold mb-2">📅 Booked Time Slots</h3>
         {bookings.length > 0 ? (
