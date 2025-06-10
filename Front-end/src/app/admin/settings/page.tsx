@@ -1,0 +1,356 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
+import { Eye, Plus, Save, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface CompanyData {
+  logo: string;
+  name: string;
+  images: string[];
+  address: string;
+  website: string;
+  facebook: string;
+  instagram: string;
+  phone: string;
+  about: string;
+}
+
+const initialData: CompanyData = {
+  logo: "/placeholder.svg?height=64&width=64",
+  name: "Company Name",
+  images: [
+    "/placeholder.svg?height=256&width=400",
+    "/placeholder.svg?height=256&width=400",
+  ],
+  address: "han Uul Dvvreg",
+  website: "website.com",
+  facebook: "facebook",
+  instagram: "instagram",
+  phone: "(+976) 99999999",
+  about:
+    "At Elevate Bootcamp we firmly believe in the power of our unique group training environment. Our aim is elevate your fitness level as well as your love of exercise. For us it's simple...Find an activity you want to do, a workout that challenges you, a coach that motivates you and a community that inspires & supports you.",
+};
+
+export default function Settings() {
+  const [company, setCompany] = useState<CompanyData[]>();
+  const getCompanyDetail = async () => {
+    try {
+      const { data } = await axios.get("http://logalhost:8000");
+      setCompany(data.details);
+    } catch (err: any) {
+      console.log(err.message);
+    }
+  };
+  useEffect(() => {
+    getCompanyDetail();
+  }, []);
+
+  const [data, setData] = useState<CompanyData>(initialData);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const handleInputChange = (field: keyof CompanyData, value: string) => {
+    setData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageChange = (index: number, value: string) => {
+    const newImages = [...data.images];
+    newImages[index] = value;
+    setData((prev) => ({ ...prev, images: newImages }));
+  };
+
+  const addImage = () => {
+    setData((prev) => ({ ...prev, images: [...prev.images, ""] }));
+  };
+
+  const removeImage = (index: number) => {
+    setData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSave = () => {
+    console.log("Saving data:", data);
+    alert("Data saved successfully!");
+  };
+
+  if (showPreview) {
+    return (
+      <div className="w-screen h-screen bg-gray-200 rounded-lg">
+        <div className="max-w-4xl mx-auto p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Preview</h1>
+            <Button onClick={() => setShowPreview(false)}>Back to Edit</Button>
+          </div>
+
+          {/* Simple Preview */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4 mb-6">
+                <img
+                  src={data.logo || "/placeholder.svg"}
+                  alt="Logo"
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+                <h2 className="text-3xl font-bold">{data.name}</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold mb-2">Images</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {data.images.map((img, i) => (
+                      <img
+                        key={i}
+                        src={img || "/placeholder.svg"}
+                        alt={`Image ${i + 1}`}
+                        className="w-full h-24 object-cover rounded"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold mb-2">Contact Info</h3>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <strong>Address:</strong> {data.address}
+                    </p>
+                    <p>
+                      <strong>Website:</strong> {data.website}
+                    </p>
+                    <p>
+                      <strong>Facebook:</strong> {data.facebook}
+                    </p>
+                    <p>
+                      <strong>Instagram:</strong> {data.instagram}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong> {data.phone}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="font-semibold mb-2">About</h3>
+                <p className="text-sm text-gray-600">{data.about}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <ScrollArea className="w-screen h-screen bg-gray-200 rounded-lg">
+      <div className="h-screen max-w-4xl mx-auto p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Edit Company Details</h1>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowPreview(true)}>
+              <Eye className="w-4 h-4 mr-2" />
+              Preview
+            </Button>
+            <Button onClick={handleSave}>
+              <Save className="w-4 h-4 mr-2" />
+              Save
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          {/* Basic Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Basic Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-col gap-1">
+                <Label htmlFor="logo">Logo</Label>
+                <div className="flex items-center gap-4">
+                  {data.logo && (
+                    <img
+                      src={data.logo || "/placeholder.svg"}
+                      alt="Logo preview"
+                      className="w-16 h-16 rounded-full object-cover border"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <Input
+                      id="logo"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            const result = event.target?.result as string;
+                            handleInputChange("logo", result);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <Label htmlFor="name">Company Name</Label>
+                <Input
+                  id="name"
+                  value={data.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  placeholder="Enter company name"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Images */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Images
+                <Button size="sm" onClick={addImage}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Image
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {data.images.map((image, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-4 border rounded-lg"
+                >
+                  {image && (
+                    <img
+                      src={image || "/placeholder.svg"}
+                      alt={`Preview ${index + 1}`}
+                      className="w-20 h-20 object-cover rounded border"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            const result = event.target?.result as string;
+                            handleImageChange(index, result);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="cursor-pointer"
+                    />
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => removeImage(index)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Contact Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Contact Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  value={data.address}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
+                  placeholder="Enter address"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  value={data.website}
+                  onChange={(e) => handleInputChange("website", e.target.value)}
+                  placeholder="Enter website"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="facebook">Facebook</Label>
+                  <Input
+                    id="facebook"
+                    value={data.facebook}
+                    onChange={(e) =>
+                      handleInputChange("facebook", e.target.value)
+                    }
+                    placeholder="Enter Facebook handle"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="instagram">Instagram</Label>
+                  <Input
+                    id="instagram"
+                    value={data.instagram}
+                    onChange={(e) =>
+                      handleInputChange("instagram", e.target.value)
+                    }
+                    placeholder="Enter Instagram handle"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  value={data.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  placeholder="Enter phone number"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* About */}
+          <Card>
+            <CardHeader>
+              <CardTitle>About</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={data.about}
+                onChange={(e) => handleInputChange("about", e.target.value)}
+                placeholder="Enter company description"
+                rows={6}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </ScrollArea>
+  );
+}
