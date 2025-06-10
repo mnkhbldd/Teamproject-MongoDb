@@ -42,6 +42,7 @@ const ExploreMap = () => {
 
     FetchData();
   }, []);
+  console.log(data);
 
   return (
     <div className="w-full h-full flex rounded-lg">

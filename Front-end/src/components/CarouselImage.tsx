@@ -4,52 +4,28 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const carouselItems = [
-  {
-    id: 1,
-    image: "/fitt.webp",
-  },
-  {
-    id: 2,
-    image: "/fitt.webp",
-  },
-  {
-    id: 3,
-    image: "/fitt.webp",
-  },
-  {
-    id: 4,
-    image: "/fitt.webp",
-  },
-  {
-    id: 5,
-    image: "/fitt.webp",
-  },
-  {
-    id: 6,
-    image: "/fitt.webp",
-  },
-  {
-    id: 7,
-    image: "/fitt.webp",
-  },
-];
+export const CarouselImage = ({
+  imageSrc,
+}: {
+  imageSrc: string[] | undefined;
+}) => {
+  const carouselItems = imageSrc;
+  console.log(carouselItems);
 
-export const CarouselImage = () => {
   const [currentIndex, setCurrentIndex] = useState(2); // Start with middle item
   const [isAnimating, setIsAnimating] = useState(false);
 
   const nextSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrentIndex((prev) => (prev + 1) % carouselItems.length);
+    setCurrentIndex((prev) => (prev + 1) % carouselItems!.length);
   };
 
   const prevSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentIndex(
-      (prev) => (prev - 1 + carouselItems.length) % carouselItems.length
+      (prev) => (prev - 1 + carouselItems!.length) % carouselItems!.length
     );
   };
 
@@ -139,11 +115,11 @@ export const CarouselImage = () => {
 
             {/* Cards */}
             <div className="relative w-full h-full flex items-center justify-center">
-              {carouselItems.map((item, index) => {
+              {carouselItems?.map((item: string, index: number) => {
                 const style = getCardStyle(index);
                 return (
                   <div
-                    key={item.id}
+                    key={index}
                     className="absolute w-150 h-100 rounded-2xl shadow-2xl cursor-pointer transition-all duration-500 ease-out overflow-hidden bg-white"
                     style={style}
                     onClick={() => goToSlide(index)}
@@ -151,7 +127,7 @@ export const CarouselImage = () => {
                     {/* Image */}
                     <div className="relative w-full h-full">
                       <Image
-                        src={item.image || "/placeholder.svg"}
+                        src={item || "/placeholder.svg"}
                         alt="image"
                         fill
                         className="object-cover rounded-2xl"
