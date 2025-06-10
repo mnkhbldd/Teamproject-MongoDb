@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import axiosInstance from "@/utils/axios";
 import { MiniInfoCard } from "./MiniInfoCard";
+import { useRouter } from "next/navigation";
 
 interface Company {
   _id: string;
@@ -28,6 +29,7 @@ interface Company {
 }
 
 const ExploreMap = () => {
+  const router = useRouter();
   const [data, setData] = useState<Company[]>();
 
   useEffect(() => {
@@ -43,7 +45,9 @@ const ExploreMap = () => {
     FetchData();
   }, []);
   console.log(data);
-
+  const jumpToDetail = (_id: string) => {
+    router.push(`/Company/${_id}`);
+  };
   return (
     <div className="w-full h-full flex rounded-lg">
       <MapContainer
@@ -61,26 +65,27 @@ const ExploreMap = () => {
         {data && (
           <>
             {data.map((el: Company) => (
-              <Marker
-                key={el._id}
-                position={[
-                  el.location[0].coordinate[0],
-                  el.location[0].coordinate[1],
-                ]}
-                icon={L.icon({
-                  iconUrl: `${el.companyLogo}`,
-                  iconSize: [60, 60],
-                  iconAnchor: [16, 32],
-                  popupAnchor: [0, -32],
-                  className: " rounded-full object-cover",
-                })}
-              >
-                <MiniInfoCard
-                  imageUrl={el.companyLogo}
-                  name={el.name}
-                  location={el.location[0].address}
-                />
-              </Marker>
+              <div key={el._id} onClick={() => jumpToDetail(el._id)}>
+                <Marker
+                  position={[
+                    el.location[0].coordinate[0],
+                    el.location[0].coordinate[1],
+                  ]}
+                  icon={L.icon({
+                    iconUrl: `${el.companyLogo}`,
+                    iconSize: [60, 60],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32],
+                    className: " rounded-full object-cover",
+                  })}
+                >
+                  <MiniInfoCard
+                    imageUrl={el.companyLogo}
+                    name={el.name}
+                    location={el.location[0].address}
+                  />
+                </Marker>
+              </div>
             ))}
           </>
         )}
