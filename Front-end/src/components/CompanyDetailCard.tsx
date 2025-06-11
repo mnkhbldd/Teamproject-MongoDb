@@ -67,7 +67,7 @@ export const CompanyDetailCard = ({
     FetchData();
   }, [company?.category]);
   return (
-    <div onClick={onclick} className="w-full">
+    <div className="w-full">
       <div className="w-full h-fit rounded-[12px] shadow-lg border-2  backdrop-blur-lg bg-[#111827]/30  flex">
         <Carousel className="w-[50%] h-fit">
           <CarouselContent className="w-full h-fit rounded-[12px]">
@@ -88,7 +88,7 @@ export const CompanyDetailCard = ({
           <CarouselPrevious className="ml-15 size-5 rounded-[8px]" />
           <CarouselNext className="mr-18 size-5 rounded-[8px]" />
         </Carousel>
-        <div className="w-[50%] p-2 flex flex-col gap-2">
+        <div onClick={onclick} className="w-[50%] p-2 flex flex-col gap-2">
           <div className="flex gap-2 items-center">
             <Avatar>
               <AvatarImage src={company.companyLogo} className="object-cover" />
