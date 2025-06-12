@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 const reviewSchema = new mongoose.Schema({
   company: {
@@ -7,8 +7,8 @@ const reviewSchema = new mongoose.Schema({
     required: true,
   },
   user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
+
     required: true,
   },
   name: {

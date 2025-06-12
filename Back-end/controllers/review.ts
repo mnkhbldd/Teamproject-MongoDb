@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import ReviewModel from "../model/review";
 import CompanyModel from "../model/company";
 
@@ -7,8 +7,9 @@ export const createReview = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { companyId, name, starCount, comment } = req.body;
+    const {companyId, name, starCount, comment} = req.body;
     const userId = (req as any).userId;
+    console.log(userId);
 
     if (!userId) {
       res.status(401).json({
@@ -28,8 +29,8 @@ export const createReview = async (
 
     await CompanyModel.findByIdAndUpdate(
       companyId,
-      { $push: { reviews: review._id } },
-      { new: true }
+      {$push: {reviews: review._id}},
+      {new: true}
     );
 
     res.status(200).json({
@@ -50,11 +51,11 @@ export const getReviewsByCompany = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { companyId } = req.params;
+    const {companyId} = req.params;
 
-    const reviews = await ReviewModel.find({ company: companyId })
+    const reviews = await ReviewModel.find({company: companyId})
       .populate("user", "name")
-      .sort({ createdAt: -1 });
+      .sort({createdAt: -1});
 
     res.status(200).json({
       success: true,
