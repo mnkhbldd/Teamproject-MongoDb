@@ -120,6 +120,7 @@ export default function Home() {
               quaerat, quos autem eum, earum recusandae facere! Sapiente, at
               veniam!
             </p>
+            <p>about the company</p>
           </div>
         </div>
       </div>
