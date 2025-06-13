@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "@clerk/backend";
+import {Request, Response, NextFunction} from "express";
+import {verifyToken} from "@clerk/backend";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -16,21 +16,20 @@ export const verifyClerkToken = async (
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader?.replace("Bearer ", "");
-
     if (!token) {
       res
         .status(401)
-        .json({ success: false, message: "Authentication token missing" });
+        .json({success: false, message: "Authentication token missing"});
       return;
     }
-
+    console.log(token, "token");
     const payload = await verifyToken(token, {
       secretKey: process.env.CLERK_SECRET_KEY!,
     });
-
     const userId = payload.sub;
+    console.log(userId);
     if (!userId || typeof userId !== "string") {
-      res.status(401).json({ success: false, message: "Invalid token" });
+      res.status(401).json({success: false, message: "Invalid token"});
       return;
     }
 
@@ -38,6 +37,6 @@ export const verifyClerkToken = async (
     next();
   } catch (error) {
     console.error("Token verification failed:", error);
-    res.status(401).json({ success: false, message: "Authentication failed" });
+    res.status(401).json({success: false, message: "Authentication failed"});
   }
 };
