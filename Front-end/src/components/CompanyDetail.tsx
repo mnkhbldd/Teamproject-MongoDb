@@ -31,6 +31,7 @@ interface Company {
   ];
   images: string[];
   companyLogo: string;
+  clock: number;
 }
 export const CompanyDetail = () => {
   const [data, setData] = useState<Company>();
@@ -79,6 +80,7 @@ export const CompanyDetail = () => {
                 website={data.socialMedia[0].website}
                 address={data.location[0].address}
                 number={data.phoneNumber}
+                clock={data.clock}
               />
             )}
           </div>

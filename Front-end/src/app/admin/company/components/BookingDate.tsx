@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { format, addDays, isWeekend, startOfDay, isSameDay } from "date-fns";
 import { ChevronRight } from "lucide-react";

@@ -1,4 +1,5 @@
 import {
+  Clock,
   Facebook,
   Instagram,
   MapPin,
@@ -21,6 +22,7 @@ export const MapInfo = ({
   website,
   number,
   position,
+  clock,
 }: {
   facebook: string;
   address: string;
@@ -28,6 +30,7 @@ export const MapInfo = ({
   website: string;
   number: string;
   position: number[];
+  clock: number;
 }) => {
   return (
     <div className="box pt-4 px-2 w-full flex flex-col gap-5 ">
@@ -91,6 +94,12 @@ export const MapInfo = ({
           <Phone className="w-5 h-5" />
           <p className="relative text-gray-700 hover:text-cyan-600 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 hover:after:w-full after:h-0.5 after:bg-cyan-600 after:transition-all after:duration-300">
             (+976) {number}
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Clock className="w-5 h-5" />
+          <p className="relative text-gray-700 hover:text-cyan-600 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 hover:after:w-full after:h-0.5 after:bg-cyan-600 after:transition-all after:duration-300">
+            (9:00 - 18:00) {clock}
           </p>
         </div>
       </div>
