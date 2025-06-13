@@ -1,5 +1,10 @@
+import { AdminSettings } from "@/components/AdminSettings";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 export default function Settings() {
   return (
-    <div className="w-screen h-screen bg-green-500 rounded-lg">Settings</div>
+    <ScrollArea className="w-screen h-screen bg-gray-200 rounded-lg">
+      <AdminSettings />
+    </ScrollArea>
   );
 }
