@@ -8,6 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/Company/[id]",
   "/Explore",
   "/recommendation",
+  "/company(.*)",
   "/",
 ]);
 

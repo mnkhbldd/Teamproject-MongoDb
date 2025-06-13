@@ -138,7 +138,10 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 dark:bg-black dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden">
+      <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 dark:bg-black dark:bg-grid-white/[0.05]  justify-center relative overflow-hidden">
+        <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
+          What they tell about us{" "}
+        </p>
         <InfiniteMovingCards
           items={testimonials}
           direction="right"
