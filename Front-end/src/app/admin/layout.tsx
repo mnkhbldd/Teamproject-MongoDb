@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import LogoIconMain from "@/components/LogoIcon";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import { Link } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function AdminLayout({
   children,
@@ -89,9 +89,10 @@ export default function AdminLayout({
   );
 }
 export const Logo = () => {
+  const router = useRouter();
   return (
-    <a
-      href="/"
+    <div
+      onClick={() => router.push("/")}
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
     >
       <LogoIconMain />
@@ -102,16 +103,13 @@ export const Logo = () => {
       >
         Freely
       </motion.span>
-    </a>
+    </div>
   );
 };
 export const LogoIcon = () => {
   return (
-    <a
-      href="/"
-      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
-    >
+    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
       <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
-    </a>
+    </div>
   );
 };
