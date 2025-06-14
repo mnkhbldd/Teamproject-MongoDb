@@ -1,158 +1,206 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+
+// Define our data structure for metrics and their connection to chart data
+interface MetricData {
+  day: number;
+  newItems: number;
+  comments: number;
+  uploads: number;
+  feeds: number;
+}
+
+// Sample data that would connect metrics to chart
+const connectedData: MetricData[] = [
+  { day: 0, newItems: 60, comments: 45, uploads: 100, feeds: 15 },
+  { day: 1, newItems: 50, comments: 40, uploads: 95, feeds: 13 },
+  { day: 2, newItems: 65, comments: 50, uploads: 110, feeds: 16 },
+  { day: 3, newItems: 45, comments: 35, uploads: 85, feeds: 11 },
+  { day: 4, newItems: 40, comments: 30, uploads: 80, feeds: 10 },
+  { day: 5, newItems: 55, comments: 45, uploads: 105, feeds: 14 },
+  { day: 6, newItems: 45, comments: 35, uploads: 90, feeds: 12 },
+  { day: 7, newItems: 50, comments: 40, uploads: 95, feeds: 13 },
+  { day: 8, newItems: 40, comments: 35, uploads: 85, feeds: 11 },
+  { day: 9, newItems: 40, comments: 35, uploads: 85, feeds: 11 },
+];
+
+// Calculate totals to match the numbers in the image
+const metrics = {
+  Booking: 100, // Sum of all newItems in connectedData would equal this
+  comments: 100, // Sum of all comments in connectedData would equal this
+  uploads: 100, // Sum of all uploads in connectedData would equal this
+  Rating: 100, // Sum of all feeds in connectedData would equal this
+};
 
 const AdminDashboard = () => {
-  const campaignData = [
-    { day: 0, pv: 15, mac: 4 },
-    { day: 1, pv: 8, mac: 6 },
-    { day: 2, pv: 12, mac: 7 },
-    { day: 3, pv: 8, mac: 5 },
-    { day: 4, pv: 9, mac: 3 },
-    { day: 5, pv: 11, mac: 7 },
-    { day: 6, pv: 8, mac: 5 },
-    { day: 7, pv: 9, mac: 6 },
-    { day: 8, pv: 8, mac: 4 },
-    { day: 9, pv: 7, mac: 5 },
-  ];
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([
+    "newItems",
+    "uploads",
+  ]);
+
+  const toggleMetric = (metric: string) => {
+    if (selectedMetrics.includes(metric)) {
+      setSelectedMetrics(selectedMetrics.filter((m) => m !== metric));
+    } else {
+      setSelectedMetrics([...selectedMetrics, metric]);
+    }
+  };
 
   return (
-    <div className="w-screen bg-gray-200 h-screen rounded-lg">
-      <div className="mb-6 flex items-center justify-between px-4 pt-4">
-        <div>
-          <h1 className="text-3xl font-medium text-gray-700">Dashboard</h1>
-          <p className="text-gray-500">Welcome to angular application</p>
-        </div>
+    <div className="p-4 w-screen pr-20 h-screen">
+      <h2 className="text-4xl font-bold text-gray-600">Dashboard</h2>
+      <p className="pb-4">Company dashborad.</p>
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        <Card
+          className={`bg-green-300 cursor-pointer ${
+            selectedMetrics.includes("newItems") ? "ring-2 ring-black" : ""
+          }`}
+          onClick={() => toggleMetric("newItems")}
+        >
+          <div className="p-6">
+            <h3 className="text-4xl font-light text-white">
+              {metrics.Booking}
+            </h3>
+            <p className="text-sm text-white">Booking</p>
+          </div>
+        </Card>
+
+        <Card
+          className={`bg-[#67b7e7] cursor-pointer ${
+            selectedMetrics.includes("comments") ? "ring-2 ring-black" : ""
+          }`}
+          onClick={() => toggleMetric("comments")}
+        >
+          <div className="p-6">
+            <h3 className="text-4xl font-light text-white">
+              {metrics.comments}
+            </h3>
+            <p className="text-sm text-white">Comments</p>
+          </div>
+        </Card>
+
+        <Card
+          className={`bg-[#6c47c9] cursor-pointer ${
+            selectedMetrics.includes("uploads") ? "ring-2 ring-black" : ""
+          }`}
+          onClick={() => toggleMetric("uploads")}
+        >
+          <div className="p-6">
+            <h3 className="text-4xl font-light text-white">
+              {metrics.uploads}
+            </h3>
+            <p className="text-sm text-white">Uploads</p>
+          </div>
+        </Card>
+
+        <Card
+          className={`bg-red-300 cursor-pointer ${
+            selectedMetrics.includes("feeds") ? "ring-2 ring-black" : ""
+          }`}
+          onClick={() => toggleMetric("feeds")}
+        >
+          <div className="p-6">
+            <h3 className="text-4xl font-light text-white">{metrics.Rating}</h3>
+            <div className="inline-block px-2 py-0.5 rounded text-sm mt-1 text-white">
+              Rating
+            </div>
+          </div>
+        </Card>
       </div>
 
-      <div className="flex gap-4 px-8 w-screen p-10">
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-4">
-            <Card>
-              <CardContent className="p-6 w-80">
-                <div className="text-5xl font-light text-gray-500">521</div>
-                <div className="mt-2 text-sm text-gray-500">New Items</div>
-              </CardContent>
-            </Card>
+      <Card className="bg-white">
+        <div className="p-6">
+          <h2 className="text-lg font-medium mb-4">
+            Connected Data Visualization
+          </h2>
 
-            <Card className="bg-[hsl(250,60%,50%)] text-white">
-              <CardContent className="p-6 w-80">
-                <div>
-                  <div className="text-5xl font-light">930</div>
-                  <div className="mt-2 text-sm">Uploads</div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <Card className="bg-[hsl(199,89%,60%)] text-white">
-              <CardContent className="p-6 w-80">
-                <div className="text-5xl font-light">432</div>
-                <div className="mt-2 text-sm">Comments</div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6 w-80">
-                <div className="text-5xl font-light text-gray-500">129</div>
-                <div className="mt-2 text-sm text-gray-500">Feeds</div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        <div className="w-[60%] pr-8">
-          <Card className="">
-            <CardHeader className="pb-4">
-              <CardTitle>Latest Campaign</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer
-                config={{
-                  pv: {
-                    label: "PV",
-                    color: "hsl(199, 89%, 60%)", // Light blue color
-                  },
-                  mac: {
-                    label: "Mac",
-                    color: "hsl(250, 60%, 50%)", // Purple color
-                  },
-                }}
-                className="h-[250px] w-full"
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={connectedData}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               >
-                <AreaChart
-                  data={campaignData}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                  <defs>
-                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="hsl(199, 89%, 60%)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="hsl(199, 89%, 60%)"
-                        stopOpacity={0.2}
-                      />
-                    </linearGradient>
-                    <linearGradient id="colorMac" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="hsl(250, 60%, 50%)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="hsl(250, 60%, 50%)"
-                        stopOpacity={0.2}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis
-                    dataKey="day"
-                    axisLine={false}
-                    tickLine={false}
-                    tickMargin={10}
-                  />
-                  <YAxis
-                    domain={[0, 20]}
-                    axisLine={false}
-                    tickLine={false}
-                    tickMargin={10}
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
+                <defs>
+                  <linearGradient
+                    id="colorNewItems"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="green" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="green" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient
+                    id="colorComments"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#67b7e7" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#67b7e7" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="colorUploads" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6c47c9" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#6c47c9" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="colorFeeds" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="red" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="red" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
+
+                <XAxis dataKey="day" axisLine={false} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} />
+
+                {selectedMetrics.includes("newItems") && (
                   <Area
                     type="monotone"
-                    dataKey="mac"
-                    stackId="1"
-                    stroke="var(--color-mac)"
-                    fill="url(#colorMac)"
+                    dataKey="newItems"
+                    stroke="#d1d5db"
                     fillOpacity={1}
+                    fill="url(#colorNewItems)"
                   />
+                )}
+
+                {selectedMetrics.includes("comments") && (
                   <Area
                     type="monotone"
-                    dataKey="pv"
-                    stackId="1"
-                    stroke="var(--color-pv)"
-                    fill="url(#colorPv)"
+                    dataKey="comments"
+                    stroke="#67b7e7"
                     fillOpacity={1}
+                    fill="url(#colorComments)"
                   />
-                </AreaChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
+                )}
+
+                {selectedMetrics.includes("uploads") && (
+                  <Area
+                    type="monotone"
+                    dataKey="uploads"
+                    stroke="#6c47c9"
+                    fillOpacity={1}
+                    fill="url(#colorUploads)"
+                  />
+                )}
+
+                {selectedMetrics.includes("feeds") && (
+                  <Area
+                    type="monotone"
+                    dataKey="feeds"
+                    stroke="#93c5fd"
+                    fillOpacity={1}
+                    fill="url(#colorFeeds)"
+                  />
+                )}
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
