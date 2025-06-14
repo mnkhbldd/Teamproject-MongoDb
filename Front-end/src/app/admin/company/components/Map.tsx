@@ -52,23 +52,28 @@ import {
 } from "../utils/imageUpload";
 import axiosInstance from "@/utils/axios";
 import { toast, Toaster } from "sonner";
+import { MiniInfoCard } from "@/app/(main)/Explore/components/MiniInfoCard";
+import { useRouter } from "next/navigation";
 
-const customIcon = L.icon({
-  iconUrl:
-    "https://hips.hearstapps.com/hmg-prod/images/cristiano-ronaldo-of-portugal-reacts-as-he-looks-on-during-news-photo-1725633476.jpg?crop=0.666xw:1.00xh;0.180xw,0&resize=640:*",
-  iconSize: [60, 60],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-  className: " rounded-full",
-});
-const customIcon2 = L.icon({
-  iconUrl:
-    "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds",
-  iconSize: [60, 60],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-  className: " rounded-full",
-});
+interface Company {
+  _id: string;
+  name: string;
+  description: string;
+  location: Array<{
+    address: string;
+    coordinate: [number, number];
+  }>;
+  phoneNumber: string;
+  category: string[];
+  socialMedia: {
+    Facebook: string;
+    instagram: string;
+    website: string;
+  };
+  images: string[];
+  companyLogo: string;
+}
+
 const MarkerIcon = new L.DivIcon({
   className: "custom-div-icon",
   html: ReactDOMServer.renderToString(
@@ -76,25 +81,13 @@ const MarkerIcon = new L.DivIcon({
   ),
 });
 
-const initialData = [
-  {
-    latLng: [47.9222, 106.95] as LatLngTuple,
-    title: "messi",
-    icon: customIcon,
-  },
-  {
-    latLng: [47.9223, 106.918] as LatLngTuple,
-    title: "ronaldo",
-    icon: customIcon2,
-  },
-];
 type CompanyInfoType = z.infer<typeof formSchema> &
   z.infer<typeof step2formSchema>;
 
 export const Map = () => {
   const [clicked, setClicked] = useState<LatLngTuple | null>(null);
   const [address, setAddress] = useState("");
-  const [data] = useState(initialData);
+
   const [value, setValue] = useState<
     Partial<z.infer<typeof formSchema>> &
       Partial<z.infer<typeof step2formSchema>>
@@ -106,6 +99,11 @@ export const Map = () => {
   const markerRef = useRef<LeafletMarker | null>(null);
   const [isLoading, setIsloading] = useState(false);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  const jumpToDetail = (_id: string) => {
+    router.push(`/Company/${_id}`);
+  };
 
   useEffect(() => {
     if (markerRef.current) {
@@ -212,6 +210,21 @@ export const Map = () => {
     handlNextStep();
   };
 
+  const [myCompanies, setMyCompanies] = useState<Company[]>();
+
+  const FetchData = async () => {
+    try {
+      const res = await axiosInstance.get("/company/get-companies-by-user");
+      setMyCompanies(res.data.companies);
+    } catch (error) {
+      console.log("Error fetching companies:", error);
+    }
+  };
+
+  useEffect(() => {
+    FetchData();
+  }, []);
+
   const onSubmit = async (values: z.infer<typeof step2formSchema>) => {
     setIsloading(true);
     const imageUrls = await uploadToCloudinary(selectedImages);
@@ -253,6 +266,7 @@ export const Map = () => {
     setIsloading(false);
     toast("company has been created.");
     setOpen(false);
+    FetchData();
   };
 
   return (
@@ -534,13 +548,33 @@ export const Map = () => {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.jawg.io/5811666f-ea6e-421b-a1a8-c220b61f6b36/{z}/{x}/{y}{r}.png?access-token=uqeYaHBOlPqp13ESsgteE53obi4o78aMNktTHsvSRtv6g2DhywRCEzEIelnC7vhx"
         />
-        {data.map((el, index) => {
-          return (
-            <Marker key={index} icon={el.icon} position={el.latLng}>
-              <Popup>{el.title}</Popup>
-            </Marker>
-          );
-        })}
+        {myCompanies && (
+          <>
+            {myCompanies.map((el: Company) => (
+              <div key={el._id} onClick={() => jumpToDetail(el._id)}>
+                <Marker
+                  position={[
+                    el.location[0].coordinate[0],
+                    el.location[0].coordinate[1],
+                  ]}
+                  icon={L.icon({
+                    iconUrl: `${el.companyLogo}`,
+                    iconSize: [60, 60],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32],
+                    className: " rounded-full object-cover",
+                  })}
+                >
+                  <MiniInfoCard
+                    imageUrl={el.companyLogo}
+                    name={el.name}
+                    location={el.location[0].address}
+                  />
+                </Marker>
+              </div>
+            ))}
+          </>
+        )}
       </MapContainer>
     </div>
   );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { BookingListsAdmin } from "@/components/BookingListsAdmin";
 
 // Define our data structure for metrics and their connection to chart data
 interface MetricData {
@@ -50,9 +51,14 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="p-4 w-screen pr-20 h-screen">
-      <h2 className="text-4xl font-bold text-gray-600">Dashboard</h2>
-      <p className="pb-4">Company dashborad.</p>
+    <div className="p-4 space-y-8 w-screen pr-20 h-screen overflow-y-scroll">
+      <h2 className="text-4xl font-bold text-gray-600">
+        Dashboard{" "}
+        <p className="text-gray-600 text-sm mt-1">
+          List of all bookings in your company
+        </p>
+      </h2>
+
       <div className="grid grid-cols-4 gap-4 mb-6">
         <Card
           className={`bg-green-300 cursor-pointer ${
@@ -110,7 +116,6 @@ const AdminDashboard = () => {
           </div>
         </Card>
       </div>
-
       <Card className="bg-white">
         <div className="p-6">
           <h2 className="text-lg font-medium mb-4">
@@ -201,6 +206,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </Card>
+      <BookingListsAdmin />
     </div>
   );
 };

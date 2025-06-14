@@ -7,6 +7,7 @@ import { Eye, Plus, Save, Trash2 } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import Image from "next/image";
 
 interface CompanyData {
   logo: string;
@@ -109,10 +110,12 @@ export const AdminSettings = () => {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center gap-4 mb-6">
-              <img
+              <Image
                 src={data.logo || "/placeholder.svg"}
                 alt="Logo"
                 className="w-16 h-16 rounded-full object-cover"
+                width={64}
+                height={64}
               />
               <h2 className="text-3xl font-bold">{data.name}</h2>
             </div>
@@ -122,11 +125,13 @@ export const AdminSettings = () => {
                 <h3 className="font-semibold mb-2">Images</h3>
                 <div className="grid grid-cols-2 gap-2">
                   {data.images.map((img, i) => (
-                    <img
+                    <Image
                       key={i}
                       src={img || "/placeholder.svg"}
                       alt={`Image ${i + 1}`}
                       className="w-full h-24 object-cover rounded"
+                      width={400}
+                      height={256}
                     />
                   ))}
                 </div>
@@ -201,10 +206,12 @@ export const AdminSettings = () => {
               <Label htmlFor="logo">Logo</Label>
               <div className="flex items-center gap-4">
                 {data.logo && (
-                  <img
+                  <Image
                     src={data.logo || "/placeholder.svg"}
                     alt="Logo preview"
                     className="w-16 h-16 rounded-full object-cover border"
+                    width={64}
+                    height={64}
                   />
                 )}
                 <div className="flex-1">
@@ -259,10 +266,12 @@ export const AdminSettings = () => {
                 className="flex items-center gap-4 p-4 border rounded-lg"
               >
                 {image && (
-                  <img
+                  <Image
                     src={image || "/placeholder.svg"}
                     alt={`Preview ${index + 1}`}
                     className="w-20 h-20 object-cover rounded border"
+                    width={80}
+                    height={80}
                   />
                 )}
                 <div className="flex-1">

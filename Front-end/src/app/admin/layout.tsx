@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/sidebar";
 import {
-  IconArrowLeft,
   IconBrandTabler,
   IconSettings,
   IconUserBolt,
@@ -12,6 +11,7 @@ import { cn } from "@/lib/utils";
 import LogoIconMain from "@/components/LogoIcon";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import { Link } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -38,13 +38,6 @@ export default function AdminLayout({
       href: "/admin/reviews",
       icon: (
         <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
-    },
-    {
-      label: "Settings",
-      href: "/admin/settings",
-      icon: (
-        <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
   ];
@@ -76,7 +69,7 @@ export default function AdminLayout({
             <SidebarLink
               link={{
                 label: user.fullName!,
-                href: "#",
+                href: "/",
                 icon: (
                   <Image
                     src={user.imageUrl!}
@@ -98,7 +91,7 @@ export default function AdminLayout({
 export const Logo = () => {
   return (
     <a
-      href="#"
+      href="/"
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
     >
       <LogoIconMain />
@@ -115,7 +108,7 @@ export const Logo = () => {
 export const LogoIcon = () => {
   return (
     <a
-      href="#"
+      href="/"
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
     >
       <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />

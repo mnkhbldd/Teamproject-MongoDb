@@ -10,15 +10,26 @@ export const formSchema = z.object({
       message: "must be at least 5 characters.",
     })
     .max(200, { message: "too long" }),
-  phoneNumber: z.string({ required_error: "phone number required" }).min(8, {
-    message: "at least 8 characters.",
-  }),
-  Facebook: z.string().min(2, {
-    message: "must be at least 2 characters.",
-  }),
-  instagram: z.string().min(2, {
-    message: "must be at least 2 characters.",
-  }),
+  phoneNumber: z
+    .string({ required_error: "phone number required" })
+    .min(8, {
+      message: "at least 8 characters.",
+    })
+    .max(8, {
+      message: "Invalid phone number must be below 8 characters.",
+    }),
+  Facebook: z
+    .string()
+    .min(2, {
+      message: "must be at least 2 characters.",
+    })
+    .url({ message: "Must be website url" }),
+  instagram: z
+    .string()
+    .min(2, {
+      message: "must be at least 2 characters.",
+    })
+    .url({ message: "Must be website url" }),
   website: z
     .string({ required_error: "url required" })
     .url({ message: "enter valid URL" }),

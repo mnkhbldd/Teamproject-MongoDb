@@ -2,7 +2,7 @@
 
 import gsap from "gsap";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ReviewsPage from "./ReviewPage";
 import { CompanyName } from "./CompanyName";
 import { CarouselImage } from "./CarouselImage";
@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { BookingDate } from "@/app/admin/company/components/BookingDate";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
+
 interface Company {
   _id: string;
   name: string;
@@ -32,6 +33,7 @@ interface Company {
   images: string[];
   companyLogo: string;
 }
+
 export const CompanyDetail = () => {
   const [data, setData] = useState<Company>();
   useEffect(() => {
@@ -43,17 +45,19 @@ export const CompanyDetail = () => {
   }, []);
   const { id } = useParams();
 
-  const getCompanyId = async () => {
+  const getCompanyId = useCallback(async () => {
     try {
       const res = await axiosInstance.get(`/company/get-company/${id}`);
       setData(res.data.company);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [id, setData]);
+
   useEffect(() => {
     getCompanyId();
-  }, [id]);
+  }, [getCompanyId]);
+
   console.log(data, "data");
 
   return (
