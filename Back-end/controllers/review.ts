@@ -18,9 +18,10 @@ export const createReview = async (
       return;
     }
 
+    // Ensure the userId is a string
     const review = await ReviewModel.create({
       company: companyId,
-      user: userId,
+      user: userId.toString(),
       name,
       starCount,
       comment,

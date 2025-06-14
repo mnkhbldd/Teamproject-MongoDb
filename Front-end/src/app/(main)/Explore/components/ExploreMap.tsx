@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
 import { MiniInfoCard } from "./MiniInfoCard";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Company {
   _id: string;
@@ -30,7 +31,8 @@ interface Company {
 
 const ExploreMap = () => {
   const router = useRouter();
-  const [data, setData] = useState<Company[]>();
+  const [data, setData] = useState<Company[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const FetchData = async () => {
@@ -39,58 +41,62 @@ const ExploreMap = () => {
         setData(res.data.companies);
       } catch (error) {
         console.log("Error fetching companies:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     FetchData();
   }, []);
-  console.log(data);
   const jumpToDetail = (_id: string) => {
     router.push(`/Company/${_id}`);
   };
   return (
-    <div className="w-full h-full flex rounded-lg">
-      <MapContainer
-        className=" size-full z-10 "
-        center={[47.92, 106.91]}
-        zoom={14}
-        maxZoom={19}
-        minZoom={1}
-        attributionControl={false}
-      >
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.jawg.io/5811666f-ea6e-421b-a1a8-c220b61f6b36/{z}/{x}/{y}{r}.png?access-token=uqeYaHBOlPqp13ESsgteE53obi4o78aMNktTHsvSRtv6g2DhywRCEzEIelnC7vhx"
-        />
-        {data && (
-          <>
-            {data.map((el: Company) => (
-              <div key={el._id} onClick={() => jumpToDetail(el._id)}>
-                <Marker
-                  position={[
-                    el.location[0].coordinate[0],
-                    el.location[0].coordinate[1],
-                  ]}
-                  icon={L.icon({
-                    iconUrl: `${el.companyLogo}`,
-                    iconSize: [60, 60],
-                    iconAnchor: [16, 32],
-                    popupAnchor: [0, -32],
-                    className: " rounded-full object-cover",
-                  })}
-                >
-                  <MiniInfoCard
-                    imageUrl={el.companyLogo}
-                    name={el.name}
-                    location={el.location[0].address}
-                  />
-                </Marker>
-              </div>
-            ))}
-          </>
-        )}
-      </MapContainer>
-    </div>
+    <>
+      {isLoading && <LoadingSpinner />}
+      <div className="w-full h-full flex rounded-lg">
+        <MapContainer
+          className=" size-full z-10 "
+          center={[47.92, 106.91]}
+          zoom={14}
+          maxZoom={19}
+          minZoom={1}
+          attributionControl={false}
+        >
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://tile.jawg.io/5811666f-ea6e-421b-a1a8-c220b61f6b36/{z}/{x}/{y}{r}.png?access-token=uqeYaHBOlPqp13ESsgteE53obi4o78aMNktTHsvSRtv6g2DhywRCEzEIelnC7vhx"
+          />
+          {data && (
+            <>
+              {data.map((el: Company) => (
+                <div key={el._id} onClick={() => jumpToDetail(el._id)}>
+                  <Marker
+                    position={[
+                      el.location[0].coordinate[0],
+                      el.location[0].coordinate[1],
+                    ]}
+                    icon={L.icon({
+                      iconUrl: `${el.companyLogo}`,
+                      iconSize: [60, 60],
+                      iconAnchor: [16, 32],
+                      popupAnchor: [0, -32],
+                      className: " rounded-full object-cover",
+                    })}
+                  >
+                    <MiniInfoCard
+                      imageUrl={el.companyLogo}
+                      name={el.name}
+                      location={el.location[0].address}
+                    />
+                  </Marker>
+                </div>
+              ))}
+            </>
+          )}
+        </MapContainer>
+      </div>
+    </>
   );
 };
 

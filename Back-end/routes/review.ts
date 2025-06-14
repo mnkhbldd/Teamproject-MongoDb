@@ -1,9 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
-import {
-  createReview,
-  getReviewsByCompany,
-} from "../controllers/review";
+import { createReview, getReviewsByCompany } from "../controllers/review";
 import { verifyClerkToken } from "../middleware/checkClerkToken";
 
 export const reviewsRouter = express.Router();

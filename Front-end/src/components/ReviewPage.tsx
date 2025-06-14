@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Star, Send, CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import axiosInstance from "@/utils/axios";
+import { useParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 interface RatingData {
   stars: number;
@@ -20,18 +23,42 @@ interface RatingData {
 
 interface SuggestionFormData {
   name: string;
-  email: string;
+
   suggestion: string;
   rating: number;
 }
 
+interface Review {
+  _id: string;
+  name: string;
+  comment: string;
+  starCount: number;
+  createdAt: string;
+}
+
 export default function ReviewsPage() {
+  const { userId } = useAuth();
+  const params = useParams();
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  const fetchReview = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get(`/review/reviews/${params.id}`);
+      setReviews(res.data.reviews);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [params.id, setReviews]);
+
+  useEffect(() => {
+    fetchReview();
+  }, [fetchReview]);
+
   const overallRating = 5.0;
   const totalRatings = 127;
 
   const [formData, setFormData] = useState<SuggestionFormData>({
     name: "",
-    email: "",
     suggestion: "",
     rating: 5,
   });
@@ -93,12 +120,6 @@ export default function ReviewsPage() {
       errors.name = "Name is required";
     }
 
-    if (!formData.email.trim()) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Email is invalid";
-    }
-
     if (!formData.suggestion.trim()) {
       errors.suggestion = "Suggestion is required";
     } else if (formData.suggestion.length < 10) {
@@ -108,33 +129,63 @@ export default function ReviewsPage() {
     return errors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const errors = validateForm();
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
 
-    setIsSubmitting(true);
+    try {
+      setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({
-        name: "",
-        email: "",
-        suggestion: "",
-        rating: 5,
+      if (!userId) {
+        window.location.href = "/sign-in";
+        return;
+      }
+
+      console.log("Making API call to create review");
+
+      const response = await axiosInstance.post("/review/create-review", {
+        companyId: params.id,
+        name: formData.name.trim(),
+        comment: formData.suggestion.trim(),
+        starCount: formData.rating,
       });
 
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 5000);
-    }, 1500);
+      console.log("API response:", response.data);
+
+      if (response.data.success) {
+        // Refresh reviews list
+        fetchReview();
+        console.log("Review submitted successfully!");
+
+        // Reset form
+        setIsSubmitted(true);
+        setFormErrors({});
+        setFormData({
+          name: "",
+          suggestion: "",
+          rating: 0,
+        });
+
+        // Reset success message after 5 seconds
+        setTimeout(() => {
+          setIsSubmitted(false);
+        }, 5000);
+      } else {
+        console.log("Server response not successful", response.data);
+        throw new Error("Failed to create review");
+      }
+    } catch (error) {
+      console.error("Error creating review:", error);
+      alert("Failed to submit review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -229,33 +280,36 @@ export default function ReviewsPage() {
               {/* Recent Reviews Preview */}
               <div className="mt-8">
                 <h3 className="text-xl font-semibold mb-4">Recent Reviews</h3>
-                <div className="space-y-4">
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex gap-1">{renderStars(5)}</div>
-                      <span className="text-sm text-gray-500">2 days ago</span>
-                    </div>
-                    <p className="text-gray-700">
-                      &quot;Excellent bootcamp! The instructors were
-                      knowledgeable and the curriculum was comprehensive. Highly
-                      recommend for anyone looking to break into tech.&quot;
-                    </p>
-                    <div className="text-sm text-gray-500 mt-2">- Sarah M.</div>
-                  </div>
 
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex gap-1">{renderStars(5)}</div>
-                      <span className="text-sm text-gray-500">1 week ago</span>
-                    </div>
-                    <p className="text-gray-700">
-                      &quot;Great experience overall. The hands-on projects
-                      really helped me understand the concepts. The career
-                      support was also fantastic.&quot;
-                    </p>
-                    <div className="text-sm text-gray-500 mt-2">- James K.</div>
+                {reviews.length === 0 ? (
+                  <div className="text-gray-700 w-full border rounded-lg h-[100px] flex items-center justify-center text-center">
+                    No reviews on this company
                   </div>
-                </div>
+                ) : (
+                  reviews.map((review) => (
+                    <div
+                      key={review._id}
+                      className="border border-gray-200 rounded-lg p-4 mb-4"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex gap-1">
+                          {renderStars(review.starCount)}
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {`${Math.ceil(
+                            (new Date().getTime() -
+                              new Date(review.createdAt).getTime()) /
+                              (1000 * 60 * 60 * 24)
+                          )} days ago`}
+                        </span>
+                      </div>
+                      <p className="text-gray-700">{review.comment}</p>
+                      <div className="text-sm text-gray-500 mt-2">
+                        - {review.name}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </TabsContent>
 
@@ -275,7 +329,14 @@ export default function ReviewsPage() {
                   </Alert>
                 ) : null}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form
+                  onSubmit={(e) => {
+                    console.log("Form submitted", e);
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }}
+                  className="space-y-4"
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Your Name</Label>
@@ -293,26 +354,7 @@ export default function ReviewsPage() {
                         </p>
                       )}
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Your Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className={formErrors.email ? "border-red-500" : ""}
-                      />
-                      {formErrors.email && (
-                        <p className="text-red-500 text-sm">
-                          {formErrors.email}
-                        </p>
-                      )}
-                    </div>
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="suggestion">
                       Your Suggestion or Request
