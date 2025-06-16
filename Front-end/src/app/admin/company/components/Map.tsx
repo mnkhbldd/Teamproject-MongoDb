@@ -370,8 +370,14 @@ export const Map = () => {
                                                         )
                                                       )}
                                                     </CarouselContent>
-                                                    <CarouselPrevious className="left-2" />
-                                                    <CarouselNext className="right-2" />
+                                                    <CarouselPrevious
+                                                      className="left-2"
+                                                      type="button"
+                                                    />
+                                                    <CarouselNext
+                                                      className="right-2"
+                                                      type="button"
+                                                    />
                                                   </Carousel>
                                                 </div>
                                               )}
