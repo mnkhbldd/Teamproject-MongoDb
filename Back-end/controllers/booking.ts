@@ -6,6 +6,62 @@ interface RequestWithUserId extends Request {
   userId: string;
 }
 
+export const createBookings = async (
+  req: RequestWithUserId,
+  res: Response
+): Promise<void> => {
+  try {
+    const { bookings } = req.body;
+    const userId = req.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: "User ID is required",
+      });
+      return;
+    }
+
+    const bookingPromises = bookings.map(async (bookingData: any) => {
+      const formattedStartTime =
+        bookingData.startTime.length === 5
+          ? bookingData.startTime
+          : bookingData.startTime.replace(/:/g, "");
+      const formattedEndTime =
+        bookingData.endTime.length === 5
+          ? bookingData.endTime
+          : bookingData.endTime.replace(/:/g, "");
+
+      return BookingModel.create({
+        user: userId,
+        company: bookingData.companyId,
+        bookingDate: new Date(bookingData.bookingDate),
+        startTime: formattedStartTime,
+        endTime: formattedEndTime,
+        price: parseFloat(bookingData.price),
+        status: "booked",
+      });
+    });
+
+    const createdBookings = await Promise.all(bookingPromises);
+
+    res.status(200).json({
+      success: true,
+      bookings: createdBookings,
+      totalAmount: bookings.reduce(
+        (acc, booking) => acc + parseFloat(booking.price),
+        0
+      ),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const createBooking = async (
   req: RequestWithUserId,
   res: Response
@@ -23,13 +79,18 @@ export const createBooking = async (
       return;
     }
 
+    const formattedStartTime =
+      startTime.length === 5 ? startTime : startTime.replace(/:/g, "");
+    const formattedEndTime =
+      endTime.length === 5 ? endTime : endTime.replace(/:/g, "");
+
     const booking = await BookingModel.create({
       user: userId,
       company: companyId,
-      bookingDate,
-      startTime,
-      endTime,
-      price,
+      bookingDate: new Date(bookingDate),
+      startTime: formattedStartTime,
+      endTime: formattedEndTime,
+      price: parseFloat(price),
       status: "booked",
     });
 
@@ -41,7 +102,7 @@ export const createBooking = async (
     console.error(error);
     res.status(400).json({
       success: false,
-      message: error,
+      message: error.message,
     });
   }
 };
