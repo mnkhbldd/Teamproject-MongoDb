@@ -111,12 +111,16 @@ export const BookingDate = () => {
   const handleBooking = () => {
     const fetchBooking = async () => {
       try {
-        const res = await axiosInstance.post("/booking/create-booking", {
+        const bookingData = bookings.map((booking) => ({
           companyId: params.id,
-          bookingDate: bookings[0].date,
-          startTime: bookings[0].time,
-          endTime: bookings[0].time,
-          price: bookings[0].price,
+          bookingDate: booking.date.toISOString().split("T")[0],
+          startTime: booking.time.split("-")[0].trim(),
+          endTime: booking.time.split("-")[1].trim(),
+          price: booking.price,
+        }));
+
+        const res = await axiosInstance.post("/booking/create-bookings", {
+          bookings: bookingData,
         });
         console.log(res.data);
       } catch (error) {
@@ -125,6 +129,24 @@ export const BookingDate = () => {
     };
     fetchBooking();
   };
+
+  const fetchBookingData = () => {
+    const fetchBooking = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/booking/company-bookings/${params.id}`
+        );
+        setBookings(res.data.bookings);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBooking();
+  };
+
+  React.useEffect(() => {
+    fetchBookingData();
+  }, []);
 
   return (
     <div className="w-full">
