@@ -64,29 +64,12 @@ export const getCompanies = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const { q } = req.query;
-
-  let filter = {};
-
-  if (q && typeof q === "string") {
-    const searchRegex = new RegExp(q, "i");
-    filter = {
-      $or: [
-        { name: searchRegex },
-        { phoneNumber: searchRegex },
-        { "socialMedia.Facebook": searchRegex },
-        { "socialMedia.instagram": searchRegex },
-        { "location.address": searchRegex },
-      ],
-    };
-  }
-
   try {
-    const companies = await CompanyModel.find(filter).sort({ createdAt: -1 });
-    return res.status(200).json({ success: true, companies });
+    const companies = await CompanyModel.find({}).sort({ createdAt: -1 });
+    return res.status(200).json({ success: true, companies }).end();
   } catch (error) {
-    console.error("Get/Search error:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
+    console.error(error, "err");
+    return res.status(400).json({ success: false, message: error }).end();
   }
 };
 
