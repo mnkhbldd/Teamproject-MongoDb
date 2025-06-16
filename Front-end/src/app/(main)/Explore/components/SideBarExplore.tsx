@@ -3,6 +3,7 @@ import { CompanyDetailCard } from "@/components/CompanyDetailCard";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 interface Company {
   _id: string;
   name: string;
@@ -39,15 +40,21 @@ export const SideBarExplore = () => {
   };
   return (
     <div className=" overflow-y-scroll w-full flex flex-col gap-3 pt-13 from-black to-gray-800 bg-gradient-to-b h-full">
-      {company.map((values: Company, index) => {
-        return (
-          <CompanyDetailCard
-            onclick={() => jumpToDetail(values._id)}
-            key={index}
-            company={values}
-          />
-        );
-      })}
+      <div className="flex h-fit w-[35%] fixed z-50 px-4 py-2 gap-2 backdrop-blur-3xl">
+        <Input className="bg-white" />
+        <Input className="bg-white" />
+      </div>
+      <div className=" flex flex-col pt-15 gap-2 px-6">
+        {company.map((values: Company, index) => {
+          return (
+            <CompanyDetailCard
+              onclick={() => jumpToDetail(values._id)}
+              key={index}
+              company={values}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
