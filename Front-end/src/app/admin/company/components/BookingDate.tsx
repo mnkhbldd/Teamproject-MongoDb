@@ -97,7 +97,8 @@ export const BookingDate = () => {
 
   const formatTimeTo24Hour = (timeStr: string): string => {
     const [time, period] = timeStr.split(/(?=[AP]M)/);
-    let [hours, minutes] = time.split(":").map(Number);
+    const [hoursStr, minutes] = time.split(":");
+    let hours = parseInt(hoursStr, 10);
 
     if (period === "PM" && hours < 12) {
       hours += 12;
@@ -105,9 +106,7 @@ export const BookingDate = () => {
       hours = 0;
     }
 
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes.padStart(2, "0")}`;
   };
 
   const getBookingForSlot = (date: Date, timeSlot: string) => {
@@ -118,7 +117,7 @@ export const BookingDate = () => {
     if (localBooking) return localBooking;
 
     const formattedDate = format(date, "yyyy-MM-dd");
-    const [startTime, endTime] = timeSlot.split("-");
+    const [startTime] = timeSlot.split("-");
     const slotStartTime24 = formatTimeTo24Hour(startTime);
 
     console.log(
