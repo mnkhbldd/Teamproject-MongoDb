@@ -2,15 +2,15 @@
 
 import type React from "react";
 
-import { useState } from "react";
-import { Star, Send, CheckCircle } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import {useState} from "react";
+import {Star, Send, CheckCircle} from "lucide-react";
+import {Progress} from "@/components/ui/progress";
+import {Button} from "@/components/ui/button";
+import {Textarea} from "@/components/ui/textarea";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {Alert, AlertDescription} from "@/components/ui/alert";
 
 interface RatingData {
   stars: number;
@@ -20,7 +20,7 @@ interface RatingData {
 
 interface SuggestionFormData {
   name: string;
-  email: string;
+  // email: string;
   suggestion: string;
   rating: number;
 }
@@ -31,7 +31,7 @@ export default function ReviewsPage() {
 
   const [formData, setFormData] = useState<SuggestionFormData>({
     name: "",
-    email: "",
+    // email: "",
     suggestion: "",
     rating: 5,
   });
@@ -41,15 +41,15 @@ export default function ReviewsPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   const ratingsData: RatingData[] = [
-    { stars: 5, count: 120, percentage: 94.5 },
-    { stars: 4, count: 5, percentage: 3.9 },
-    { stars: 3, count: 2, percentage: 1.6 },
-    { stars: 2, count: 0, percentage: 0 },
-    { stars: 1, count: 0, percentage: 0 },
+    {stars: 5, count: 120, percentage: 94.5},
+    {stars: 4, count: 5, percentage: 3.9},
+    {stars: 3, count: 2, percentage: 1.6},
+    {stars: 2, count: 0, percentage: 0},
+    {stars: 1, count: 0, percentage: 0},
   ];
 
   const renderStars = (rating: number, interactive = false) => {
-    return Array.from({ length: 5 }, (_, index) => (
+    return Array.from({length: 5}, (_, index) => (
       <Star
         key={index}
         className={`w-6 h-6 ${
@@ -69,13 +69,13 @@ export default function ReviewsPage() {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const {name, value} = e.target;
+    setFormData((prev) => ({...prev, [name]: value}));
 
     // Clear error when user starts typing
     if (formErrors[name]) {
       setFormErrors((prev) => {
-        const newErrors = { ...prev };
+        const newErrors = {...prev};
         delete newErrors[name];
         return newErrors;
       });
@@ -83,7 +83,7 @@ export default function ReviewsPage() {
   };
 
   const handleRatingChange = (rating: number) => {
-    setFormData((prev) => ({ ...prev, rating }));
+    setFormData((prev) => ({...prev, rating}));
   };
 
   const validateForm = () => {
@@ -93,11 +93,11 @@ export default function ReviewsPage() {
       errors.name = "Name is required";
     }
 
-    if (!formData.email.trim()) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Email is invalid";
-    }
+    // if (!formData.email.trim()) {
+    //   errors.email = "Email is required";
+    // } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    //   errors.email = "Email is invalid";
+    // }
 
     if (!formData.suggestion.trim()) {
       errors.suggestion = "Suggestion is required";
@@ -125,7 +125,7 @@ export default function ReviewsPage() {
       setIsSubmitted(true);
       setFormData({
         name: "",
-        email: "",
+        // email: "",
         suggestion: "",
         rating: 5,
       });
@@ -240,7 +240,7 @@ export default function ReviewsPage() {
                       knowledgeable and the curriculum was comprehensive. Highly
                       recommend for anyone looking to break into tech.&quot;
                     </p>
-                    <div className="text-sm text-gray-500 mt-2">- Sarah M.</div>
+                    <div className="text-sm text-gray-500 mt-2">{}</div>
                   </div>
 
                   <div className="border border-gray-200 rounded-lg p-4">
@@ -294,7 +294,7 @@ export default function ReviewsPage() {
                       )}
                     </div>
 
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                       <Label htmlFor="email">Your Email</Label>
                       <Input
                         id="email"
@@ -310,10 +310,10 @@ export default function ReviewsPage() {
                           {formErrors.email}
                         </p>
                       )}
-                    </div>
+                    </div> */}
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="w-[570px]">
                     <Label htmlFor="suggestion">
                       Your Suggestion or Request
                     </Label>
