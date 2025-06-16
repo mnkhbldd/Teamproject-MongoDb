@@ -32,10 +32,14 @@ export const createBookings = async (
           ? bookingData.endTime
           : bookingData.endTime.replace(/:/g, "");
 
+      // Create date object from YYYY-MM-DD string
+      const [year, month, day] = bookingData.bookingDate.split("-").map(Number);
+      const bookingDate = new Date(Date.UTC(year, month - 1, day));
+
       return BookingModel.create({
         user: userId,
         company: bookingData.companyId,
-        bookingDate: new Date(bookingData.bookingDate),
+        bookingDate: bookingDate,
         startTime: formattedStartTime,
         endTime: formattedEndTime,
         price: parseFloat(bookingData.price),

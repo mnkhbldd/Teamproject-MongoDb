@@ -14,11 +14,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
 
+interface BackendBooking {
+  _id: string;
+  bookingDate: string;
+  startTime: string;
+  status: string;
+}
+
 interface Booking {
   id: string;
   date: Date;
   time: string;
-  status: "pending" | "confirmed" | "cancelled" | "selected";
+  status: "pending" | "booked" | "cancelled" | "selected";
   price: number;
   isSale: boolean;
 }
@@ -29,6 +36,7 @@ export const BookingDate = () => {
   );
   const [days, setDays] = React.useState<Date[]>([]);
   const [bookings, setBookings] = React.useState<Booking[]>([]);
+  const [bookingsBackend, setBookingsBackend] = React.useState<Booking[]>([]);
   const params = useParams();
 
   React.useEffect(() => {
@@ -87,19 +95,83 @@ export const BookingDate = () => {
     setBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
   };
 
-  const getBookingForSlot = (date: Date, time: string) => {
-    return (
-      bookings.find(
-        (booking) => isSameDay(booking.date, date) && booking.time === time
-      ) || null
+  const formatTimeTo24Hour = (timeStr: string): string => {
+    const [time, period] = timeStr.split(/(?=[AP]M)/);
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (period === "PM" && hours < 12) {
+      hours += 12;
+    } else if (period === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const getBookingForSlot = (date: Date, timeSlot: string) => {
+    const localBooking = bookings.find(
+      (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
     );
+
+    if (localBooking) return localBooking;
+
+    const formattedDate = format(date, "yyyy-MM-dd");
+    const [startTime, endTime] = timeSlot.split("-");
+    const slotStartTime24 = formatTimeTo24Hour(startTime);
+
+    console.log(
+      "Checking backend bookings for date:",
+      formattedDate,
+      "time:",
+      slotStartTime24
+    );
+
+    const backendBooking = (
+      bookingsBackend as unknown as BackendBooking[]
+    ).find((booking) => {
+      const bookingDate = new Date(booking.bookingDate);
+      const bookingDateStr = format(bookingDate, "yyyy-MM-dd");
+
+      const bookingTime24 = booking.startTime.includes(" ")
+        ? formatTimeTo24Hour(booking.startTime)
+        : booking.startTime;
+
+      console.log("Comparing with backend booking:", {
+        bookingDate: bookingDateStr,
+        bookingStartTime: booking.startTime,
+        bookingTime24,
+        formattedDate,
+        slotStartTime24,
+      });
+
+      return (
+        bookingDateStr === formattedDate && bookingTime24 === slotStartTime24
+      );
+    });
+
+    console.log("Found matching backend booking:", backendBooking);
+
+    if (backendBooking) {
+      return {
+        id: backendBooking._id,
+        date: new Date(backendBooking.bookingDate),
+        time: timeSlot,
+        status: "booked" as const,
+        price: 0,
+        isSale: false,
+      };
+    }
+
+    return null;
   };
 
   const getStatusClass = (booking: Booking | null) => {
     if (!booking) return "bg-white hover:bg-blue-50 cursor-pointer";
 
     switch (booking.status) {
-      case "confirmed":
+      case "booked":
         return "bg-green-100 text-green-800 cursor-not-allowed";
       case "pending":
         return "bg-blue-500 text-white cursor-not-allowed";
@@ -107,24 +179,40 @@ export const BookingDate = () => {
         return "bg-red-100 text-red-800 cursor-not-allowed";
     }
   };
-
   const handleBooking = () => {
     const fetchBooking = async () => {
       try {
-        // Create bookings one by one
         for (const booking of bookings) {
-          const [startTime, endTime] = booking.time
-            .split(" - ")
-            .map((time) => time.trim());
+          try {
+            console.log("Creating booking:", {
+              date: booking.date,
+              time: booking.time,
+              price: booking.price,
+            });
 
-          const res = await axiosInstance.post("/booking/create-booking", {
-            companyId: params.id,
-            bookingDate: booking.date.toISOString().split("T")[0],
-            startTime,
-            endTime,
-            price: booking.price,
-          });
-          console.log(res.data);
+            if (!booking.time || typeof booking.time !== "string") {
+              throw new Error("Invalid time format");
+            }
+
+            const [startTime, endTime] = booking.time.split("-");
+
+            if (!startTime || !endTime) {
+              throw new Error("Invalid time slots");
+            }
+
+            const formattedDate = format(booking.date, "yyyy-MM-dd");
+            const res = await axiosInstance.post("/booking/create-booking", {
+              companyId: params.id,
+              bookingDate: formattedDate,
+              startTime,
+              endTime,
+              price: booking.price,
+            });
+            console.log("Booking created:", res.data);
+          } catch (error) {
+            console.error("Error creating booking:", error);
+            throw error;
+          }
         }
       } catch (error) {
         console.log(error);
@@ -139,7 +227,7 @@ export const BookingDate = () => {
         const res = await axiosInstance.get(
           `/booking/company-bookings/${params.id}`
         );
-        setBookings(res.data.bookings);
+        setBookingsBackend(res.data.bookings);
       } catch (error) {
         console.log(error);
       }
@@ -180,7 +268,7 @@ export const BookingDate = () => {
                           <span>Status: </span>
                           <span
                             className={`font-medium ${
-                              booking.status === "confirmed"
+                              booking.status === "booked"
                                 ? "text-green-600"
                                 : booking.status === "pending"
                                 ? "text-blue-600"
@@ -254,7 +342,7 @@ export const BookingDate = () => {
                   <span>Status: </span>
                   <span
                     className={`font-medium ${
-                      booking.status === "confirmed"
+                      booking.status === "booked"
                         ? "text-green-600"
                         : booking.status === "pending"
                         ? "text-blue-600"
