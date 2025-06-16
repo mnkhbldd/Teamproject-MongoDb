@@ -111,18 +111,21 @@ export const BookingDate = () => {
   const handleBooking = () => {
     const fetchBooking = async () => {
       try {
-        const bookingData = bookings.map((booking) => ({
-          companyId: params.id,
-          bookingDate: booking.date.toISOString().split("T")[0],
-          startTime: booking.time.split("-")[0].trim(),
-          endTime: booking.time.split("-")[1].trim(),
-          price: booking.price,
-        }));
+        // Create bookings one by one
+        for (const booking of bookings) {
+          const [startTime, endTime] = booking.time
+            .split(" - ")
+            .map((time) => time.trim());
 
-        const res = await axiosInstance.post("/booking/create-bookings", {
-          bookings: bookingData,
-        });
-        console.log(res.data);
+          const res = await axiosInstance.post("/booking/create-booking", {
+            companyId: params.id,
+            bookingDate: booking.date.toISOString().split("T")[0],
+            startTime,
+            endTime,
+            price: booking.price,
+          });
+          console.log(res.data);
+        }
       } catch (error) {
         console.log(error);
       }
