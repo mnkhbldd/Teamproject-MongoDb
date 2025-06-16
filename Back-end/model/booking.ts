@@ -2,8 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const bookingSchema = new mongoose.Schema({
   user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: true,
   },
   company: {
