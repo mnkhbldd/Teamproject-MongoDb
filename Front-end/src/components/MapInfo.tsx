@@ -31,7 +31,7 @@ export const MapInfo = ({
 }) => {
   return (
     <div className="box pt-4 px-2 w-full flex flex-col gap-5 ">
-      <div className="w-[250px] h-[250px] rounded overflow-hidden">
+      <div className="w-[250px] h-[250px] rounded overflow-hidden z-0">
         {position && (
           <MapContainer
             center={[position[0], position[1]]}

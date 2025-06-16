@@ -27,29 +27,25 @@ interface CompanyData {
   };
 }
 
-const initialData: CompanyData = {
-  logo: "/placeholder.svg?height=64&width=64",
-  name: "Company Name",
-  images: [
-    "/placeholder.svg?height=256&width=400",
-    "/placeholder.svg?height=256&width=400",
-  ],
-  address: "han Uul Dvvreg",
-  website: "website.com",
-  facebook: "facebook",
-  instagram: "instagram",
-  phone: "(+976) 99999999",
-  about:
-    "At Elevate Bootcamp we firmly believe in the power of our unique group training environment. Our aim is elevate your fitness level as well as your love of exercise. For us it's simple...Find an activity you want to do, a workout that challenges you, a coach that motivates you and a community that inspires & supports you.",
-  pricing: "Starting from $50/session",
-  businessHours: {
-    openTime: "09:00",
-    closeTime: "18:00",
-    closed: false,
-  },
-};
 export const AdminSettings = () => {
-  const [data, setData] = useState<CompanyData>(initialData);
+  const [data, setData] = useState<CompanyData>({
+    logo: "",
+    name: "",
+    images: [],
+    address: "",
+    website: "",
+    facebook: "",
+    instagram: "",
+    phone: "",
+    about: "",
+    pricing: "",
+    businessHours: {
+      openTime: "",
+      closeTime: "",
+      closed: false,
+    },
+  });
+
   const [showPreview, setShowPreview] = useState(false);
 
   const handleInputChange = (field: keyof CompanyData, value: string) => {
@@ -84,11 +80,6 @@ export const AdminSettings = () => {
       ...prev,
       images: prev.images.filter((_, i) => i !== index),
     }));
-  };
-
-  const handleSave = () => {
-    console.log("Saving data:", data);
-    alert("Data saved successfully!");
   };
 
   const formatBusinessHours = () => {
@@ -188,7 +179,7 @@ export const AdminSettings = () => {
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
-          <Button onClick={handleSave}>
+          <Button>
             <Save className="w-4 h-4 mr-2" />
             Save
           </Button>

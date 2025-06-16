@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Star, Send, CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-
-interface RatingData {
-  stars: number;
-  count: number;
-  percentage: number;
-}
 
 interface SuggestionFormData {
   name: string;
@@ -54,9 +48,6 @@ export default function ReviewsPage() {
     fetchReview();
   }, [fetchReview]);
 
-  const overallRating = 5.0;
-  const totalRatings = 127;
-
   const [formData, setFormData] = useState<SuggestionFormData>({
     name: "",
     suggestion: "",
@@ -67,15 +58,37 @@ export default function ReviewsPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  const ratingsData: RatingData[] = [
-    { stars: 5, count: 120, percentage: 94.5 },
-    { stars: 4, count: 5, percentage: 3.9 },
-    { stars: 3, count: 2, percentage: 1.6 },
-    { stars: 2, count: 0, percentage: 0 },
-    { stars: 1, count: 0, percentage: 0 },
-  ];
+  const stats = useMemo(() => {
+    if (!reviews.length)
+      return { overallRating: 0, totalRatings: 0, ratingsData: [] };
 
-  const renderStars = (rating: number, interactive = false) => {
+    const totalStars = reviews.reduce(
+      (sum: number, review) => sum + review.starCount,
+      0
+    );
+    const overallRating = Number((totalStars / reviews.length).toFixed(1));
+    const totalRatings = reviews.length;
+
+    const ratingCounts = Array(5).fill(0);
+    reviews.forEach((review) => {
+      ratingCounts[review.starCount - 1]++;
+    });
+
+    const ratingsData = ratingCounts.map((count: number, index: number) => {
+      const stars = index + 1;
+      const percentage = Number(((count / totalRatings) * 100).toFixed(1));
+      return { stars, count, percentage };
+    });
+
+    return { overallRating, totalRatings, ratingsData };
+  }, [reviews]);
+
+  const { overallRating, totalRatings, ratingsData } = stats;
+
+  const renderStars = (
+    rating: number,
+    interactive = false
+  ): React.ReactNode[] => {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
@@ -99,7 +112,6 @@ export default function ReviewsPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when user starts typing
     if (formErrors[name]) {
       setFormErrors((prev) => {
         const newErrors = { ...prev };
@@ -189,13 +201,9 @@ export default function ReviewsPage() {
   };
 
   return (
-    <div className="size-fit bg-cover">
+    <div className="w-full bg-cover">
       <div className="w-full mx-auto">
         <div className="rounded-lg py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">
-            Elevate Bootcamp Glasgow QP Reviews
-          </h1>
-
           <Tabs defaultValue="reviews" className="w-full">
             <TabsList className="mb-6">
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
@@ -249,30 +257,6 @@ export default function ReviewsPage() {
                         </span>
                       </div>
                     ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Additional Info */}
-              <div className="mt-8 py-6 border rounded-lg border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">
-                      94.5%
-                    </div>
-                    <div className="text-sm text-gray-600">5-star ratings</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">
-                      98.4%
-                    </div>
-                    <div className="text-sm text-gray-600">Recommend</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-purple-600">
-                      4.8
-                    </div>
-                    <div className="text-sm text-gray-600">Course Quality</div>
                   </div>
                 </div>
               </div>

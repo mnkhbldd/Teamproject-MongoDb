@@ -1,12 +1,24 @@
 import React from "react";
 import { format, addDays, isWeekend, startOfDay, isSameDay } from "date-fns";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Wallet } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import axiosInstance from "@/utils/axios";
+import { useParams } from "next/navigation";
 
 interface Booking {
   id: string;
   date: Date;
   time: string;
-  status: "pending" | "confirmed" | "cancelled";
+  status: "pending" | "confirmed" | "cancelled" | "selected";
   price: number;
   isSale: boolean;
 }
@@ -17,6 +29,7 @@ export const BookingDate = () => {
   );
   const [days, setDays] = React.useState<Date[]>([]);
   const [bookings, setBookings] = React.useState<Booking[]>([]);
+  const params = useParams();
 
   React.useEffect(() => {
     const newDays = Array.from({ length: 7 }, (_, i) =>
@@ -52,19 +65,26 @@ export const BookingDate = () => {
       (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
     );
 
-    if (existingBooking) return;
+    if (existingBooking) {
+      setBookings((prev) =>
+        prev.filter((booking) => booking.id !== existingBooking.id)
+      );
+    } else {
+      const newBooking: Booking = {
+        id: `${date.toISOString()}-${timeSlot}-${Date.now()}`,
+        date: startOfDay(date),
+        time: timeSlot,
+        status: "pending",
+        price: timeSlots.find((ts) => ts.time === timeSlot)?.price || 75000,
+        isSale: timeSlots.find((ts) => ts.time === timeSlot)?.isSale || false,
+      };
 
-    const newBooking: Booking = {
-      id: `${date.toISOString()}-${timeSlot}-${Date.now()}`,
-      date: startOfDay(date),
-      time: timeSlot,
-      status: "pending",
-      price: timeSlots.find((ts) => ts.time === timeSlot)?.price || 75000,
-      isSale: timeSlots.find((ts) => ts.time === timeSlot)?.isSale || false,
-    };
+      setBookings((prev) => [...prev, newBooking]);
+    }
+  };
 
-    setBookings((prev) => [...prev, newBooking]);
-    console.log(bookings);
+  const handleRemoveBooking = (bookingId: string) => {
+    setBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
   };
 
   const getBookingForSlot = (date: Date, time: string) => {
@@ -82,26 +102,117 @@ export const BookingDate = () => {
       case "confirmed":
         return "bg-green-100 text-green-800 cursor-not-allowed";
       case "pending":
-        return "bg-yellow-100 text-yellow-800 cursor-not-allowed";
+        return "bg-blue-500 text-white cursor-not-allowed";
       default:
         return "bg-red-100 text-red-800 cursor-not-allowed";
     }
   };
 
-  const handleConfirmBooking = (bookingId: string) => {
-    setBookings((prev) =>
-      prev.map((booking) =>
-        booking.id === bookingId
-          ? { ...booking, status: "confirmed" as const }
-          : booking
-      )
-    );
+  const handleBooking = () => {
+    const fetchBooking = async () => {
+      try {
+        const res = await axiosInstance.post("/booking/create-booking", {
+          companyId: params.id,
+          bookingDate: bookings[0].date,
+          startTime: bookings[0].time,
+          endTime: bookings[0].time,
+          price: bookings[0].price,
+        });
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBooking();
   };
 
   return (
     <div className="w-full">
       <div className="mb-8 p-4 bg-gray-100 rounded-lg">
-        <h3 className="text-lg font-semibold mb-2">📅 Booked Time Slots</h3>
+        <div className="flex items-center justify-between pb-2">
+          <h3 className="text-lg font-semibold mb-2">📅 Booked Time Slots</h3>
+          {bookings.length > 0 && (
+            <Sheet>
+              <SheetTrigger className="bg-blue-500 text-white border-2 border-red-500 px-5 py-1 rounded text-sm hover:bg-blue-600">
+                Cashout
+              </SheetTrigger>
+              <SheetContent className="!w-[900px] !sm:w-[940px] z-50">
+                <SheetHeader>
+                  <SheetTitle>Are you absolutely sure?</SheetTitle>
+                  <SheetDescription></SheetDescription>
+                  <div className="flex flex-col gap-2 overflow-y-scroll h-[500px] ">
+                    {bookings.map((booking, index) => (
+                      <div
+                        key={index}
+                        className="p-3 bg-white rounded border flex flex-col gap-2"
+                      >
+                        <div className="font-medium">
+                          {format(booking.date, "MMM d, yyyy")}
+                        </div>
+                        <div>Time: {booking.time}</div>
+                        <div>Price: {booking.price.toLocaleString()} ₮</div>
+                        <div className="flex items-center gap-2">
+                          <span>Status: </span>
+                          <span
+                            className={`font-medium ${
+                              booking.status === "confirmed"
+                                ? "text-green-600"
+                                : booking.status === "pending"
+                                ? "text-blue-600"
+                                : booking.status === "selected"
+                                ? "text-blue-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {booking.status.charAt(0).toUpperCase() +
+                              booking.status.slice(1)}
+                          </span>
+                        </div>
+
+                        {booking.isSale && (
+                          <div className="text-xs text-red-600 font-medium">
+                            SALE
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <div className="gap-10 flex flex-col items-center justify-between">
+                      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 w-full">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between ">
+                            <div>
+                              <p className="text-sm text-green-700 font-medium">
+                                Total Price
+                              </p>
+                              <p className="text-2xl font-bold text-green-800">
+                                {bookings
+                                  .reduce((acc, curr) => acc + curr.price, 0)
+                                  .toLocaleString()}{" "}
+                                ₮
+                              </p>
+                            </div>
+                            <Wallet className="h-8 w-8 text-green-600" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Button
+                        className="w-full"
+                        onClick={() => {
+                          setBookings([]);
+                          handleBooking();
+                        }}
+                      >
+                        Confirm Cashout
+                      </Button>
+                    </div>
+                  </div>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+          )}
+        </div>
         {bookings.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
             {bookings.map((booking, index) => (
@@ -121,7 +232,9 @@ export const BookingDate = () => {
                       booking.status === "confirmed"
                         ? "text-green-600"
                         : booking.status === "pending"
-                        ? "text-yellow-600"
+                        ? "text-blue-600"
+                        : booking.status === "selected"
+                        ? "text-blue-600"
                         : "text-red-600"
                     }`}
                   >
@@ -129,17 +242,15 @@ export const BookingDate = () => {
                       booking.status.slice(1)}
                   </span>
                 </div>
-                {booking.status === "pending" && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleConfirmBooking(booking.id);
-                    }}
-                    className="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
-                  >
-                    Confirm Booking
-                  </button>
-                )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveBooking(booking.id);
+                  }}
+                  className="mt-2 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                >
+                  Remove
+                </button>
                 {booking.isSale && (
                   <div className="text-red-600 font-medium">On Sale!</div>
                 )}
@@ -224,7 +335,7 @@ export const BookingDate = () => {
                   ) : (
                     <div className="text-center text-sm">
                       {currentBooking?.status === "pending"
-                        ? "Pending..."
+                        ? "Selected"
                         : "Booked"}
                     </div>
                   )}
