@@ -21,7 +21,7 @@ const companySchema = new mongoose.Schema({
   description: { type: String },
   location: [locationSchema],
   phoneNumber: { type: String, required: true },
-  category: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+  category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   socialMedia: [socialMediaSchema],
   images: [{ type: String }],
   pricing: { type: String },

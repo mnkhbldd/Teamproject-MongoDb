@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 
 import categoryModel from "../model/category";
-
+import mongoose from "mongoose";
+import CompanyModel from "../model/company";
 interface RequestWithUserId extends Request {
   userId: string;
 }
@@ -60,36 +61,29 @@ export const createCompany = async (
   }
 };
 
-import mongoose from "mongoose";
-import CompanyModel from "../model/company";
-
-export const getCompanies = async (req: Request, res: Response) => {
+export const getCompanies = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   const { q } = req.query;
-  const categories = (req.query.categories as string[] | undefined) || [];
 
   try {
-    let filter: any = {};
+    let filter = {};
 
-    if (q && typeof q === "string" && q.trim() !== "") {
-      const searchRegex = new RegExp(q.trim(), "i");
-      filter.$or = [
-        { name: searchRegex },
-        { phoneNumber: searchRegex },
-        { "socialMedia.Facebook": searchRegex },
-        { "socialMedia.instagram": searchRegex },
-        { "socialMedia.website": searchRegex },
-        { "location.address": searchRegex },
-      ];
+    if (q && typeof q === "string") {
+      const searchRegex = new RegExp(q, "i");
+
+      filter = {
+        $or: [
+          { name: searchRegex },
+          { phoneNumber: searchRegex },
+          { "socialMedia.Facebook": searchRegex },
+          { "socialMedia.instagram": searchRegex },
+          { "socialMedia.website": searchRegex },
+          { "location.address": searchRegex },
+        ],
+      };
     }
-
-    if (categories.length > 0) {
-      const categoryObjectIds = categories.map(
-        (id) => new mongoose.Types.ObjectId(id)
-      );
-      filter.category = { $in: categoryObjectIds };
-    }
-
-    console.log("FINAL FILTER:", JSON.stringify(filter, null, 2));
 
     const companies = await CompanyModel.find(filter).sort({ createdAt: -1 });
 
@@ -99,7 +93,6 @@ export const getCompanies = async (req: Request, res: Response) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
 export const getCompaniesByUser = async (
   req: RequestWithUserId,
   res: Response

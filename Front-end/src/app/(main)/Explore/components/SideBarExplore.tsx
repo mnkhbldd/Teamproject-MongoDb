@@ -29,19 +29,17 @@ export const SideBarExplore = () => {
   const router = useRouter();
   const [company, setCompany] = useState([]);
   const { categories } = useCategory();
-
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
   const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await axiosInstance.get("/company/get-companies", {
-          params: {
-            q: search,
-            categories: selectedCategories,
-          },
-        });
+        const res = await axiosInstance.get(
+          `/company/get-companies?q=${search}`
+        );
+
         setCompany(res.data.companies);
       } catch (error) {
         console.error("Error fetching companies", error);
@@ -49,8 +47,7 @@ export const SideBarExplore = () => {
     };
 
     fetchCompanies();
-  }, [search, selectedCategories]);
-  console.log(company, "as");
+  }, [search]);
 
   const jumpToDetail = (_id: string) => {
     router.push(`/Company/${_id}`);
@@ -63,11 +60,11 @@ export const SideBarExplore = () => {
   return (
     <div className=" overflow-y-scroll w-full flex flex-col gap-3 pt-13 from-black to-gray-800 bg-gradient-to-b h-full">
       <div className="flex h-fit w-[35%] fixed z-50 px-4 py-2 gap-2 backdrop-blur-3xl">
-        <CategoryFilter
+        {/* <CategoryFilter
           categories={categories}
           value={selectedCategories}
           onChange={setSelectedCategories}
-        />
+        /> */}
         <Input
           onChange={handleInputValue}
           className="bg-white focus-visible:ring-0 "
