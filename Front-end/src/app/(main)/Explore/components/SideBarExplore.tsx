@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { CategoryFilter } from "@/components/FilterByCategories";
+import { useCategory } from "@/app/context/CategoryContext";
 interface Company {
   _id: string;
   name: string;
@@ -26,17 +28,29 @@ interface Company {
 export const SideBarExplore = () => {
   const router = useRouter();
   const [company, setCompany] = useState([]);
+  const { categories } = useCategory();
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
-    const FetchData = async () => {
-      const res = await axiosInstance.get(`/company/get-companies?q=${search}`);
-      const data = await res.data.companies;
-      setCompany(data);
-      console.log(data, "companydatas");
+    const fetchCompanies = async () => {
+      try {
+        const res = await axiosInstance.get("/company/get-companies", {
+          params: {
+            q: search,
+            categories: selectedCategories,
+          },
+        });
+        setCompany(res.data.companies);
+      } catch (error) {
+        console.error("Error fetching companies", error);
+      }
     };
-    FetchData();
-  }, [search]);
+
+    fetchCompanies();
+  }, [search, selectedCategories]);
+  console.log(company, "as");
 
   const jumpToDetail = (_id: string) => {
     router.push(`/Company/${_id}`);
@@ -44,13 +58,16 @@ export const SideBarExplore = () => {
 
   const handleInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    console.log(search, "s");
   };
 
   return (
     <div className=" overflow-y-scroll w-full flex flex-col gap-3 pt-13 from-black to-gray-800 bg-gradient-to-b h-full">
       <div className="flex h-fit w-[35%] fixed z-50 px-4 py-2 gap-2 backdrop-blur-3xl">
-        <Input className="bg-white focus-visible:ring-0 " />
+        <CategoryFilter
+          categories={categories}
+          value={selectedCategories}
+          onChange={setSelectedCategories}
+        />
         <Input
           onChange={handleInputValue}
           className="bg-white focus-visible:ring-0 "
