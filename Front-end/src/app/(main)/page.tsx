@@ -2,11 +2,12 @@
 
 import React from "react";
 
-import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
-import { TextGenerateEffect } from "@/components/text-generate-effect";
+import {BackgroundBeamsWithCollision} from "@/components/background-beams-with-collision";
+import {TextGenerateEffect} from "@/components/text-generate-effect";
 import Image from "next/image";
-import { AnimatedFooter } from "@/components/NextFooter";
-import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
+import {AnimatedFooter} from "@/components/NextFooter";
+import {InfiniteMovingCards} from "@/components/infinite-moving-cards";
+import {WavyBackground} from "@/components/wavy-background";
 
 export default function Home() {
   const words =
@@ -46,37 +47,38 @@ export default function Home() {
   return (
     <div className="w-full">
       <BackgroundBeamsWithCollision>
-        <div className="flex flex-col items-center">
-          <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-[rgba(227,232,255,0.9)] dark:text-white font-sans tracking-tight">
-            U looking for best activity site?{" "}
-            <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
-              <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-                <span className="">Freely is for you</span>
+        <div>
+          <WavyBackground className="flex flex-col justify-center items-center">
+            <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-[rgba(227,232,255,0.9)] dark:text-white font-sans tracking-tight">
+              U looking for best activity site?{" "}
+              <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
+                <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
+                  <span className="">Freely is for you</span>
+                </div>
+                <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
+                  <span className="">Freely is for you</span>
+                </div>
               </div>
-              <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
-                <span className="">Freely is for you</span>
-              </div>
-            </div>
-          </h2>
-          <TextGenerateEffect
-            words={words}
-            className=" text-center max-w-2xl  "
-          />
-
-          <div className="flex gap-6 pt-6">
-            <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-                Join us
-              </span>
-            </button>
-            <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-                Learn More
-              </span>
-            </button>
-          </div>
+            </h2>
+            <TextGenerateEffect
+              words={words}
+              className="text-center max-w-2xl"
+            />{" "}
+            <div className="flex gap-6 justify-center pt-6">
+              <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                  Join us
+                </span>
+              </button>
+              <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                  Learn More
+                </span>
+              </button>
+            </div>{" "}
+          </WavyBackground>
         </div>
       </BackgroundBeamsWithCollision>
 
