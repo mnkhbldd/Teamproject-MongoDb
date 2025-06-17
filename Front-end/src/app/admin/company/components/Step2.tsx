@@ -5,6 +5,7 @@ import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import axiosInstance from "@/utils/axios";
 import { step2formSchema } from "./formSchema";
 import { z } from "zod";
+import { useCategory } from "@/app/context/CategoryContext";
 
 type Category = {
   _id: string;
@@ -55,28 +56,11 @@ interface Step2Props {
 //   { id: 86, name: "Zip Lining", icon: "🌲" },
 // ];
 
-type CategoryData = {
-  _id: string;
-  name: string;
-  icons: string;
-};
-
 export const Step2 = ({ control, name }: Step2Props) => {
   const [search, setSearch] = useState("");
-  const [categories, setCategories] = useState<CategoryData[]>([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await axiosInstance.get("/category/");
-        setCategories(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const { categories } = useCategory();
 
-    fetchCategories();
-  }, []);
   return (
     <FormField
       control={control}
