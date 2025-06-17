@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { CategoryFilter } from "@/components/FilterByCategories";
+
 import { useCategory } from "@/app/context/CategoryContext";
 interface Company {
   _id: string;
