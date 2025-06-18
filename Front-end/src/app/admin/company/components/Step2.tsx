@@ -1,8 +1,8 @@
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Control } from "react-hook-form";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
-import axiosInstance from "@/utils/axios";
+
 import { step2formSchema } from "./formSchema";
 import { z } from "zod";
 import { useCategory } from "@/app/context/CategoryContext";

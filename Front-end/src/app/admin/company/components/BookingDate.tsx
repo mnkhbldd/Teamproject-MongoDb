@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { format, addDays, isWeekend, startOfDay, isSameDay } from "date-fns";
 import { ChevronRight, Wallet } from "lucide-react";
 import {
@@ -234,9 +234,9 @@ export const BookingDate = () => {
     fetchBooking();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchBookingData();
-  }, []);
+  }, [fetchBookingData]);
 
   return (
     <div className="w-full">

@@ -157,6 +157,34 @@ export const getBookingsByCompany = async (
   }
 };
 
+export const getBookingsByUserCompanies = async (
+  req: RequestWithUserId,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = req.userId;
+
+    const userCompanies = await CompanyModel.find({ user: userId });
+    const companyIds = userCompanies.map((company) => company._id);
+
+    const bookings = await BookingModel.find({ company: { $in: companyIds } })
+      .populate("company", "name")
+      .populate("user", "name")
+      .sort({ bookingDate: -1, startTime: -1 });
+
+    res.status(200).json({
+      success: true,
+      bookings,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
 export const updateBookingStatus = async (
   req: RequestWithUserId,
   res: Response

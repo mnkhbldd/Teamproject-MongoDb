@@ -2,12 +2,13 @@
 
 import React from "react";
 
-import {BackgroundBeamsWithCollision} from "@/components/background-beams-with-collision";
-import {TextGenerateEffect} from "@/components/text-generate-effect";
+import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
+import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
-import {AnimatedFooter} from "@/components/NextFooter";
-import {InfiniteMovingCards} from "@/components/infinite-moving-cards";
-import {StickyScroll} from "@/components/ui/sticky-scroll-reveal";
+import { AnimatedFooter } from "@/components/NextFooter";
+import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
+import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
+import { Star } from "lucide-react";
 
 export default function Home() {
   const words =
@@ -239,7 +240,7 @@ export default function Home() {
         </div>
       </div> */}
       <StickyScroll content={scrollContent} />
-      <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 dark:bg-black dark:bg-grid-white/[0.05]  justify-center relative overflow-hidden">
+      <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
           What they tell about us{" "}
         </p>
@@ -249,6 +250,7 @@ export default function Home() {
           speed="slow"
         />
       </div>
+
       <AnimatedFooter />
     </div>
   );

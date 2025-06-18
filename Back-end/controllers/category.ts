@@ -16,7 +16,6 @@ export const createCategory = async (
       return;
     }
 
-    // Check if category with same name and group already exists
     const existingCategory = await Category.findOne({ name, group });
     if (existingCategory) {
       res

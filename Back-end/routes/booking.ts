@@ -5,6 +5,7 @@ import {
   getBookingsByUser,
   getBookingsByCompany,
   updateBookingStatus,
+  getBookingsByUserCompanies,
 } from "../controllers/booking";
 import { verifyClerkToken } from "../middleware/checkClerkToken";
 
@@ -71,6 +72,23 @@ bookingRouter.put(
     try {
       const reqWithUserId = req as RequestWithUserId;
       await updateBookingStatus(reqWithUserId, res);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+);
+
+bookingRouter.get(
+  "/user-company-bookings",
+  verifyClerkToken,
+  async (req: Request, res: Response) => {
+    try {
+      const reqWithUserId = req as RequestWithUserId;
+      await getBookingsByUserCompanies(reqWithUserId, res);
     } catch (error) {
       console.error(error);
       res.status(500).json({
