@@ -1,14 +1,13 @@
 "use client";
 
 import React from "react";
-
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
 import { AnimatedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
-import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
-
+import { GlobeDemo } from "@/components/Global";
+import { GlowingEffectDemo } from "@/components/Glowing-effect";
 export default function Home() {
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
@@ -238,10 +237,14 @@ export default function Home() {
           </div>
         </div>
       </div> */}
-      <StickyScroll content={scrollContent} />
+      <div className="w-full h-[800px] bg-slate-900 flex items-center justify-center">
+        <GlobeDemo />
+        <GlowingEffectDemo />
+      </div>
+
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
-          What they tell about us{" "}
+          What they tell about us
         </p>
         <InfiniteMovingCards
           items={testimonials}
