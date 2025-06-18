@@ -7,8 +7,11 @@ import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
 import { AnimatedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
-import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
+
 import { Star } from "lucide-react";
+
+import { BentoGridDemo } from "@/components/BentoGridDemo";
+import { BentoGrid } from "@/components/ui/bento-grid";
 
 export default function Home() {
   const words =
@@ -239,7 +242,9 @@ export default function Home() {
           </div>
         </div>
       </div> */}
-      <StickyScroll content={scrollContent} />
+      <div className="w-full h-[1000px] bg-slate-900 flex pt-1">
+        <BentoGridDemo />
+      </div>
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
           What they tell about us{" "}
