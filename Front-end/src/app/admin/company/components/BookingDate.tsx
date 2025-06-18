@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { format, addDays, isWeekend, startOfDay, isSameDay } from "date-fns";
 import { ChevronRight, Wallet } from "lucide-react";
 import {
@@ -9,17 +9,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
-import QRCode from "react-qr-code";
 
 interface BackendBooking {
   _id: string;
@@ -38,9 +31,6 @@ interface Booking {
 }
 
 export const BookingDate = () => {
-  const [showQrModal, setShowQrModal] = useState(false);
-  const [qrData, setQrData] = useState("");
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [currentStartDate, setCurrentStartDate] = React.useState<Date>(
     startOfDay(new Date())
   );
@@ -119,6 +109,65 @@ export const BookingDate = () => {
     return `${hours.toString().padStart(2, "0")}:${minutes.padStart(2, "0")}`;
   };
 
+  // const getBookingForSlot = (date: Date, timeSlot: string) => {
+
+  //   const localBooking = bookings.find(
+  //     (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
+  //   );
+
+  //   if (localBooking) return localBooking;
+
+  //   const formattedDate = format(date, "yyyy-MM-dd");
+  //   const [startTime] = timeSlot.split("-");
+  //   const slotStartTime24 = formatTimeTo24Hour(startTime);
+
+  //   console.log(
+  //     "Checking backend bookings for date:",
+  //     formattedDate,
+  //     "time:",
+  //     slotStartTime24
+  //   );
+
+  //   const backendBooking = (
+  //     bookingsBackend as unknown as BackendBooking[]
+  //   ).find((booking) => {
+  //     const bookingDate = new Date(booking.bookingDate);
+  //     const bookingDateStr = format(bookingDate, "yyyy-MM-dd");
+
+  //     const bookingTime24 = booking.startTime.includes(" ")
+  //       ? formatTimeTo24Hour(booking.startTime)
+  //       : booking.startTime;
+
+  //     console.log("Comparing with backend booking:", {
+  //       bookingDate: bookingDateStr,
+  //       bookingStartTime: booking.startTime,
+  //       bookingTime24,
+  //       formattedDate,
+  //       slotStartTime24,
+  //     });
+
+  //     return (
+  //       bookingDateStr === formattedDate && bookingTime24 === slotStartTime24
+  //     );
+
+  //   });
+
+  //   console.log("Found matching backend booking:", backendBooking);
+
+  //   if (backendBooking) {
+  //     return {
+  //       id: backendBooking._id,
+  //       date: new Date(backendBooking.bookingDate),
+  //       time: timeSlot,
+  //       status: "booked" as const,
+  //       price: 0,
+  //       isSale: false,
+  //     };
+  //   }
+
+  //   return null;
+  // };
+
   const getBookingForSlot = (date: Date, timeSlot: string) => {
     const localBooking = bookings.find(
       (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
@@ -179,7 +228,6 @@ export const BookingDate = () => {
 
     return null;
   };
-
   const getStatusClass = (booking: Booking | null) => {
     if (!booking) return "bg-white hover:bg-blue-50 cursor-pointer";
 
@@ -192,129 +240,46 @@ export const BookingDate = () => {
         return "bg-red-100 text-red-800 cursor-not-allowed";
     }
   };
+  const handleBooking = () => {
+    const fetchBooking = async () => {
+      try {
+        for (const booking of bookings) {
+          try {
+            console.log("Creating booking:", {
+              date: booking.date,
+              time: booking.time,
+              price: booking.price,
+            });
 
-  const handleCashout = (booking: Booking) => {
-    setSelectedBooking(booking);
-    const paymentData = {
-      bookingId: booking.id,
-      amount: booking.price,
-      timestamp: new Date().toISOString(),
-      companyId: params.id,
-    };
-    setQrData(JSON.stringify(paymentData));
-    setShowQrModal(true);
-  };
+            if (!booking.time || typeof booking.time !== "string") {
+              throw new Error("Invalid time format");
+            }
 
-  const checkPaymentStatus = async () => {
-    if (!selectedBooking) return;
+            const [startTime, endTime] = booking.time.split("-");
 
-    try {
-      const response = await axiosInstance.get(
-        `/booking/status/${selectedBooking.id}`
-      );
-      if (response.data.status === "confirmed") {
-        setShowQrModal(false);
-        fetchBookingData();
-      }
-    } catch (error) {
-      console.error("Error checking payment status:", error);
-    }
-  };
+            if (!startTime || !endTime) {
+              throw new Error("Invalid time slots");
+            }
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (showQrModal && selectedBooking) {
-      interval = setInterval(checkPaymentStatus, 3000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [showQrModal, selectedBooking]);
-
-  const QRPaymentModal = () => (
-    <Dialog open={showQrModal} onOpenChange={setShowQrModal}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Scan QR to Complete Payment</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col items-center p-4">
-          <div className="p-4 bg-white rounded-lg">
-            <QRCode
-              value={qrData}
-              size={200}
-              level="H"
-              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-            />
-          </div>
-          <p className="mt-4 text-sm text-gray-600 text-center">
-            Scan this QR code with your phone to complete the payment
-          </p>
-          {selectedBooking && (
-            <p className="text-xs text-gray-500 mt-2">
-              Amount: {selectedBooking.price.toLocaleString()} ₮
-            </p>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-
-  const createBookingWithPayment = async (bookingData: Booking) => {
-    try {
-      const formattedDate = format(bookingData.date, "yyyy-MM-dd");
-      const [startTime, endTime] = bookingData.time.split("-");
-
-      const response = await axiosInstance.post("/booking/create-booking", {
-        companyId: params.id,
-        bookingDate: formattedDate,
-        startTime,
-        endTime,
-        price: bookingData.price,
-        status: "pending",
-      });
-
-      return response.data;
-    } catch (error) {
-      console.error("Error creating booking:", error);
-      throw error;
-    }
-  };
-
-  const handleBooking = async () => {
-    try {
-      for (const booking of bookings) {
-        try {
-          console.log("Creating booking:", {
-            date: booking.date,
-            time: booking.time,
-            price: booking.price,
-          });
-
-          if (!booking.time || typeof booking.time !== "string") {
-            throw new Error("Invalid time format");
+            const formattedDate = format(booking.date, "yyyy-MM-dd");
+            const res = await axiosInstance.post("/booking/create-booking", {
+              companyId: params.id,
+              bookingDate: formattedDate,
+              startTime,
+              endTime,
+              price: booking.price,
+            });
+            console.log("Booking created:", res.data);
+          } catch (error) {
+            console.error("Error creating booking:", error);
+            throw error;
           }
-
-          const [startTime, endTime] = booking.time.split("-");
-
-          if (!startTime || !endTime) {
-            throw new Error("Invalid time slots");
-          }
-
-          const createdBooking = await createBookingWithPayment(booking);
-          handleCashout({
-            ...booking,
-            id: createdBooking._id,
-          });
-        } catch (error) {
-          console.error("Error creating booking:", error);
-          throw error;
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.error("Error in booking process:", error);
-    }
+    };
+    fetchBooking();
   };
 
   const fetchBookingData = () => {
@@ -406,14 +371,6 @@ export const BookingDate = () => {
                           </div>
                         </CardContent>
                       </Card>
-                      <Button
-                        onClick={handleBooking}
-                        className="w-full"
-                        disabled={bookings.length === 0}
-                      >
-                        Book Now
-                      </Button>
-                      <QRPaymentModal />
                       <Button
                         className="w-full"
                         onClick={() => {

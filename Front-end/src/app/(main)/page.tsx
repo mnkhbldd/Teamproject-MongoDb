@@ -8,7 +8,6 @@ import Image from "next/image";
 import { AnimatedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
-import { Star } from "lucide-react";
 
 export default function Home() {
   const words =

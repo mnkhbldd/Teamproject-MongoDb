@@ -32,7 +32,6 @@ export const createBookings = async (
           ? bookingData.endTime
           : bookingData.endTime.replace(/:/g, "");
 
-      // Create date object from YYYY-MM-DD string
       const [year, month, day] = bookingData.bookingDate.split("-").map(Number);
       const bookingDate = new Date(Date.UTC(year, month - 1, day));
 
