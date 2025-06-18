@@ -52,7 +52,7 @@ export default function Home() {
       content: (
         <div className="flex h-full w-full items-center justify-center">
           <Image
-            src="./scroll1.jpg"
+            src={"/scroll1.jpg"}
             width={300}
             height={300}
             className="h-full w-full object-cover"
@@ -68,7 +68,7 @@ export default function Home() {
       content: (
         <div className="flex h-full w-full items-center justify-center">
           <Image
-            src="./scroll2.jpg"
+            src={"/scroll2.jpg"}
             width={300}
             height={300}
             className="h-full w-full object-cover"
@@ -84,7 +84,7 @@ export default function Home() {
       content: (
         <div className="flex h-full w-full items-center justify-center">
           <Image
-            src="./scroll3.jpg"
+            src="/scroll3.jpg"
             width={300}
             height={300}
             className="h-full w-full object-cover"
@@ -100,7 +100,7 @@ export default function Home() {
       content: (
         <div className="flex h-full w-full items-center justify-center">
           <Image
-            src="./scroll4.jpg"
+            src="/scroll4.jpg"
             width={300}
             height={300}
             className="h-full w-full object-cover"
@@ -116,7 +116,7 @@ export default function Home() {
       content: (
         <div className="flex h-full w-full items-center justify-center">
           <Image
-            src="./scroll5.jpg"
+            src="/scroll5.jpg"
             width={300}
             height={300}
             className="h-full w-full object-cover"
@@ -132,7 +132,7 @@ export default function Home() {
       content: (
         <div className="flex h-full w-full items-center justify-center">
           <Image
-            src="./scroll6.jpg"
+            src="/scroll6.jpg"
             width={300}
             height={300}
             className="h-full w-full object-cover"
