@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
 import { useCategory } from "@/app/context/CategoryContext";
+import { CategoryFilter } from "@/components/FilterByCategories";
 interface Company {
   _id: string;
   name: string;
@@ -36,19 +37,27 @@ export const SideBarExplore = () => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await axiosInstance.get(
-          `/company/get-companies?q=${search}`
-        );
+        const params = new URLSearchParams();
 
-        setCompany(res.data.companies);
+        if (search) {
+          params.append("q", search);
+        }
+
+        selectedCategories.forEach((id) => {
+          params.append("categories", id); // will send ?categories=id1&categories=id2
+        });
+
+        const res = await axiosInstance.get(
+          `/company/get-companies?${params.toString()}`
+        );
+        setCompany(res.data.companies || []);
       } catch (error) {
         console.error("Error fetching companies", error);
       }
     };
 
     fetchCompanies();
-  }, [search]);
-
+  }, [search, selectedCategories]);
   const jumpToDetail = (_id: string) => {
     router.push(`/Company/${_id}`);
   };
@@ -59,12 +68,12 @@ export const SideBarExplore = () => {
 
   return (
     <div className=" overflow-y-scroll w-full flex flex-col gap-3 pt-13 from-black to-gray-800 bg-gradient-to-b h-full">
-      <div className="flex h-fit w-[35%] fixed z-50 px-4 py-2 gap-2 backdrop-blur-3xl">
-        {/* <CategoryFilter
+      <div className="flex h-fit w-[35%] fixed z-50 px-4 py-2 gap-2">
+        <CategoryFilter
           categories={categories}
           value={selectedCategories}
           onChange={setSelectedCategories}
-        /> */}
+        />
         <Input
           onChange={handleInputValue}
           className="bg-white focus-visible:ring-0 "

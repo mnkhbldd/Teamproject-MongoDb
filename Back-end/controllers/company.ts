@@ -61,28 +61,44 @@ export const createCompany = async (
   }
 };
 
+interface GetCompaniesQuery {
+  q?: string;
+  categories?: string | string[];
+}
+
 export const getCompanies = async (
-  req: Request,
+  req: Request<unknown, unknown, unknown, GetCompaniesQuery>,
   res: Response
-): Promise<any> => {
-  const { q } = req.query;
+): Promise<Response> => {
+  const { q, categories } = req.query;
 
   try {
-    let filter = {};
+    const filter: Record<string, unknown> = {};
 
-    if (q && typeof q === "string") {
+    // Search query
+    if (q) {
       const searchRegex = new RegExp(q, "i");
+      filter.$or = [
+        { name: searchRegex },
+        { phoneNumber: searchRegex },
+        { "socialMedia.Facebook": searchRegex },
+        { "socialMedia.instagram": searchRegex },
+        { "socialMedia.website": searchRegex },
+        { "location.address": searchRegex },
+      ];
+    }
 
-      filter = {
-        $or: [
-          { name: searchRegex },
-          { phoneNumber: searchRegex },
-          { "socialMedia.Facebook": searchRegex },
-          { "socialMedia.instagram": searchRegex },
-          { "socialMedia.website": searchRegex },
-          { "location.address": searchRegex },
-        ],
-      };
+    // Filter by category IDs
+    if (categories) {
+      const categoryArray = Array.isArray(categories)
+        ? categories
+        : [categories];
+
+      const categoryObjectIds = categoryArray.map(
+        (id) => new mongoose.Types.ObjectId(id)
+      );
+
+      filter.category = { $in: categoryObjectIds };
     }
 
     const companies = await CompanyModel.find(filter).sort({ createdAt: -1 });
@@ -93,6 +109,7 @@ export const getCompanies = async (
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 export const getCompaniesByUser = async (
   req: RequestWithUserId,
   res: Response
