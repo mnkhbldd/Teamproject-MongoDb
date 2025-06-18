@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ReviewModel from "../model/review";
 import CompanyModel from "../model/company";
+import UserModel from "../model/user"; // Import UserModel
 import { RequestWithUserId } from "../middleware/checkClerkToken";
 
 export const createReview = async (
@@ -80,18 +81,26 @@ export const getReviewsByUserCompanies = async (
     const userCompanies = await CompanyModel.find({ user: userId });
     const companyIds = userCompanies.map((company) => company._id);
 
-    const reviews = await ReviewModel.find({ company: { $in: companyIds } })
-      .populate("company", "name")
-      .populate({
-        path: "user",
-        select: "userName photo",
-        model: "User",
-      })
-      .sort({ createdAt: -1 });
+    const reviews = await ReviewModel.find({
+      company: { $in: companyIds },
+    }).populate("company", "name");
+
+    const userIds = [...new Set(reviews.map((review) => review.user))];
+
+    const users = await UserModel.find({ clerkId: { $in: userIds } });
+    const userMap = new Map(users.map((user) => [user.clerkId, user]));
+
+    const reviewsWithUsers = reviews.map((review) => ({
+      ...review.toObject(),
+      user: userMap.get(review.user) || {
+        userName: "Unknown User",
+        photo: null,
+      },
+    }));
 
     res.status(200).json({
       success: true,
-      reviews,
+      reviews: reviewsWithUsers,
     });
   } catch (error) {
     console.error(error);
