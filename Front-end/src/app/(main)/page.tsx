@@ -1,14 +1,59 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
 import { AnimatedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
-
+import { useRouter } from "next/navigation";
+import InfiniteMenu from "@/components/ui/InfinitMenu";
+const items = [
+  {
+    image: "/logo1.png",
+    link: "https://google.com/",
+    title: "Item 1",
+    description: "This is pretty cool, right?",
+  },
+  {
+    image: "logo2.png",
+    link: "https://google.com/",
+    title: "Item 2",
+    description: "This is pretty cool, right?",
+  },
+  {
+    image: "logo3.png",
+    link: "https://google.com/",
+    title: "Item 3",
+    description: "This is pretty cool, right?",
+  },
+  {
+    image: "logo4.png",
+    link: "https://google.com/",
+    title: "Item 4",
+    description: "This is pretty cool, right?",
+  },
+  {
+    image: "logo5.png",
+    link: "https://google.com/",
+    title: "Item 5",
+    description: "This is pretty cool, right?",
+  },
+  {
+    image: "logo6.png",
+    link: "https://google.com/",
+    title: "Item 6",
+    description: "This is pretty cool, right?",
+  },
+];
 export default function Home() {
+  const router = useRouter();
+  const handleOnClick = () => {
+    router.push("/AboutUs");
+  };
+  const canvasRef = useRef(null);
+  useEffect(() => {}, []);
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
 
@@ -48,7 +93,7 @@ export default function Home() {
       <BackgroundBeamsWithCollision>
         <div className="flex flex-col items-center">
           <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-[rgba(227,232,255,0.9)] dark:text-white font-sans tracking-tight">
-            U looking for best activity site?{" "}
+            U looking for best activity site?
             <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
               <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
                 <span className="">Freely is for you</span>
@@ -79,7 +124,6 @@ export default function Home() {
           </div>
         </div>
       </BackgroundBeamsWithCollision>
-
       <div className="w-full h-[80px] bg-gray-900 flex items-center justify-center">
         <div className="flex items-center justify-center w-full gap-30">
           <div className="flex gap-[30px] items-center">
@@ -138,9 +182,18 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <div
+        style={{
+          height: "350px",
+          position: "relative",
+        }}
+      >
+        <InfiniteMenu items={items} />
+      </div>
+      ;
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 dark:bg-black dark:bg-grid-white/[0.05]  justify-center relative overflow-hidden">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
-          What they tell about us{" "}
+          What they tell about us
         </p>
         <InfiniteMovingCards
           items={testimonials}

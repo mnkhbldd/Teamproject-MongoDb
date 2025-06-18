@@ -15,9 +15,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const AnimatedFooter = () => {
   const [email, setEmail] = useState("");
+  const { push } = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +59,24 @@ export const AnimatedFooter = () => {
     rotate: 5,
     transition: { duration: 0.2 },
   };
+  const routes1 = [
+    {
+      label: "Гар утасны апп",
+      value: "/Phone",
+    },
+    {
+      label: "Газрын зураг харах",
+      value: "/Addlocation",
+    },
+  ];
 
+  const routes = [
+    { label: "Нүүр хуудас", value: "/" },
+    { label: "Бидний тухай", value: "AboutUs" },
+  ];
+  const handleNavigate = (route: string) => {
+    push(route);
+  };
   return (
     <motion.footer
       className="bg-slate-900 text-white"
@@ -135,12 +154,17 @@ export const AnimatedFooter = () => {
               transition={{ delay: 0.6, duration: 0.4 }}
             />
             <ul className="space-y-2">
-              {["Home", "About", "Services", "Contact"].map((item) => (
-                <li key={item}>
+              {routes.map((item, index) => (
+                <li key={index}>
                   <motion.div whileHover={linkHover}>
-                    <Link href="#" className="text-slate-300 hover:text-white">
-                      {item}
-                    </Link>
+                    <p
+                      onClick={() => {
+                        handleNavigate(item.value);
+                      }}
+                      className="text-slate-300 hover:text-white cursor-pointer"
+                    >
+                      {item.label}
+                    </p>
                   </motion.div>
                 </li>
               ))}
@@ -156,18 +180,19 @@ export const AnimatedFooter = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.7, duration: 0.4 }}
             />
+
             <ul className="space-y-2">
-              {[
-                "Утасны апп",
-                "Газрын зураг оруулах",
-                "Цаг захиалах",
-                "SEO",
-              ].map((item) => (
-                <li key={item}>
+              {routes1.map((item, index) => (
+                <li key={index}>
                   <motion.div whileHover={linkHover}>
-                    <Link href="#" className="text-slate-300 hover:text-white">
-                      {item}
-                    </Link>
+                    <p
+                      onClick={() => {
+                        handleNavigate(item.value);
+                      }}
+                      className="text-slate-300 hover:text-white"
+                    >
+                      {item.label}
+                    </p>
                   </motion.div>
                 </li>
               ))}
