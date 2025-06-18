@@ -82,7 +82,11 @@ export const getReviewsByUserCompanies = async (
 
     const reviews = await ReviewModel.find({ company: { $in: companyIds } })
       .populate("company", "name")
-      .populate("user", "username", "photo")
+      .populate({
+        path: "user",
+        select: "userName photo",
+        model: "User",
+      })
       .sort({ createdAt: -1 });
 
     res.status(200).json({
