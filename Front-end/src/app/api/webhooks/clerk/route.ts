@@ -50,8 +50,6 @@ export async function POST(req: Request) {
     const { email_addresses, image_url, username, first_name, last_name } =
       evt.data;
 
-    console.log("User created event data:", evt.data);
-
     if (!email_addresses || email_addresses.length === 0) {
       console.error("Error: No email addresses found in event data");
       return new Response("Error: No email addresses", { status: 400 });
@@ -69,8 +67,6 @@ export async function POST(req: Request) {
 
     try {
       const newUser = await axiosInstance.post("/user/create-user", user);
-
-      console.log("New user created:", newUser.data);
 
       if (newUser && newUser.data && newUser.data._id) {
         try {

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ReviewModel from "../model/review";
 import CompanyModel from "../model/company";
+import { RequestWithUserId } from "../middleware/checkClerkToken";
 
 export const createReview = async (
   req: Request,
@@ -18,7 +19,6 @@ export const createReview = async (
       return;
     }
 
-    // Ensure the userId is a string
     const review = await ReviewModel.create({
       company: companyId,
       user: userId.toString(),
@@ -54,6 +54,34 @@ export const getReviewsByCompany = async (
     const { companyId } = req.params;
 
     const reviews = await ReviewModel.find({ company: companyId })
+      .populate("user", "name")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      reviews,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+export const getReviewsByUserCompanies = async (
+  req: RequestWithUserId,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = req.userId;
+
+    const userCompanies = await CompanyModel.find({ user: userId });
+    const companyIds = userCompanies.map((company) => company._id);
+
+    const reviews = await ReviewModel.find({ company: { $in: companyIds } })
+      .populate("company", "name")
       .populate("user", "name")
       .sort({ createdAt: -1 });
 

@@ -10,7 +10,6 @@ export const CarouselImage = ({
   imageSrc: string[] | undefined;
 }) => {
   const carouselItems = imageSrc;
-  console.log(carouselItems);
 
   const [currentIndex, setCurrentIndex] = useState(2); // Start with middle item
   const [isAnimating, setIsAnimating] = useState(false);
