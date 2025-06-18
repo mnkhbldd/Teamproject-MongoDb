@@ -51,7 +51,7 @@ export default function Home() {
         "To provide an easy-to-use platform that helps users find and book sports activities, venues, and services in one place.",
       content: (
         <div className="flex h-full w-full items-center justify-center">
-          <img
+          <Image
             src="./scroll1.jpg"
             width={300}
             height={300}
@@ -67,7 +67,7 @@ export default function Home() {
         "To simplify the way people discover and join sports events, classes, and venues through a clear and accessible online system.",
       content: (
         <div className="flex h-full w-full items-center justify-center">
-          <img
+          <Image
             src="./scroll2.jpg"
             width={300}
             height={300}
@@ -83,7 +83,7 @@ export default function Home() {
         "To make it effortless for users to explore, reserve, and enjoy sports and fitness options via a streamlined digital platform.",
       content: (
         <div className="flex h-full w-full items-center justify-center">
-          <img
+          <Image
             src="./scroll3.jpg"
             width={300}
             height={300}
@@ -99,7 +99,7 @@ export default function Home() {
         "To bring people and sports together by offering a smart, simple, and convenient online booking experience.",
       content: (
         <div className="flex h-full w-full items-center justify-center">
-          <img
+          <Image
             src="./scroll4.jpg"
             width={300}
             height={300}
@@ -115,7 +115,7 @@ export default function Home() {
         "To create a centralized hub where users can easily access and book sports opportunities, locations, and services.",
       content: (
         <div className="flex h-full w-full items-center justify-center">
-          <img
+          <Image
             src="./scroll5.jpg"
             width={300}
             height={300}
@@ -131,7 +131,7 @@ export default function Home() {
         "To connect individuals with local sports and recreational services through a modern, efficient, and user-focused website.",
       content: (
         <div className="flex h-full w-full items-center justify-center">
-          <img
+          <Image
             src="./scroll6.jpg"
             width={300}
             height={300}
