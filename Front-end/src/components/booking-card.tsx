@@ -66,7 +66,7 @@ export function BookingCard({ booking, onStatusChange }: BookingCardProps) {
       transition={{ duration: 0.3 }}
       className="group"
     >
-      <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border-0 shadow-sm bg-gradient-to-r from-blue-500 to-pink-200">
+      <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border-0 shadow-sm bg-gradient-to-r from-slate-400 to-white">
         {/* Premium gradient bar */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-premium-gradient" />
 

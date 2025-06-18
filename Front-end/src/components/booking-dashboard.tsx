@@ -114,14 +114,14 @@ export function BookingDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
+    <div className="container mx-auto p-6 space-y-8 h-screen">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-2"
       >
-        <h1 className="text-3xl text-white font-bold tracking-tight">
+        <h1 className="text-4xl relative text-white font-bold text-shadow-2xl  tracking-tight">
           Booking Dashboard
         </h1>
         <p className="text-muted-foreground  ">
@@ -136,7 +136,7 @@ export function BookingDashboard() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-1 md:grid-cols-4 gap-4"
       >
-        <Card className="bg-gradient-to-r from-blue-300 to-pink-300">
+        <Card className="bg-gradient-to-r relative from-slate-300 to-purple-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Bookings
@@ -148,7 +148,7 @@ export function BookingDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-yellow-300 to-red-500">
+        <Card className="bg-gradient-to-r relative from-slate-200 to-red-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -158,7 +158,7 @@ export function BookingDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-bl from-green-400 to-blue-500 ">
+        <Card className="bg-gradient-to-bl relative from-green-400 to-blue-500 ">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Confirmed</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -168,7 +168,7 @@ export function BookingDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-b from-pink-400 to-purple-500">
+        <Card className="bg-gradient-to-b relative from-blue-400 to-slate-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -186,7 +186,7 @@ export function BookingDashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="flex flex-col sm:flex-row gap-4 items-center justify-between"
+        className="flex flex-col relative sm:flex-row gap-4 items-center justify-between"
       >
         <div className="flex flex-1 max-w-md gap-2">
           <div className="relative flex-1">
@@ -195,7 +195,7 @@ export function BookingDashboard() {
               placeholder="Search bookings..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 text-white"
+              className="pl-10 border-2 text-white"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -203,7 +203,7 @@ export function BookingDashboard() {
               <Filter color="white" className="w-4 h-4 mr-2" />
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="text-black">
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="confirmed">Confirmed</SelectItem>
