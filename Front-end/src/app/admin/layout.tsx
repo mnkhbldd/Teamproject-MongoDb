@@ -51,8 +51,8 @@ export default function AdminLayout({
   return (
     <div
       className={cn(
-        "mx-auto flex w-full flex-1 flex-col overflow-hidden rounded-md border border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
-        "h-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
+        " flex w-full flex-1 flex-col overflow-hidden rounded-md border border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
+        "h-screen"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
@@ -84,7 +84,7 @@ export default function AdminLayout({
           </div>
         </SidebarBody>
       </Sidebar>
-      <div>{children}</div>
+      <div className="w-[96%]">{children}</div>
     </div>
   );
 }
