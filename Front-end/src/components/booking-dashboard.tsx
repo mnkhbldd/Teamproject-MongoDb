@@ -121,8 +121,10 @@ export function BookingDashboard() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-2"
       >
-        <h1 className="text-3xl font-bold tracking-tight">Booking Dashboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-3xl text-white font-bold tracking-tight">
+          Booking Dashboard
+        </h1>
+        <p className="text-muted-foreground  ">
           Manage your bookings with style and efficiency
         </p>
       </motion.div>
@@ -134,7 +136,7 @@ export function BookingDashboard() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-1 md:grid-cols-4 gap-4"
       >
-        <Card>
+        <Card className="bg-gradient-to-r from-blue-300 to-pink-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Bookings
@@ -146,7 +148,7 @@ export function BookingDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-r from-yellow-300 to-red-500">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -156,7 +158,7 @@ export function BookingDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-bl from-green-400 to-blue-500 ">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Confirmed</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -166,7 +168,7 @@ export function BookingDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-b from-pink-400 to-purple-500">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -193,12 +195,12 @@ export function BookingDashboard() {
               placeholder="Search bookings..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 text-white"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-40">
-              <Filter className="w-4 h-4 mr-2" />
+              <Filter color="white" className="w-4 h-4 mr-2" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
