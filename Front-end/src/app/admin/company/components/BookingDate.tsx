@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { format, addDays, isWeekend, startOfDay, isSameDay } from "date-fns";
 import { ChevronRight, Wallet } from "lucide-react";
 import {
@@ -109,6 +109,65 @@ export const BookingDate = () => {
     return `${hours.toString().padStart(2, "0")}:${minutes.padStart(2, "0")}`;
   };
 
+  // const getBookingForSlot = (date: Date, timeSlot: string) => {
+
+  //   const localBooking = bookings.find(
+  //     (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
+  //   );
+
+  //   if (localBooking) return localBooking;
+
+  //   const formattedDate = format(date, "yyyy-MM-dd");
+  //   const [startTime] = timeSlot.split("-");
+  //   const slotStartTime24 = formatTimeTo24Hour(startTime);
+
+  //   console.log(
+  //     "Checking backend bookings for date:",
+  //     formattedDate,
+  //     "time:",
+  //     slotStartTime24
+  //   );
+
+  //   const backendBooking = (
+  //     bookingsBackend as unknown as BackendBooking[]
+  //   ).find((booking) => {
+  //     const bookingDate = new Date(booking.bookingDate);
+  //     const bookingDateStr = format(bookingDate, "yyyy-MM-dd");
+
+  //     const bookingTime24 = booking.startTime.includes(" ")
+  //       ? formatTimeTo24Hour(booking.startTime)
+  //       : booking.startTime;
+
+  //     console.log("Comparing with backend booking:", {
+  //       bookingDate: bookingDateStr,
+  //       bookingStartTime: booking.startTime,
+  //       bookingTime24,
+  //       formattedDate,
+  //       slotStartTime24,
+  //     });
+
+  //     return (
+  //       bookingDateStr === formattedDate && bookingTime24 === slotStartTime24
+  //     );
+
+  //   });
+
+  //   console.log("Found matching backend booking:", backendBooking);
+
+  //   if (backendBooking) {
+  //     return {
+  //       id: backendBooking._id,
+  //       date: new Date(backendBooking.bookingDate),
+  //       time: timeSlot,
+  //       status: "booked" as const,
+  //       price: 0,
+  //       isSale: false,
+  //     };
+  //   }
+
+  //   return null;
+  // };
+
   const getBookingForSlot = (date: Date, timeSlot: string) => {
     const localBooking = bookings.find(
       (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
@@ -157,7 +216,11 @@ export const BookingDate = () => {
         id: backendBooking._id,
         date: new Date(backendBooking.bookingDate),
         time: timeSlot,
-        status: "booked" as const,
+        status: backendBooking.status as
+          | "pending"
+          | "booked"
+          | "cancelled"
+          | "selected",
         price: 0,
         isSale: false,
       };
@@ -165,7 +228,6 @@ export const BookingDate = () => {
 
     return null;
   };
-
   const getStatusClass = (booking: Booking | null) => {
     if (!booking) return "bg-white hover:bg-blue-50 cursor-pointer";
 
@@ -234,7 +296,7 @@ export const BookingDate = () => {
     fetchBooking();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchBookingData();
   }, []);
 
@@ -448,7 +510,11 @@ export const BookingDate = () => {
                     <div className="text-center text-sm">
                       {currentBooking?.status === "pending"
                         ? "Selected"
-                        : "Booked"}
+                        : currentBooking?.status === "booked"
+                        ? "Booked"
+                        : currentBooking?.status === "cancelled"
+                        ? "Cancelled"
+                        : ""}
                     </div>
                   )}
                 </div>

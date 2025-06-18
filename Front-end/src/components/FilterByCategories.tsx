@@ -31,7 +31,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
         scrollbarColor: "#e3e8ffe6 transparent",
         msOverflowStyle: "none",
       }}
-      className="max-h-60 overflow-y-auto grid grid-cols-2 gap-2"
+      className="max-h-60 overflow-y-scroll grid grid-cols-2 gap-2"
     >
       {categories.length > 0 ? (
         categories.map((cat) => {

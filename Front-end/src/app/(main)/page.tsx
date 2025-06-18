@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import Image from "next/image";
 import { AnimatedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
-
+import { GlobeDemo } from "@/components/Global";
+import { GlowingEffectDemo } from "@/components/Glowing-effect";
 export default function Home() {
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
@@ -43,6 +43,105 @@ export default function Home() {
       title: "Moby-Dick",
     },
   ];
+  const scrollContent = [
+    {
+      title: "Physical Health",
+      description:
+        "To provide an easy-to-use platform that helps users find and book sports activities, venues, and services in one place.",
+      content: (
+        <div className="flex h-full w-full items-center justify-center">
+          <Image
+            src={"/scroll1.jpg"}
+            width={300}
+            height={300}
+            className="h-full w-full object-cover"
+            alt="linear board demo"
+          />
+        </div>
+      ),
+    },
+    {
+      title: "Mental Well-being",
+      description:
+        "To simplify the way people discover and join sports events, classes, and venues through a clear and accessible online system.",
+      content: (
+        <div className="flex h-full w-full items-center justify-center">
+          <Image
+            src={"/scroll2.jpg"}
+            width={300}
+            height={300}
+            className="h-full w-full object-cover"
+            alt="linear board demo"
+          />
+        </div>
+      ),
+    },
+    {
+      title: "Social Connection",
+      description:
+        "To make it effortless for users to explore, reserve, and enjoy sports and fitness options via a streamlined digital platform.",
+      content: (
+        <div className="flex h-full w-full items-center justify-center">
+          <Image
+            src="/scroll3.jpg"
+            width={300}
+            height={300}
+            className="h-full w-full object-cover"
+            alt="linear board demo"
+          />
+        </div>
+      ),
+    },
+    {
+      title: "Personal Growth",
+      description:
+        "To bring people and sports together by offering a smart, simple, and convenient online booking experience.",
+      content: (
+        <div className="flex h-full w-full items-center justify-center">
+          <Image
+            src="/scroll4.jpg"
+            width={300}
+            height={300}
+            className="h-full w-full object-cover"
+            alt="linear board demo"
+          />
+        </div>
+      ),
+    },
+    {
+      title: "Life Balance and Recreation",
+      description:
+        "To create a centralized hub where users can easily access and book sports opportunities, locations, and services.",
+      content: (
+        <div className="flex h-full w-full items-center justify-center">
+          <Image
+            src="/scroll5.jpg"
+            width={300}
+            height={300}
+            className="h-full w-full object-cover"
+            alt="linear board demo"
+          />
+        </div>
+      ),
+    },
+    {
+      title: "Cultural and Educational Impact",
+      description:
+        "To connect individuals with local sports and recreational services through a modern, efficient, and user-focused website.",
+      content: (
+        <div className="flex h-full w-full items-center justify-center">
+          <Image
+            src="/scroll6.jpg"
+            width={300}
+            height={300}
+            className="h-full w-full object-cover"
+            alt="linear board demo"
+          />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="w-full">
       <BackgroundBeamsWithCollision>
@@ -80,7 +179,7 @@ export default function Home() {
         </div>
       </BackgroundBeamsWithCollision>
 
-      <div className="w-full h-[80px] bg-gray-900 flex items-center justify-center">
+      {/* <div className="w-full h-[80px] bg-gray-900 flex items-center justify-center">
         <div className="flex items-center justify-center w-full gap-30">
           <div className="flex gap-[30px] items-center">
             <p className="text-[13px] font-bold text-[rgba(227,232,255,0.21)]">
@@ -137,10 +236,15 @@ export default function Home() {
             />
           </div>
         </div>
+      </div> */}
+      <div className="w-full h-[800px] bg-slate-900 flex items-center justify-center">
+        <GlobeDemo />
+        <GlowingEffectDemo />
       </div>
-      <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 dark:bg-black dark:bg-grid-white/[0.05]  justify-center relative overflow-hidden">
+
+      <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
-          What they tell about us{" "}
+          What they tell about us
         </p>
         <InfiniteMovingCards
           items={testimonials}
@@ -148,6 +252,7 @@ export default function Home() {
           speed="slow"
         />
       </div>
+
       <AnimatedFooter />
     </div>
   );

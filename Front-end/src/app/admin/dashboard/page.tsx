@@ -29,110 +29,127 @@ import {
 } from "@/components/ui/table";
 import { CalendarDays, DollarSign, TrendingUp, Users } from "lucide-react";
 import { BookingListsAdmin } from "@/components/BookingListsAdmin";
+import axiosInstance from "@/utils/axios";
 
-const mockBookings = [
-  {
-    _id: "684ffb08e14b423dee2f4989",
-    user: "user_2yDXdHHp9AN0w9XYA2FktIY8j9Z",
-    company: "684d3c1135154184ccdcd6b2",
-    companyName: "Tech Solutions Inc",
-    bookingDate: "2025-06-20T00:00:00.000+00:00",
-    startTime: "09:00",
-    endTime: "10:00",
-    status: "booked",
-    price: "75000",
-    createdAt: "2025-06-16T11:07:52.635+00:00",
-    updatedAt: "2025-06-16T11:07:52.635+00:00",
-  },
-  {
-    _id: "684ffb08e14b423dee2f4990",
-    user: "user_3xEYeIIq0BO1x0YZB3GluJZ9k0A",
-    company: "684d3c1135154184ccdcd6b3",
-    companyName: "Digital Marketing Pro",
-    bookingDate: "2025-06-21T00:00:00.000+00:00",
-    startTime: "14:00",
-    endTime: "15:30",
-    status: "booked",
-    price: "120000",
-    createdAt: "2025-06-16T12:15:30.123+00:00",
-    updatedAt: "2025-06-16T12:15:30.123+00:00",
-  },
-  {
-    _id: "684ffb08e14b423dee2f4991",
-    user: "user_4zFZfJJr1CP2y1ZAC4HmvKA0l1B",
-    company: "684d3c1135154184ccdcd6b4",
-    companyName: "Creative Studio",
-    bookingDate: "2025-06-19T00:00:00.000+00:00",
-    startTime: "10:30",
-    endTime: "12:00",
-    status: "cancelled",
-    price: "95000",
-    createdAt: "2025-06-15T09:30:15.456+00:00",
-    updatedAt: "2025-06-16T08:45:22.789+00:00",
-  },
-  {
-    _id: "684ffb08e14b423dee2f4992",
-    user: "user_5aGAgKKs2DQ3z2ABC5InwLB1m2C",
-    company: "684d3c1135154184ccdcd6b2",
-    companyName: "Tech Solutions Inc",
-    bookingDate: "2025-06-22T00:00:00.000+00:00",
-    startTime: "16:00",
-    endTime: "17:00",
-    status: "booked",
-    price: "85000",
-    createdAt: "2025-06-16T14:20:45.321+00:00",
-    updatedAt: "2025-06-16T14:20:45.321+00:00",
-  },
-];
+interface Booking {
+  _id: string;
+  user: string;
+  company: {
+    _id: string;
+    name: string;
+  };
 
-const companies = [
-  { id: "684d3c1135154184ccdcd6b2", name: "Tech Solutions Inc" },
-  { id: "684d3c1135154184ccdcd6b3", name: "Digital Marketing Pro" },
-  { id: "684d3c1135154184ccdcd6b4", name: "Creative Studio" },
-];
+  bookingDate: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  price: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Company {
+  _id: string;
+  name: string;
+  description: string;
+  location: Array<{
+    address: string;
+    coordinate: [number, number];
+  }>;
+  phoneNumber: string;
+  category: string[];
+  socialMedia: {
+    Facebook: string;
+    instagram: string;
+    website: string;
+  };
+  images: string[];
+  companyLogo: string;
+}
 
 export default function AdminDashboard() {
-  const [bookings, setBookings] = useState(mockBookings);
   const [selectedCompany, setSelectedCompany] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [bookingDataBE, setBookingDataBE] = useState<Booking[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
-  const filteredBookings = bookings.filter((booking) => {
+  const fetchBookingDataBe = async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/booking/user-company-bookings"
+      );
+      setBookingDataBE(response.data.bookings);
+      console.log(response.data.bookings, "response.data");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchCompanies = async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/company/get-companies-by-user"
+      );
+      if (response.data?.success && response.data?.companies) {
+        setCompanies(response.data.companies);
+      }
+    } catch (error) {
+      console.error("Error fetching companies:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookingDataBe();
+    fetchCompanies();
+  }, []);
+
+  const filteredBookings = bookingDataBE.filter((booking) => {
     const matchesCompany =
-      selectedCompany === "all" || booking.company === selectedCompany;
+      selectedCompany === "all" || booking.company._id === selectedCompany;
     const matchesStatus =
       statusFilter === "all" || booking.status === statusFilter;
     const matchesSearch =
       searchTerm === "" ||
-      booking.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesCompany && matchesStatus && matchesSearch;
   });
 
-  const totalBookings = filteredBookings.length;
-  const bookedCount = filteredBookings.filter(
-    (b) => b.status === "booked"
-  ).length;
-  const cancelledCount = filteredBookings.filter(
+  const totalBookings = bookingDataBE.length;
+  const bookedCount = bookingDataBE.filter((b) => b.status === "booked").length;
+  const cancelledCount = bookingDataBE.filter(
     (b) => b.status === "cancelled"
   ).length;
-  const totalRevenue = filteredBookings
+  const totalRevenue = bookingDataBE
     .filter((b) => b.status === "booked")
     .reduce((sum, b) => sum + Number.parseInt(b.price), 0);
 
-  const handleStatusChange = (bookingId: string, newStatus: string) => {
-    setBookings((prev) =>
-      prev.map((booking) =>
-        booking._id === bookingId
-          ? {
-              ...booking,
-              status: newStatus,
-              updatedAt: new Date().toISOString(),
-            }
-          : booking
-      )
-    );
+  const handleStatusChange = async (bookingId: string, newStatus: string) => {
+    try {
+      setBookingDataBE((prev) =>
+        prev.map((booking) =>
+          booking._id === bookingId
+            ? {
+                ...booking,
+                status: newStatus,
+                updatedAt: new Date().toISOString(),
+              }
+            : booking
+        )
+      );
+
+      await axiosInstance.put(`/booking/update-status/${bookingId}`, {
+        status: newStatus,
+      });
+
+      await fetchBookingDataBe();
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+
+      await fetchBookingDataBe();
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -152,8 +169,8 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 overflow-y-scroll">
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+    <div className="flex flex-col w-full h-screen bg-gray-50 overflow-y-scroll">
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 w- ">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">
             Booking Dashboard
@@ -257,7 +274,7 @@ export default function AdminDashboard() {
                   <SelectContent>
                     <SelectItem value="all">All Companies</SelectItem>
                     {companies.map((company) => (
-                      <SelectItem key={company.id} value={company.id}>
+                      <SelectItem key={company._id} value={company._id}>
                         {company.name}
                       </SelectItem>
                     ))}
@@ -326,21 +343,21 @@ export default function AdminDashboard() {
                         colSpan={7}
                         className="text-center py-8 text-muted-foreground"
                       >
-                        No bookings found matching your criteria
+                        No bookings found matching your company
                       </TableCell>
                     </TableRow>
                   ) : (
                     filteredBookings.map((booking) => (
                       <TableRow key={booking._id}>
                         <TableCell className="font-medium">
-                          {booking.companyName}
+                          {booking.company.name}
                         </TableCell>
                         <TableCell>{formatDate(booking.bookingDate)}</TableCell>
                         <TableCell>
                           {booking.startTime} - {booking.endTime}
                         </TableCell>
                         <TableCell className="font-mono text-sm">
-                          {booking.user.slice(-8)}...
+                          {booking.user}
                         </TableCell>
                         <TableCell>
                           {formatCurrency(Number.parseInt(booking.price))}
