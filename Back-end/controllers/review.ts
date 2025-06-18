@@ -101,3 +101,33 @@ export const getReviewsByUserCompanies = async (
     });
   }
 };
+
+export const deleteReview = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { reviewId } = req.params;
+
+    const review = await ReviewModel.findByIdAndDelete(reviewId);
+
+    if (!review) {
+      res.status(404).json({
+        success: false,
+        message: "Review not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      review,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: error,
+    });
+  }
+};
