@@ -30,6 +30,18 @@ import {
 import { CalendarDays, DollarSign, TrendingUp, Users } from "lucide-react";
 import { BookingListsAdmin } from "@/components/BookingListsAdmin";
 import axiosInstance from "@/utils/axios";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import AdminBookingForm from "@/components/admin-booking-form";
 
 interface Booking {
   _id: string;
@@ -316,11 +328,28 @@ export default function AdminDashboard() {
         {/* Bookings Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Bookings ({filteredBookings.length})</CardTitle>
+            <div className="flex justify-between">
+              <CardTitle>Bookings ({filteredBookings.length})</CardTitle>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <div className="bg-black text-white px-2 py-1 rounded-lg hover:bg-blue-500 hover:text-black">
+                    Add booking
+                  </div>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AdminBookingForm />
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
             <CardDescription>
               Manage all bookings across your companies
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <div className="rounded-md border">
               <Table>
