@@ -1,18 +1,14 @@
 "use client";
-import gradient from "@/components/ui/gradient";
+
 import React from "react";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
-import { PiArrowArcLeftFill } from "react-icons/pi";
 
-import { AnimatedFooter } from "@/components/NextFooter";
+import { EnhancedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
 
-import { LampDemo } from "@/components/Lampdemo";
-
 import CircularGallery from "@/components/CircularGallery/CircularGallery";
-import GradientText from "@/components/ui/gradient";
 
 export default function Home() {
   console.log("Welcome to Freely!");
@@ -163,7 +159,7 @@ export default function Home() {
         />
       </div>
 
-      <AnimatedFooter />
+      <EnhancedFooter />
     </div>
   );
 }
