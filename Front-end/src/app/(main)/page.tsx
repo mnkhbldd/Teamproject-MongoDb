@@ -14,6 +14,8 @@ import { LampDemo } from "@/components/Lampdemo";
 import CircularGallery from "@/components/CircularGallery/CircularGallery";
 
 export default function Home() {
+  console.log("Welcome to Freely!");
+
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
 
