@@ -72,6 +72,7 @@ interface Company {
   };
   images: string[];
   companyLogo: string;
+  pricing: string;
 }
 
 const MarkerIcon = new L.DivIcon({
@@ -155,6 +156,7 @@ export const Map = () => {
       website: "",
       phoneNumber: "",
       companyLogo: undefined as unknown as FileList,
+      pricing: "",
     },
   });
 
@@ -261,6 +263,7 @@ export const Map = () => {
       },
       images: finalData.images,
       companyLogo: finalData.companyLogo,
+      pricing: finalData.pricing,
     });
 
     setIsloading(false);

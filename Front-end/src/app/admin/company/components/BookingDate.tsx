@@ -186,7 +186,7 @@ export const BookingDate = () => {
 
     switch (booking.status) {
       case "booked":
-        return "bg-green-100 text-green-800 cursor-not-allowed";
+        return "bg-green-100 text-green-500 cursor-not-allowed";
       case "pending":
         return "bg-blue-500 text-white cursor-not-allowed";
       default:
@@ -345,7 +345,7 @@ export const BookingDate = () => {
                 className={`p-3 rounded-lg text-left transition-colors ${
                   slotBooked
                     ? currentBooking?.status === "booked"
-                      ? "bg-green-100 text-green-800 cursor-not-allowed"
+                      ? "bg-green-100 text-green-100 cursor-not-allowed"
                       : currentBooking?.status === "pending"
                       ? "bg-blue-500 text-white cursor-not-allowed"
                       : "bg-red-100 text-red-800 cursor-not-allowed"
@@ -451,7 +451,7 @@ export const BookingDate = () => {
                                   <p className="text-sm text-green-700 font-medium">
                                     Total Price
                                   </p>
-                                  <p className="text-2xl font-bold text-green-800">
+                                  <p className="text-2xl font-bold text-green-500">
                                     {bookings
                                       .reduce(
                                         (acc, curr) => acc + curr.price,
