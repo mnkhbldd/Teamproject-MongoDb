@@ -5,7 +5,7 @@ import { BookingData, generateBookingData } from "@/lib/booking-data";
 import { BookingCard } from "./booking-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
+import { GrCurrency } from "react-icons/gr";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -87,8 +87,9 @@ export function BookingDashboard() {
 
   const stats = {
     total: bookings.length,
-    pending: bookings.filter((b) => b.status === "pending").length,
-    confirmed: bookings.filter((b) => b.status === "confirmed").length,
+    booked: bookings.filter((b) => b.status === "booked").length,
+    cancelled: bookings.filter((b) => b.status === "cancelled").length,
+
     revenue: bookings.reduce((sum, booking) => sum + booking.amount, 0),
   };
 
@@ -114,7 +115,7 @@ export function BookingDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8 h-screen">
+    <div className="container mx-auto p-6 space-y-8 h-screen overflow-scroll scrollbar-hide">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -150,32 +151,34 @@ export function BookingDashboard() {
 
         <Card className="bg-gradient-to-r relative from-slate-200 to-red-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending</CardTitle>
+            <CardTitle className="text-sm font-medium">Booked</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.pending}</div>
+            <div className="text-2xl font-bold">{stats.booked}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-bl relative from-green-400 to-blue-500 ">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Confirmed</CardTitle>
+            <CardTitle className="text-sm font-medium">Canceled</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold ">{stats.confirmed}</div>
+            <div className="text-2xl font-bold ">{stats.cancelled}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-b relative from-blue-400 to-slate-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <GrCurrency className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${stats.revenue.toLocaleString()}
+              {stats.revenue.toLocaleString()}
+              {"  "}
+              <span className="text-2xl font-bold">₮ </span>
             </div>
           </CardContent>
         </Card>
@@ -188,7 +191,7 @@ export function BookingDashboard() {
         transition={{ delay: 0.2 }}
         className="flex flex-col relative sm:flex-row gap-4 items-center justify-between"
       >
-        <div className="flex flex-1 max-w-md gap-2">
+        <div className="flex flex-1 max-w-md text-white  gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
@@ -205,8 +208,8 @@ export function BookingDashboard() {
             </SelectTrigger>
             <SelectContent className="text-black">
               <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="confirmed">Confirmed</SelectItem>
+
+              <SelectItem value="booked">Booked</SelectItem>
               <SelectItem value="cancelled">Cancelled</SelectItem>
             </SelectContent>
           </Select>
