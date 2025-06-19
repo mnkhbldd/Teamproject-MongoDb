@@ -3,24 +3,22 @@
 import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import axiosInstance from "@/utils/axios";
+import { useScan } from "@/app/context/ScanContext";
 
 export const QrBooking = () => {
   const [qrId, setQrId] = useState<string | null>(null);
-  const [scanned, setScanned] = useState(false);
+  const { scanned, setScanned } = useScan();
 
   useEffect(() => {
     const createQrSession = async () => {
       try {
-        // Step 1: Request a new QR session from backend
         const res = await axiosInstance.post("/qr/create-qr-session");
         const qrIdFromServer = res.data.qrId;
         setQrId(qrIdFromServer);
 
-        // Step 2: Open WebSocket connection
         const socket = new WebSocket("wss://teamproject-mongodb.onrender.com");
 
         socket.onopen = () => {
-          // Send QR ID immediately after opening connection
           socket.send(JSON.stringify({ qrId: qrIdFromServer }));
         };
 
@@ -28,7 +26,7 @@ export const QrBooking = () => {
           const message = JSON.parse(event.data);
           if (message.scanned) {
             setScanned(true);
-            socket.close(); // Close after success
+            socket.close();
           }
         };
 
@@ -36,7 +34,7 @@ export const QrBooking = () => {
           console.error("WebSocket error:", err);
         };
 
-        return () => socket.close(); // Clean up on unmount
+        return () => socket.close();
       } catch (error) {
         console.error("Failed to create QR session", error);
       }
@@ -50,7 +48,7 @@ export const QrBooking = () => {
     : "";
 
   return (
-    <div className="text-center p-6">
+    <div className="text-center flex flex-col items-center justify-center">
       <h2 className="text-xl font-bold mb-4">Scan QR to Confirm</h2>
 
       {scanned ? (
