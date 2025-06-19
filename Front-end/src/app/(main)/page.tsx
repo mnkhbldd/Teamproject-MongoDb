@@ -4,7 +4,7 @@ import React from "react";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 
-import { AnimatedFooter } from "@/components/NextFooter";
+import { EnhancedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
 import { GlowingEffectDemo } from "@/components/Glowing-effect";
@@ -155,7 +155,7 @@ export default function Home() {
         />
       </div>
 
-      <AnimatedFooter />
+      <EnhancedFooter />
     </div>
   );
 }
