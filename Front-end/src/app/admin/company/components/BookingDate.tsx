@@ -109,65 +109,6 @@ export const BookingDate = () => {
     return `${hours.toString().padStart(2, "0")}:${minutes.padStart(2, "0")}`;
   };
 
-  // const getBookingForSlot = (date: Date, timeSlot: string) => {
-
-  //   const localBooking = bookings.find(
-  //     (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
-  //   );
-
-  //   if (localBooking) return localBooking;
-
-  //   const formattedDate = format(date, "yyyy-MM-dd");
-  //   const [startTime] = timeSlot.split("-");
-  //   const slotStartTime24 = formatTimeTo24Hour(startTime);
-
-  //   console.log(
-  //     "Checking backend bookings for date:",
-  //     formattedDate,
-  //     "time:",
-  //     slotStartTime24
-  //   );
-
-  //   const backendBooking = (
-  //     bookingsBackend as unknown as BackendBooking[]
-  //   ).find((booking) => {
-  //     const bookingDate = new Date(booking.bookingDate);
-  //     const bookingDateStr = format(bookingDate, "yyyy-MM-dd");
-
-  //     const bookingTime24 = booking.startTime.includes(" ")
-  //       ? formatTimeTo24Hour(booking.startTime)
-  //       : booking.startTime;
-
-  //     console.log("Comparing with backend booking:", {
-  //       bookingDate: bookingDateStr,
-  //       bookingStartTime: booking.startTime,
-  //       bookingTime24,
-  //       formattedDate,
-  //       slotStartTime24,
-  //     });
-
-  //     return (
-  //       bookingDateStr === formattedDate && bookingTime24 === slotStartTime24
-  //     );
-
-  //   });
-
-  //   console.log("Found matching backend booking:", backendBooking);
-
-  //   if (backendBooking) {
-  //     return {
-  //       id: backendBooking._id,
-  //       date: new Date(backendBooking.bookingDate),
-  //       time: timeSlot,
-  //       status: "booked" as const,
-  //       price: 0,
-  //       isSale: false,
-  //     };
-  //   }
-
-  //   return null;
-  // };
-
   const getBookingForSlot = (date: Date, timeSlot: string) => {
     const localBooking = bookings.find(
       (booking) => isSameDay(booking.date, date) && booking.time === timeSlot
@@ -179,13 +120,6 @@ export const BookingDate = () => {
     const [startTime] = timeSlot.split("-");
     const slotStartTime24 = formatTimeTo24Hour(startTime);
 
-    console.log(
-      "Checking backend bookings for date:",
-      formattedDate,
-      "time:",
-      slotStartTime24
-    );
-
     const backendBooking = (
       bookingsBackend as unknown as BackendBooking[]
     ).find((booking) => {
@@ -196,20 +130,10 @@ export const BookingDate = () => {
         ? formatTimeTo24Hour(booking.startTime)
         : booking.startTime;
 
-      console.log("Comparing with backend booking:", {
-        bookingDate: bookingDateStr,
-        bookingStartTime: booking.startTime,
-        bookingTime24,
-        formattedDate,
-        slotStartTime24,
-      });
-
       return (
         bookingDateStr === formattedDate && bookingTime24 === slotStartTime24
       );
     });
-
-    console.log("Found matching backend booking:", backendBooking);
 
     if (backendBooking) {
       return {
@@ -245,12 +169,6 @@ export const BookingDate = () => {
       try {
         for (const booking of bookings) {
           try {
-            console.log("Creating booking:", {
-              date: booking.date,
-              time: booking.time,
-              price: booking.price,
-            });
-
             if (!booking.time || typeof booking.time !== "string") {
               throw new Error("Invalid time format");
             }
@@ -262,14 +180,13 @@ export const BookingDate = () => {
             }
 
             const formattedDate = format(booking.date, "yyyy-MM-dd");
-            const res = await axiosInstance.post("/booking/create-booking", {
+            await axiosInstance.post("/booking/create-booking", {
               companyId: params.id,
               bookingDate: formattedDate,
               startTime,
               endTime,
               price: booking.price,
             });
-            console.log("Booking created:", res.data);
           } catch (error) {
             console.error("Error creating booking:", error);
             throw error;

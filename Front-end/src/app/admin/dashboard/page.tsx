@@ -80,7 +80,6 @@ export default function AdminDashboard() {
         "/booking/user-company-bookings"
       );
       setBookingDataBE(response.data.bookings);
-      console.log(response.data.bookings, "response.data");
     } catch (error) {
       console.log(error);
     }

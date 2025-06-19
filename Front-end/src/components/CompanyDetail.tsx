@@ -58,8 +58,6 @@ export const CompanyDetail = () => {
     getCompanyId();
   }, [getCompanyId]);
 
-  console.log(data, "data");
-
   return (
     <div className="bg-white h-screen overflow-hidden">
       <div className="flex flex-col px-8 gap-8">

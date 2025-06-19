@@ -50,7 +50,7 @@ export const CompanyDetailCard = ({
   );
 
   useEffect(() => {
-    const FetchData = async () => {
+    const fetchCategories = async () => {
       try {
         const res = await axiosInstance.get("/category/");
 
@@ -64,8 +64,8 @@ export const CompanyDetailCard = ({
       }
     };
 
-    FetchData();
-  }, [company?.category]);
+    fetchCategories();
+  }, []);
   return (
     <div className="w-full">
       <div className="w-full h-fit rounded-[12px] shadow-lg border-2  backdrop-blur-lg bg-[#111827]/30  flex">

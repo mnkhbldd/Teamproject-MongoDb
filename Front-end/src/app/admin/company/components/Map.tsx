@@ -245,7 +245,7 @@ export const Map = () => {
 
     setValue(finalData);
 
-    const res = await axiosInstance.post("/company/create-company", {
+    await axiosInstance.post("/company/create-company", {
       name: finalData.name,
       description: finalData.description,
       location: {
@@ -262,7 +262,7 @@ export const Map = () => {
       images: finalData.images,
       companyLogo: finalData.companyLogo,
     });
-    console.log(res.data, "created company");
+
     setIsloading(false);
     toast("company has been created.");
     setOpen(false);

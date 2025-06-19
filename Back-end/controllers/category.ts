@@ -49,9 +49,7 @@ export const getCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("Fetching categories...");
     const categories = await Category.find().sort({ name: 1 });
-    console.log("Categories found:", categories.length);
 
     res.status(200).json({
       success: true,

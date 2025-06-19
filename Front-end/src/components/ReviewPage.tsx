@@ -159,8 +159,6 @@ export default function ReviewsPage() {
         return;
       }
 
-      console.log("Making API call to create review");
-
       const response = await axiosInstance.post("/review/create-review", {
         companyId: params.id,
         name: formData.name.trim(),
@@ -168,14 +166,9 @@ export default function ReviewsPage() {
         starCount: formData.rating,
       });
 
-      console.log("API response:", response.data);
-
       if (response.data.success) {
-        // Refresh reviews list
         fetchReview();
-        console.log("Review submitted successfully!");
 
-        // Reset form
         setIsSubmitted(true);
         setFormErrors({});
         setFormData({
@@ -184,16 +177,14 @@ export default function ReviewsPage() {
           rating: 0,
         });
 
-        // Reset success message after 5 seconds
         setTimeout(() => {
           setIsSubmitted(false);
         }, 5000);
       } else {
-        console.log("Server response not successful", response.data);
         throw new Error("Failed to create review");
       }
     } catch (error) {
-      console.error("Error creating review:", error);
+      console.log(error);
       alert("Failed to submit review. Please try again.");
     } finally {
       setIsSubmitting(false);
