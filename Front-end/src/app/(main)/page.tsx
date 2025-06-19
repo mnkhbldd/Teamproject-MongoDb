@@ -12,6 +12,7 @@ import { GlobeDemo } from "@/components/Global";
 import { LampDemo } from "@/components/Lampdemo";
 
 import CircularGallery from "@/components/CircularGallery/CircularGallery";
+import BentoGridDemo from "@/components/BentoGrid";
 
 export default function Home() {
   console.log("Welcome to Freely!");
@@ -167,7 +168,9 @@ export default function Home() {
           speed="slow"
         />
       </div>
-      <div>git</div>
+      <div className="bg-gray-900 pb-10">
+        <BentoGridDemo />
+      </div>
       <AnimatedFooter />
     </div>
   );
