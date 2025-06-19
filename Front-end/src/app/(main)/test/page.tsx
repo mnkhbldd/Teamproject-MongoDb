@@ -49,39 +49,11 @@ const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [distanceRange, setDistanceRange] = useState([50]);
   const [minRating, setMinRating] = useState(0);
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
-  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
 
 console.log(companies,"aha");
-
-
-  // Get user location
-  useEffect(() => {
-    console.log('Getting user location...');
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          console.log('User location obtained:', location);
-          setUserLocation(location);
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          // Default to NYC if location access denied
-          setUserLocation({ lat: 40.7128, lng: -74.0060 });
-        }
-      );
-    } else {
-      console.log('Geolocation not supported');
-      setUserLocation({ lat: 40.7128, lng: -74.0060 });
-    }
-  }, []);
-
+ 
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -98,16 +70,6 @@ console.log(companies,"aha");
           params.append("categories", id);
         });
   
-        if (userLocation) {
-          params.append("lat", userLocation.lat.toString());
-          params.append("lng", userLocation.lng.toString());
-        }
-  
-        if (distanceRange && distanceRange[0]) {
-          // Convert km to meters for backend
-          params.append("maxDistance", (distanceRange[0] * 1000).toString());
-        }
-  
         const res = await axiosInstance.get(`/company/get-companies?${params.toString()}`);
   
         setCompanies(res.data.companies || []);
@@ -119,7 +81,7 @@ console.log(companies,"aha");
     };
   
     fetchCompanies();
-  }, [search, selectedCategories, userLocation, distanceRange]);
+  }, [search, selectedCategories]);
   
 
   const jumpToDetail = (_id: string) => {
@@ -166,25 +128,10 @@ console.log(companies,"aha");
                 Category
                 </label>
                  <CategoryFilter
-                          categories={categories}
-                          value={selectedCategories}
-                          onChange={setSelectedCategories}
-                        />
-              </div>
-
-              {/* Distance */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Distance: {distanceRange[0]} km
-                </label>
-                <Slider
-                  value={distanceRange}
-                  onValueChange={setDistanceRange}
-                  max={100}
-                  min={1}
-                  step={1}
-                  className="w-full"
-                />
+                 categories={categories}
+                value={selectedCategories}
+                 onChange={setSelectedCategories}
+                 />
               </div>
 
               {/* Rating */}

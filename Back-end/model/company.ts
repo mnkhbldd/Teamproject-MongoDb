@@ -1,49 +1,34 @@
 import mongoose, { Schema } from "mongoose";
 
-const socialMediaSchema = new Schema({
+const socialMediaSchema = new mongoose.Schema({
   instagram: { type: String },
   Facebook: { type: String },
   website: { type: String },
 });
 
-const locationSchema = new Schema({
-  type: {
-    type: String,
-    enum: ["Point"],
-    default: "Point",
-    required: true,
-  },
-  coordinates: {
+const locationSchema = new mongoose.Schema({
+  coordinate: {
     type: [Number],
-    required: true, // Format: [lng, lat]
   },
   address: {
     type: String,
   },
 });
 
-const companySchema = new Schema(
-  {
-    user: { type: String, required: true },
-    name: { type: String, required: true },
-    description: { type: String },
-    location: {
-      type: locationSchema,
-      required: true,
-    },
-    phoneNumber: { type: String, required: true },
-    category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
-    socialMedia: [socialMediaSchema],
-    images: [{ type: String }],
-    pricing: { type: String },
-    companyLogo: { type: String },
-    companyCoverImage: { type: String },
-  },
-  { timestamps: true }
-);
+const companySchema = new mongoose.Schema({
+  user: { type: String, required: true },
+  name: { type: String, required: true },
+  description: { type: String },
+  location: [locationSchema],
+  phoneNumber: { type: String, required: true },
+  category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+  socialMedia: [socialMediaSchema],
+  images: [{ type: String }],
+  pricing: { type: String },
 
-// ✅ 2dsphere index for location
-companySchema.index({ location: "2dsphere" });
+  companyLogo: String,
+  companyCoverImage: String,
+});
 
 const CompanyModel = mongoose.model("Company", companySchema);
 
