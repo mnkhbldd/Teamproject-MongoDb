@@ -63,50 +63,95 @@ export const createCompany = async (
 
 interface GetCompaniesQuery {
   q?: string;
-  categories?: string | string[];
+  categories?: string[] | string;
+  lat?: string;
+  lng?: string;
+  maxDistance?: string;
 }
 
 export const getCompanies = async (
   req: Request<unknown, unknown, unknown, GetCompaniesQuery>,
   res: Response
 ): Promise<Response> => {
-  const { q, categories } = req.query;
+  const { q, categories, lat, lng, maxDistance } = req.query;
 
   try {
-    const filter: Record<string, unknown> = {};
+    const filter: Record<string, any> = {};
 
-    // Search query
+    // 🔍 Full-text search
     if (q) {
-      const searchRegex = new RegExp(q, "i");
+      const regex = new RegExp(q, "i");
       filter.$or = [
-        { name: searchRegex },
-        { phoneNumber: searchRegex },
-        { "socialMedia.Facebook": searchRegex },
-        { "socialMedia.instagram": searchRegex },
-        { "socialMedia.website": searchRegex },
-        { "location.address": searchRegex },
+        { name: regex },
+        { phoneNumber: regex },
+        { "socialMedia.facebook": regex },
+        { "socialMedia.instagram": regex },
+        { "socialMedia.website": regex },
+        { "location.address": regex },
       ];
     }
 
-    // Filter by category IDs
+    // 🎯 Category filter
     if (categories) {
       const categoryArray = Array.isArray(categories)
         ? categories
         : [categories];
-
-      const categoryObjectIds = categoryArray.map(
-        (id) => new mongoose.Types.ObjectId(id)
-      );
-
-      filter.category = { $in: categoryObjectIds };
+      filter.category = {
+        $in: categoryArray.map((id) => new mongoose.Types.ObjectId(id)),
+      };
     }
 
-    const companies = await CompanyModel.find(filter).sort({ createdAt: -1 });
+    // 📍 Location-based filter using $geoNear
+    if (lat && lng) {
+      const lngNum = parseFloat(lng);
+      const latNum = parseFloat(lat);
+      const distance = parseFloat(maxDistance || "5000");
+
+      const companies = await CompanyModel.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [lngNum, latNum],
+            },
+            distanceField: "distance",
+            spherical: true,
+            maxDistance: distance,
+            query: filter,
+          },
+        },
+        {
+          $lookup: {
+            from: "categories",
+            localField: "category",
+            foreignField: "_id",
+            as: "category",
+          },
+        },
+        {
+          $unwind: {
+            path: "$category",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+      ]);
+
+      return res.status(200).json({ success: true, companies });
+    }
+
+    const companies = await CompanyModel.find(filter)
+      .populate("category")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({ success: true, companies });
   } catch (error) {
-    console.error("Get/Search error:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
+    console.error("❌ Error fetching companies:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error });
   }
 };
 
