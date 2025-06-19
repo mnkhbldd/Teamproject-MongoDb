@@ -155,6 +155,7 @@ export const Map = () => {
       website: "",
       phoneNumber: "",
       companyLogo: undefined as unknown as FileList,
+      pricing: "",
     },
   });
 
@@ -261,6 +262,7 @@ export const Map = () => {
       },
       images: finalData.images,
       companyLogo: finalData.companyLogo,
+      pricing: finalData.pricing,
     });
 
     setIsloading(false);

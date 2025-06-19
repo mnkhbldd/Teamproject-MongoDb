@@ -64,8 +64,8 @@ export const CompanyDetail = () => {
       <div className="pt-[50px]">
         <CompanyName avatarURL={data?.companyLogo} name={data?.name} />
       </div>
-      <div className="max-w-6xl mx-auto p-4 grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="mx-auto py-4 px-20 grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6 ">
           <CarouselImage images={data?.images || null} />
           <About description={data?.description} />
           <ReviewsPage />

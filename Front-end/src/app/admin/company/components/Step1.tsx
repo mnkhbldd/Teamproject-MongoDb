@@ -25,6 +25,15 @@ export const Step1 = ({
         LabelName="description"
         control={control}
       />
+
+      <Field
+        placeholder="enter company price"
+        inputType={true}
+        name="pricing"
+        LabelName="Price"
+        control={control}
+      />
+
       <div className=" flex gap-2">
         <Field
           placeholder="enter phone number here"

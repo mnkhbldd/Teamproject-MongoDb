@@ -175,7 +175,7 @@ export const BookingDate = () => {
 
     switch (booking.status) {
       case "booked":
-        return "bg-green-100 text-green-800 cursor-not-allowed";
+        return "bg-green-600 text-green-400 cursor-not-allowed";
       case "pending":
         return "bg-blue-500 text-white cursor-not-allowed";
       default:
@@ -328,7 +328,7 @@ export const BookingDate = () => {
                       : currentBooking?.status === "pending"
                       ? "bg-blue-500 text-white cursor-not-allowed"
                       : "bg-red-100 text-red-800 cursor-not-allowed"
-                    : "bg-white/10 text-white hover:bg-white/20"
+                    : "bg-white/10 text-white hover:bg-white/10"
                 }`}
               >
                 <div className="font-medium text-sm mb-1">{timeSlot.time}</div>
@@ -359,7 +359,7 @@ export const BookingDate = () => {
   return (
     <Card className="bg-white/10 backdrop-blur-sm border-white/20">
       <div className="p-3 md:p-4 border-b">
-        <div className="w-full">
+        <div className="w-full overflow-x-hidden">
           {/* Booked Time Slots Section */}
           <div className="mb-6 md:mb-8 p-3 md:p-4 bg-white/10 backdrop-blur-sm border-white/20 rounded-lg">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">

@@ -222,14 +222,14 @@ export default function ReviewsPage() {
                     </div>
 
                     {/* Right side - Rating Distribution */}
-                    <div className="flex-1 w-full max-w-md">
+                    <div className="flex-1 w-full max-w-md ">
                       <div className="space-y-3">
                         {ratingsData.map((rating) => (
                           <div
                             key={rating.stars}
                             className="flex items-center gap-3"
                           >
-                            <span className="text-sm font-medium text-white w-2">
+                            <span className="text-sm font-medium text-white  w-2">
                               {rating.stars}
                             </span>
 
@@ -239,8 +239,8 @@ export default function ReviewsPage() {
                                 className="h-3 bg-gray-200"
                                 style={
                                   {
-                                    "--progress-background":
-                                      rating.count > 0 ? "#3b82f6" : "#e5e7eb",
+                                    "--progress-background ":
+                                      rating.count > 0 ? "#f3f2f5" : "#5d25f7",
                                   } as React.CSSProperties
                                 }
                               />
@@ -319,7 +319,7 @@ export default function ReviewsPage() {
                     >
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="name" className="text-white/70">
+                          <Label htmlFor="name" className="text-white/80">
                             Your Name
                           </Label>
                           <Input
@@ -328,9 +328,14 @@ export default function ReviewsPage() {
                             placeholder="Enter your name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            className={
-                              formErrors.name ? "border-red-500" : "text-white"
-                            }
+                            className={` placeholder:text-white/50
+
+                              ${
+                                formErrors.name
+                                  ? "border-red-500"
+                                  : "text-white"
+                              }
+                            `}
                           />
                           {formErrors.name && (
                             <p className="text-red-500 text-sm">
@@ -340,7 +345,7 @@ export default function ReviewsPage() {
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="suggestion" className="text-white/70">
+                        <Label htmlFor="suggestion" className="text-white/80">
                           Your Suggestion or Request
                         </Label>
                         <Textarea
@@ -350,11 +355,13 @@ export default function ReviewsPage() {
                           rows={5}
                           value={formData.suggestion}
                           onChange={handleInputChange}
-                          className={
-                            formErrors.suggestion
-                              ? "border-red-500"
-                              : "text-white"
-                          }
+                          className={` placeholder:text-white/50
+                            ${
+                              formErrors.suggestion
+                                ? "border-red-500"
+                                : "text-white"
+                            }
+                          `}
                         />
                         {formErrors.suggestion && (
                           <p className="text-red-500 text-sm">
@@ -364,7 +371,7 @@ export default function ReviewsPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-white/70">
+                        <Label className="text-white/80">
                           Rate Your Experience (Optional)
                         </Label>
                         <div className="flex gap-1">
