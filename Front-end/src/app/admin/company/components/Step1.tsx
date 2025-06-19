@@ -27,6 +27,7 @@ export const Step1 = ({
       />
 
       <Field
+        type="number"
         placeholder="enter company price"
         inputType={true}
         name="pricing"

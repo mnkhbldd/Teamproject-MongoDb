@@ -11,19 +11,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
 import { QrBooking } from "@/components/QrBooking";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useScan } from "@/app/context/ScanContext";
 import { toast, Toaster } from "sonner";
 interface BackendBooking {
@@ -42,7 +34,7 @@ interface Booking {
   isSale: boolean;
 }
 
-export const BookingDate = () => {
+export const BookingDate = ({ price }: { price: number | undefined }) => {
   const [currentStartDate, setCurrentStartDate] = React.useState<Date>(
     startOfDay(new Date())
   );
@@ -50,7 +42,7 @@ export const BookingDate = () => {
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [bookingsBackend, setBookingsBackend] = React.useState<Booking[]>([]);
   const [selectedDay, setSelectedDay] = React.useState<Date | null>(null);
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [_, setIsMobile] = React.useState(false);
   const { scanned, setScanned } = useScan();
   const params = useParams();
 
@@ -90,7 +82,7 @@ export const BookingDate = () => {
 
       return {
         time: `${hour.toString().padStart(2, "0")}:00-${nextHour}:00`,
-        price: 80,
+        price: price,
         isSale: false,
       };
     });
@@ -358,7 +350,7 @@ export const BookingDate = () => {
                     {timeSlot.isSale && (
                       <span className="text-red-400 font-medium">SALE </span>
                     )}
-                    {timeSlot.price.toLocaleString()} ₮
+                    {timeSlot.price?.toLocaleString()} ₮
                   </div>
                 ) : (
                   <div className="text-xs font-medium">
@@ -627,7 +619,7 @@ export const BookingDate = () => {
                                   </div>
                                 )}
                                 <div className="font-medium text-sm">
-                                  {timeSlot.price.toLocaleString()} ₮
+                                  {timeSlot.price?.toLocaleString()} ₮
                                 </div>
                               </div>
                             ) : (

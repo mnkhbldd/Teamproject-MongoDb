@@ -8,14 +8,7 @@ import {
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import {
-  Calendar,
-  MapPin,
-  User,
-  CheckCircle,
-  XCircle,
-  Clock4,
-} from "lucide-react";
+import { Calendar, MapPin, User, XCircle, Clock4 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface BookingCardProps {
