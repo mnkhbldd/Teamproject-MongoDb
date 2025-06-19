@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
+import { QrBooking } from "@/components/QrBooking";
 
 interface BackendBooking {
   _id: string;
@@ -79,7 +80,7 @@ export const BookingDate = () => {
 
       return {
         time: `${hour.toString().padStart(2, "0")}:00-${nextHour}:00`,
-        price: 75000,
+        price: 80,
         isSale: false,
       };
     });
@@ -235,6 +236,7 @@ export const BookingDate = () => {
   useEffect(() => {
     fetchBookingData();
   }, []);
+  console.log(bookingsBackend, "haha");
 
   // Mobile Day Selection Component
   const MobileDaySelector = () => (
@@ -451,6 +453,7 @@ export const BookingDate = () => {
                         </Button>
                       </div>
                     </SheetHeader>
+                    <QrBooking />
                   </SheetContent>
                 </Sheet>
               )}
