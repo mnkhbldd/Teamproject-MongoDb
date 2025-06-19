@@ -19,8 +19,8 @@ interface BookingCardProps {
   ) => void;
 }
 
-export function BookingCard({ booking, onStatusChange }: BookingCardProps) {
-  console.log("Rendering BookingCard for:", booking.id);
+export function BookingCard({ booking }: BookingCardProps) {
+  console.log(booking, "bol");
 
   const getStatusColor = (status: BookingData["status"]) => {
     switch (status) {
@@ -44,10 +44,10 @@ export function BookingCard({ booking, onStatusChange }: BookingCardProps) {
     }
   };
 
-  const handleStatusChange = (newStatus: BookingData["status"]) => {
-    console.log(`Changing status for ${booking.id} to ${newStatus}`);
-    onStatusChange?.(booking.id, newStatus);
-  };
+  // const handleStatusChange = (newStatus: BookingData["status"]) => {
+  //   console.log(`Changing status for ${booking.id} to ${newStatus}`);
+  //   onStatusChange?.(booking.id, newStatus);
+  // };
 
   return (
     <motion.div
