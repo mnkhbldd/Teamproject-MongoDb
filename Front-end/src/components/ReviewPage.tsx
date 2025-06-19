@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import { Card } from "./ui/card";
 
 interface SuggestionFormData {
   name: string;
@@ -94,7 +95,7 @@ export default function ReviewsPage() {
         key={index}
         className={`w-6 h-6 ${
           index < rating
-            ? "fill-blue-500 text-blue-500"
+            ? "fill-yellow-500 text-yellow-500"
             : "fill-gray-300 text-gray-300"
         } ${
           interactive
@@ -194,201 +195,217 @@ export default function ReviewsPage() {
   return (
     <div className="w-full bg-cover">
       <div className="w-full mx-auto">
-        <div className="rounded-lg py-8">
-          <Tabs defaultValue="reviews" className="w-full">
-            <TabsList className="mb-6">
-              <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              <TabsTrigger value="suggest">Make a Suggestion</TabsTrigger>
-            </TabsList>
+        <div className="rounded-lg">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <div className="p-4 border-b">
+              <Tabs defaultValue="reviews" className="w-full">
+                <TabsList className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+                  <TabsTrigger value="reviews">Reviews</TabsTrigger>
+                  <TabsTrigger value="suggest">Make a Suggestion</TabsTrigger>
+                </TabsList>
 
-            <TabsContent value="reviews">
-              <div className="flex flex-col lg:flex-row gap-8 items-start">
-                {/* Left side - Overall Rating */}
-                <div className="flex-shrink-0">
-                  <div className="text-7xl font-bold text-gray-900 mb-2">
-                    {overallRating.toFixed(1)}
+                <TabsContent value="reviews">
+                  <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    {/* Left side - Overall Rating */}
+                    <div className="flex-shrink-0">
+                      <div className="text-7xl font-bold text-white mb-2">
+                        {overallRating.toFixed(1)}
+                      </div>
+
+                      <div className="flex gap-1 mb-3">
+                        {renderStars(Math.floor(overallRating))}
+                      </div>
+
+                      <div className="text-white/70 font-medium">
+                        {totalRatings}+ ratings
+                      </div>
+                    </div>
+
+                    {/* Right side - Rating Distribution */}
+                    <div className="flex-1 w-full max-w-md">
+                      <div className="space-y-3">
+                        {ratingsData.map((rating) => (
+                          <div
+                            key={rating.stars}
+                            className="flex items-center gap-3"
+                          >
+                            <span className="text-sm font-medium text-white w-2">
+                              {rating.stars}
+                            </span>
+
+                            <div className="flex-1">
+                              <Progress
+                                value={rating.percentage}
+                                className="h-3 bg-gray-200"
+                                style={
+                                  {
+                                    "--progress-background":
+                                      rating.count > 0 ? "#3b82f6" : "#e5e7eb",
+                                  } as React.CSSProperties
+                                }
+                              />
+                            </div>
+
+                            <span className="text-xs text-white w-8 text-right">
+                              {rating.count > 0 ? rating.count : ""}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="flex gap-1 mb-3">
-                    {renderStars(Math.floor(overallRating))}
+                  {/* Recent Reviews Preview */}
+                  <div className="mt-8">
+                    <h3 className="text-xl font-semibold mb-4 text-white">
+                      Recent Reviews
+                    </h3>
+
+                    {reviews.length === 0 ? (
+                      <div className="text-white/20 w-full border rounded-lg h-[100px] flex items-center justify-center text-center">
+                        No reviews on this company
+                      </div>
+                    ) : (
+                      reviews.map((review) => (
+                        <div
+                          key={review._id}
+                          className="border bg-white/10 backdrop-blur-sm border-white/20 rounded-lg p-4 mb-4"
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex gap-1">
+                              {renderStars(review.starCount)}
+                            </div>
+                            <span className="text-sm text-white/70">
+                              {`${Math.ceil(
+                                (new Date().getTime() -
+                                  new Date(review.createdAt).getTime()) /
+                                  (1000 * 60 * 60 * 24)
+                              )} days ago`}
+                            </span>
+                          </div>
+                          <p className="text-white">{review.comment}</p>
+                          <div className="text-sm text-white/50 mt-2">
+                            - {review.name}
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
+                </TabsContent>
 
-                  <div className="text-gray-600 font-medium">
-                    {totalRatings}+ ratings
-                  </div>
-                </div>
+                <TabsContent value="suggest">
+                  <div className=" rounded-lg p-6 border bg-white/10 backdrop-blur-sm border-white/20">
+                    <h2 className="text-xl font-semibold mb-4 text-white">
+                      Submit Your Suggestion or Request
+                    </h2>
 
-                {/* Right side - Rating Distribution */}
-                <div className="flex-1 w-full max-w-md">
-                  <div className="space-y-3">
-                    {ratingsData.map((rating) => (
-                      <div
-                        key={rating.stars}
-                        className="flex items-center gap-3"
-                      >
-                        <span className="text-sm font-medium text-gray-700 w-2">
-                          {rating.stars}
-                        </span>
+                    {isSubmitted ? (
+                      <Alert className="bg-green-50 border-green-200 mb-4">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <AlertDescription className="text-green-800">
+                          Thank you for your suggestion! We&apos;ll review it
+                          shortly.
+                        </AlertDescription>
+                      </Alert>
+                    ) : null}
 
-                        <div className="flex-1">
-                          <Progress
-                            value={rating.percentage}
-                            className="h-3 bg-gray-200"
-                            style={
-                              {
-                                "--progress-background":
-                                  rating.count > 0 ? "#3b82f6" : "#e5e7eb",
-                              } as React.CSSProperties
+                    <form
+                      onSubmit={(e) => {
+                        console.log("Form submitted", e);
+                        e.preventDefault();
+                        handleSubmit(e);
+                      }}
+                      className="space-y-4"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="name" className="text-white/70">
+                            Your Name
+                          </Label>
+                          <Input
+                            id="name"
+                            name="name"
+                            placeholder="Enter your name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            className={
+                              formErrors.name ? "border-red-500" : "text-white"
                             }
                           />
+                          {formErrors.name && (
+                            <p className="text-red-500 text-sm">
+                              {formErrors.name}
+                            </p>
+                          )}
                         </div>
-
-                        <span className="text-xs text-gray-500 w-8 text-right">
-                          {rating.count > 0 ? rating.count : ""}
-                        </span>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="suggestion" className="text-white/70">
+                          Your Suggestion or Request
+                        </Label>
+                        <Textarea
+                          id="suggestion"
+                          name="suggestion"
+                          placeholder="Share your suggestion or request for the bootcamp..."
+                          rows={5}
+                          value={formData.suggestion}
+                          onChange={handleInputChange}
+                          className={
+                            formErrors.suggestion
+                              ? "border-red-500"
+                              : "text-white"
+                          }
+                        />
+                        {formErrors.suggestion && (
+                          <p className="text-red-500 text-sm">
+                            {formErrors.suggestion}
+                          </p>
+                        )}
+                      </div>
 
-              {/* Recent Reviews Preview */}
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-4">Recent Reviews</h3>
-
-                {reviews.length === 0 ? (
-                  <div className="text-gray-700 w-full border rounded-lg h-[100px] flex items-center justify-center text-center">
-                    No reviews on this company
-                  </div>
-                ) : (
-                  reviews.map((review) => (
-                    <div
-                      key={review._id}
-                      className="border border-gray-200 rounded-lg p-4 mb-4"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="space-y-2">
+                        <Label className="text-white/70">
+                          Rate Your Experience (Optional)
+                        </Label>
                         <div className="flex gap-1">
-                          {renderStars(review.starCount)}
+                          {renderStars(formData.rating, true)}
                         </div>
-                        <span className="text-sm text-gray-500">
-                          {`${Math.ceil(
-                            (new Date().getTime() -
-                              new Date(review.createdAt).getTime()) /
-                              (1000 * 60 * 60 * 24)
-                          )} days ago`}
-                        </span>
                       </div>
-                      <p className="text-gray-700">{review.comment}</p>
-                      <div className="text-sm text-gray-500 mt-2">
-                        - {review.name}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </TabsContent>
 
-            <TabsContent value="suggest">
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h2 className="text-xl font-semibold mb-4">
-                  Submit Your Suggestion or Request
-                </h2>
-
-                {isSubmitted ? (
-                  <Alert className="bg-green-50 border-green-200 mb-4">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
-                      Thank you for your suggestion! We&apos;ll review it
-                      shortly.
-                    </AlertDescription>
-                  </Alert>
-                ) : null}
-
-                <form
-                  onSubmit={(e) => {
-                    console.log("Form submitted", e);
-                    e.preventDefault();
-                    handleSubmit(e);
-                  }}
-                  className="space-y-4"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Your Name</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        placeholder="Enter your name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className={formErrors.name ? "border-red-500" : ""}
-                      />
-                      {formErrors.name && (
-                        <p className="text-red-500 text-sm">
-                          {formErrors.name}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="suggestion">
-                      Your Suggestion or Request
-                    </Label>
-                    <Textarea
-                      id="suggestion"
-                      name="suggestion"
-                      placeholder="Share your suggestion or request for the bootcamp..."
-                      rows={5}
-                      value={formData.suggestion}
-                      onChange={handleInputChange}
-                      className={formErrors.suggestion ? "border-red-500" : ""}
-                    />
-                    {formErrors.suggestion && (
-                      <p className="text-red-500 text-sm">
-                        {formErrors.suggestion}
-                      </p>
-                    )}
+                      <Button
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <span className="animate-spin mr-2">⏳</span>
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4 mr-2" />
+                            Submit Suggestion
+                          </>
+                        )}
+                      </Button>
+                    </form>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Rate Your Experience (Optional)</Label>
-                    <div className="flex gap-1">
-                      {renderStars(formData.rating, true)}
-                    </div>
+                  <div className="mt-6 p-4 rounded-lg border bg-white/10 backdrop-blur-sm border-white/20">
+                    <h3 className="text-lg font-medium text-white/70 mb-2">
+                      Why Submit a Suggestion?
+                    </h3>
+                    <p className="text-white/70">
+                      Your feedback helps us improve the bootcamp experience for
+                      future students. We review all suggestions and implement
+                      changes based on your valuable input.
+                    </p>
                   </div>
-
-                  <Button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <span className="animate-spin mr-2">⏳</span>
-                        Submitting...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        Submit Suggestion
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </div>
-
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                <h3 className="text-lg font-medium text-blue-800 mb-2">
-                  Why Submit a Suggestion?
-                </h3>
-                <p className="text-blue-700">
-                  Your feedback helps us improve the bootcamp experience for
-                  future students. We review all suggestions and implement
-                  changes based on your valuable input.
-                </p>
-              </div>
-            </TabsContent>
-          </Tabs>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </Card>
         </div>
       </div>
     </div>

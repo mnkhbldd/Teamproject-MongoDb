@@ -3,7 +3,7 @@ export interface BookingData {
   customerName: string;
   service: string;
   datetime: Date;
-  status: "pending" | "confirmed" | "cancelled";
+  status: "booked" | "cancelled";
   amount: number;
   currency: string;
   verified: boolean;
@@ -70,11 +70,11 @@ export const generateBookingData = (): BookingData[] => {
       customerName: customers[Math.floor(Math.random() * customers.length)],
       service: services[Math.floor(Math.random() * services.length)],
       datetime: randomDate,
-      status: i <= 8 ? "pending" : i <= 10 ? "confirmed" : "cancelled",
+      status: i <= 8 ? "cancelled" : i <= 10 ? "booked" : "booked",
       amount: [75, 150, 250, 450, 720, 1200, 1850][
         Math.floor(Math.random() * 7)
       ],
-      currency: "USD",
+      currency: "MNT",
       verified: Math.random() > 0.2,
       location: locations[Math.floor(Math.random() * locations.length)],
       notes: Math.random() > 0.7 ? "Special requirements noted" : undefined,
@@ -89,7 +89,7 @@ export const generateBookingData = (): BookingData[] => {
 
 export const formatCurrency = (
   amount: number,
-  currency: string = "USD"
+  currency: string = "MNT"
 ): string => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",

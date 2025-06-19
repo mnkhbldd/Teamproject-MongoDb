@@ -21,7 +21,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",
     "mongoose": "^8.15.1",
-    "tsx": "^4.19.4"
+    "tsx": "^4.19.4",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",

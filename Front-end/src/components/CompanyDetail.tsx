@@ -49,6 +49,7 @@ export const CompanyDetail = () => {
     try {
       const res = await axiosInstance.get(`/company/get-company/${id}`);
       setData(res.data.company);
+      console.log(res.data.company, "company data");
     } catch (error) {
       console.log(error);
     }
@@ -59,31 +60,29 @@ export const CompanyDetail = () => {
   }, [getCompanyId]);
 
   return (
-    <div className="bg-white h-screen overflow-hidden">
-      <div className="flex flex-col px-8 gap-8">
-        <div className="flex w-full justify-around pt-12">
-          <ScrollArea className="h-screen scrollbar-hide ">
-            <div className="px-4 pt-8 pb-[200px] flex flex-col">
-              <CompanyName avatarURL={data?.companyLogo} name={data?.name} />
-              <CarouselImage imageSrc={data?.images} />
-              <About description={data?.description} />
-              <ReviewsPage />
-              <BookingDate />
-            </div>
-          </ScrollArea>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white">
+      <div className="pt-[50px]">
+        <CompanyName avatarURL={data?.companyLogo} name={data?.name} />
+      </div>
+      <div className="max-w-6xl mx-auto p-4 grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <CarouselImage images={data?.images || null} />
+          <About description={data?.description} />
+          <ReviewsPage />
+          <BookingDate />
+        </div>
 
-          <div className="pt-25">
-            {data?.location?.[0] && (
-              <MapInfo
-                position={data.location[0].coordinate}
-                facebook={data.socialMedia[0].Facebook}
-                instagram={data.socialMedia[0].instagram}
-                website={data.socialMedia[0].website}
-                address={data.location[0].address}
-                number={data.phoneNumber}
-              />
-            )}
-          </div>
+        <div className="space-y-4">
+          {data?.location?.[0] && (
+            <MapInfo
+              position={data.location[0].coordinate}
+              facebook={data.socialMedia[0].Facebook}
+              instagram={data.socialMedia[0].instagram}
+              website={data.socialMedia[0].website}
+              address={data.location[0].address}
+              number={data.phoneNumber}
+            />
+          )}
         </div>
       </div>
     </div>

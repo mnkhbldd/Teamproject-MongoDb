@@ -7,7 +7,7 @@ import {
 } from "@/lib/booking-data";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 import {
   Calendar,
   MapPin,
@@ -31,12 +31,11 @@ export function BookingCard({ booking, onStatusChange }: BookingCardProps) {
 
   const getStatusColor = (status: BookingData["status"]) => {
     switch (status) {
-      case "pending":
-        return "bg-amber-100 text-amber-800 border-amber-200";
-      case "confirmed":
-        return "bg-emerald-100 text-emerald-800 border-emerald-200";
+      case "booked":
+        return "bg-orange-200 text-amber-800 border-amber-200";
       case "cancelled":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-red-200 text-emerald-800 border-emerald-200";
+
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
     }
@@ -44,10 +43,9 @@ export function BookingCard({ booking, onStatusChange }: BookingCardProps) {
 
   const getStatusIcon = (status: BookingData["status"]) => {
     switch (status) {
-      case "pending":
+      case "booked":
         return <Clock4 className="w-3 h-3" />;
-      case "confirmed":
-        return <CheckCircle className="w-3 h-3" />;
+
       case "cancelled":
         return <XCircle className="w-3 h-3" />;
     }
@@ -78,9 +76,6 @@ export function BookingCard({ booking, onStatusChange }: BookingCardProps) {
               <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
                 <User className="w-4 h-4" />
                 <span>{booking.customerName}</span>
-                {booking.verified && (
-                  <CheckCircle className="w-4 h-4 text-emerald-500" />
-                )}
               </div>
             </div>
             <div className="text-right">
@@ -109,28 +104,6 @@ export function BookingCard({ booking, onStatusChange }: BookingCardProps) {
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <MapPin className="w-4 h-4" />
                 <span>{booking.location}</span>
-              </div>
-            )}
-
-            {booking.status === "pending" && (
-              <div className="flex gap-2 pt-2">
-                <Button
-                  size="sm"
-                  onClick={() => handleStatusChange("confirmed")}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Confirm
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleStatusChange("cancelled")}
-                  className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
-                >
-                  <XCircle className="w-4 h-4 mr-2" />
-                  Cancel
-                </Button>
               </div>
             )}
           </div>

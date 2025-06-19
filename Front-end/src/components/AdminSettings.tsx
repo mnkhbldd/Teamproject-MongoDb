@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Eye, Plus, Save, Trash2 } from "lucide-react";
@@ -8,67 +8,137 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
+import axiosInstance from "@/utils/axios";
+import { useParams } from "next/navigation";
+import { uploadImageToCloudinary } from "@/app/admin/company/utils/imageUpload";
 
-interface CompanyData {
-  logo: string;
+type CompanyData = {
+  companyLogo: string;
   name: string;
   images: string[];
-  address: string;
-  website: string;
-  facebook: string;
-  instagram: string;
-  phone: string;
-  about: string;
+  location: [
+    {
+      address: string;
+      coordinate: [number, number];
+    }
+  ];
+  socialMedia: [
+    {
+      website: string;
+      Facebook: string;
+      instagram: string;
+    }
+  ];
+
+  phoneNumber: string;
+  description: string;
   pricing: string;
-  businessHours: {
-    openTime: string;
-    closeTime: string;
-    closed: boolean;
-  };
-}
+};
 
 export const AdminSettings = () => {
+  const params = useParams();
+
   const [data, setData] = useState<CompanyData>({
-    logo: "",
+    companyLogo: "",
     name: "",
     images: [],
-    address: "",
-    website: "",
-    facebook: "",
-    instagram: "",
-    phone: "",
-    about: "",
+    location: [
+      {
+        address: "",
+        coordinate: [0, 0],
+      },
+    ],
+    socialMedia: [
+      {
+        website: "",
+        Facebook: "",
+        instagram: "",
+      },
+    ],
+    phoneNumber: "",
+    description: "",
     pricing: "",
-    businessHours: {
-      openTime: "",
-      closeTime: "",
-      closed: false,
-    },
   });
+
+  const fetchCompanyData = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/company/get-company/${params.id}`
+      );
+      console.log(response.data.company);
+      setData(response.data.company);
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCompanyData();
+  }, []);
 
   const [showPreview, setShowPreview] = useState(false);
 
   const handleInputChange = (field: keyof CompanyData, value: string) => {
     setData((prev) => ({ ...prev, [field]: value }));
+    console.log(data, "data");
+  };
+
+  const handleLocationChange = (value: string) => {
+    setData((prev) => ({
+      ...prev,
+      location: [
+        {
+          address: value,
+          coordinate: prev.location[0].coordinate,
+        },
+      ],
+    }));
+  };
+
+  const handleFacebookChange = (value: string) => {
+    setData((prev) => ({
+      ...prev,
+      socialMedia: [
+        {
+          instagram: prev.socialMedia[0].instagram,
+          Facebook: value,
+          website: prev.socialMedia[0].website,
+        },
+      ],
+    }));
+  };
+
+  const handleInstagramChange = (value: string) => {
+    setData((prev) => ({
+      ...prev,
+      socialMedia: [
+        {
+          Facebook: prev.socialMedia[0].Facebook,
+          website: prev.socialMedia[0].website,
+          instagram: value,
+        },
+      ],
+    }));
+  };
+
+  const handleWebsiteChange = (value: string) => {
+    setData((prev) => ({
+      ...prev,
+      socialMedia: [
+        {
+          Facebook: prev.socialMedia[0].Facebook,
+          instagram: prev.socialMedia[0].instagram,
+          website: value,
+        },
+      ],
+    }));
+    console.log(data, "data");
   };
 
   const handleImageChange = (index: number, value: string) => {
     const newImages = [...data.images];
     newImages[index] = value;
     setData((prev) => ({ ...prev, images: newImages }));
-  };
-
-  const handleBusinessHoursChange = (
-    field: keyof CompanyData["businessHours"],
-    value: string | boolean
-  ) => {
-    setData((prev) => ({
-      ...prev,
-      businessHours: {
-        ...prev.businessHours,
-        [field]: value,
-      },
-    }));
   };
 
   const addImage = () => {
@@ -80,13 +150,6 @@ export const AdminSettings = () => {
       ...prev,
       images: prev.images.filter((_, i) => i !== index),
     }));
-  };
-
-  const formatBusinessHours = () => {
-    if (data.businessHours.closed) {
-      return "Closed";
-    }
-    return ` ${data.businessHours.openTime} - ${data.businessHours.closeTime}`;
   };
 
   if (showPreview) {
@@ -102,7 +165,7 @@ export const AdminSettings = () => {
           <CardContent className="p-6">
             <div className="flex items-center gap-4 mb-6">
               <Image
-                src={data.logo || "/placeholder.svg"}
+                src={data.companyLogo || "/placeholder.svg"}
                 alt="Logo"
                 className="w-16 h-16 rounded-full object-cover"
                 width={64}
@@ -132,19 +195,19 @@ export const AdminSettings = () => {
                 <h3 className="font-semibold mb-2">Contact Info</h3>
                 <div className="space-y-1 text-sm">
                   <p>
-                    <strong>Address:</strong> {data.address}
+                    <strong>Address:</strong> {data.location[0].address}
                   </p>
                   <p>
-                    <strong>Website:</strong> {data.website}
+                    <strong>Website:</strong> {data.socialMedia[0].website}
                   </p>
                   <p>
-                    <strong>Facebook:</strong> {data.facebook}
+                    <strong>Facebook:</strong> {data.socialMedia[0].Facebook}
                   </p>
                   <p>
-                    <strong>Instagram:</strong> {data.instagram}
+                    <strong>Instagram:</strong> {data.socialMedia[0].instagram}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {data.phone}
+                    <strong>Phone:</strong> {data.phoneNumber}
                   </p>
                   <p>
                     <strong>Pricing:</strong> {data.pricing}
@@ -155,13 +218,8 @@ export const AdminSettings = () => {
 
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-semibold mb-2">About</h3>
-                <p className="text-sm text-gray-600">{data.about}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">Business Hours</h3>
-                <p className="text-sm">{formatBusinessHours()}</p>
+                <h3 className="font-semibold mb-2">Description</h3>
+                <p className="text-sm text-gray-600">{data.description}</p>
               </div>
             </div>
           </CardContent>
@@ -196,9 +254,9 @@ export const AdminSettings = () => {
             <div>
               <Label htmlFor="logo">Logo</Label>
               <div className="flex items-center gap-4">
-                {data.logo && (
+                {data?.companyLogo && (
                   <Image
-                    src={data.logo || "/placeholder.svg"}
+                    src={data?.companyLogo || "/placeholder.svg"}
                     alt="Logo preview"
                     className="w-16 h-16 rounded-full object-cover border"
                     width={64}
@@ -216,7 +274,7 @@ export const AdminSettings = () => {
                         const reader = new FileReader();
                         reader.onload = (event) => {
                           const result = event.target?.result as string;
-                          handleInputChange("logo", result);
+                          handleInputChange("companyLogo", result);
                         };
                         reader.readAsDataURL(file);
                       }
@@ -231,7 +289,7 @@ export const AdminSettings = () => {
               <Label htmlFor="name">Company Name</Label>
               <Input
                 id="name"
-                value={data.name}
+                value={data?.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
                 placeholder="Enter company name"
               />
@@ -251,7 +309,7 @@ export const AdminSettings = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {data.images.map((image, index) => (
+            {data?.images.map((image, index) => (
               <div
                 key={index}
                 className="flex items-center gap-4 p-4 border rounded-lg"
@@ -305,8 +363,8 @@ export const AdminSettings = () => {
               <Label htmlFor="address">Address</Label>
               <Input
                 id="address"
-                value={data.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
+                value={data.location[0].address || ""}
+                onChange={(e) => handleLocationChange(e.target.value)}
                 placeholder="Enter address"
               />
             </div>
@@ -315,8 +373,8 @@ export const AdminSettings = () => {
               <Label htmlFor="website">Website</Label>
               <Input
                 id="website"
-                value={data.website}
-                onChange={(e) => handleInputChange("website", e.target.value)}
+                value={data?.socialMedia[0].website || ""}
+                onChange={(e) => handleWebsiteChange(e.target.value)}
                 placeholder="Enter website"
               />
             </div>
@@ -326,10 +384,8 @@ export const AdminSettings = () => {
                 <Label htmlFor="facebook">Facebook</Label>
                 <Input
                   id="facebook"
-                  value={data.facebook}
-                  onChange={(e) =>
-                    handleInputChange("facebook", e.target.value)
-                  }
+                  value={data?.socialMedia[0].Facebook || ""}
+                  onChange={(e) => handleFacebookChange(e.target.value)}
                   placeholder="Enter Facebook handle"
                 />
               </div>
@@ -338,10 +394,8 @@ export const AdminSettings = () => {
                 <Label htmlFor="instagram">Instagram</Label>
                 <Input
                   id="instagram"
-                  value={data.instagram}
-                  onChange={(e) =>
-                    handleInputChange("instagram", e.target.value)
-                  }
+                  value={data?.socialMedia[0].instagram || ""}
+                  onChange={(e) => handleInstagramChange(e.target.value)}
                   placeholder="Enter Instagram handle"
                 />
               </div>
@@ -351,8 +405,10 @@ export const AdminSettings = () => {
               <Label htmlFor="phone">Phone</Label>
               <Input
                 id="phone"
-                value={data.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
+                value={data?.phoneNumber || ""}
+                onChange={(e) =>
+                  handleInputChange("phoneNumber", e.target.value)
+                }
                 placeholder="Enter phone number"
               />
             </div>
@@ -361,61 +417,10 @@ export const AdminSettings = () => {
               <Label htmlFor="pricing">Pricing</Label>
               <Input
                 id="pricing"
-                value={data.pricing}
+                value={data?.pricing || ""}
                 onChange={(e) => handleInputChange("pricing", e.target.value)}
                 placeholder="e.g., Starting from $50/session, $100/hour, Free consultation"
               />
-            </div>
-
-            <div>
-              <Label>Business Hours</Label>
-              <div className="space-y-3 mt-2">
-                {!data.businessHours.closed && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label
-                        htmlFor="openTime"
-                        className="text-sm text-gray-600"
-                      >
-                        Opening Time
-                      </Label>
-                      <Input
-                        id="openTime"
-                        type="time"
-                        value={data.businessHours.openTime}
-                        onChange={(e) =>
-                          handleBusinessHoursChange("openTime", e.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div>
-                      <Label
-                        htmlFor="closeTime"
-                        className="text-sm text-gray-600"
-                      >
-                        Closing Time
-                      </Label>
-                      <Input
-                        id="closeTime"
-                        type="time"
-                        value={data.businessHours.closeTime}
-                        onChange={(e) =>
-                          handleBusinessHoursChange("closeTime", e.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <p className="text-xs text-gray-500">
-                  {data.businessHours.closed
-                    ? "Business is closed all week"
-                    : `Same hours apply to all days: ${data.businessHours.openTime} - ${data.businessHours.closeTime}`}
-                </p>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -423,12 +428,12 @@ export const AdminSettings = () => {
         {/* About */}
         <Card>
           <CardHeader>
-            <CardTitle>About</CardTitle>
+            <CardTitle>Description</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
-              value={data.about}
-              onChange={(e) => handleInputChange("about", e.target.value)}
+              value={data?.description || ""}
+              onChange={(e) => handleInputChange("description", e.target.value)}
               placeholder="Enter company description"
               rows={6}
             />
