@@ -61,6 +61,7 @@ export const Field = ({
               />
             ) : (
               <Textarea
+                maxLength={500}
                 className={`text-white focus-visible:ring-0 ${
                   value?.length >= 2 &&
                   "focus-visible:border-[#18BA51] border-solid border border-[#e3e8ffe6]"
