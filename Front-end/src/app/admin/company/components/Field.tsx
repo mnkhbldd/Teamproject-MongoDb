@@ -19,6 +19,7 @@ export const Field = ({
   inputType,
   placeholder,
   isFileInput = false,
+  type,
 }: {
   control: Control<z.infer<typeof formSchema>>;
   name: keyof z.infer<typeof formSchema>;
@@ -26,6 +27,7 @@ export const Field = ({
   inputType?: boolean;
   isFileInput?: boolean;
   placeholder: string;
+  type?: string;
 }) => {
   return (
     <FormField
@@ -51,7 +53,7 @@ export const Field = ({
                   value?.length >= 2 &&
                   "focus-visible:border-[#18BA51] border-solid border border-[#e3e8ffe6]"
                 }`}
-                type="text"
+                type={type ? type : "text"}
                 placeholder={placeholder}
                 value={value as string}
                 onChange={onChange}

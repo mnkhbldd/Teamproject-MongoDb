@@ -5,6 +5,7 @@ import "./globals.css";
 import { dark } from "@clerk/themes";
 import { CategoryProvider } from "./context/CategoryContext";
 import { LoadingProvider } from "./context/LoadingContext";
+import { ScanProvider } from "./context/ScanContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,11 @@ function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <LoadingProvider>
-            <CategoryProvider>{children}</CategoryProvider>
-          </LoadingProvider>
+          <ScanProvider>
+            <LoadingProvider>
+              <CategoryProvider>{children}</CategoryProvider>
+            </LoadingProvider>
+          </ScanProvider>
         </body>
       </html>
     </ClerkProvider>
