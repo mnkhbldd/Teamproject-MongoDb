@@ -85,19 +85,19 @@ export default function ExplorePage() {
     router.push(`/Company/${_id}`);
   };
   return (
-    <div className="min-h-screen bg-[#0B0F1C]">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       <NavBar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
-        <div className="mb-8">
+        <div className=" hidden sm:flex py-4">
           <span className="text-6xl font-bold text-white">
             Explore activities
           </span>
         </div>
 
         {/* Filters */}
-        <Card className="mb-8 bg-[#1A1E2E] border-0">
+        <Card className="mb-8 bg-white/10 backdrop-blur-sm border-white/20 border-0">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Filter className="h-5 w-5 text-white" />
@@ -148,7 +148,7 @@ export default function ExplorePage() {
             <Button
               className={`${
                 viewMode === "list"
-                  ? "bg-green-400 text-white hover:bg-green-400"
+                  ? "bg-green-600 text-white hover:bg-green-600"
                   : " bg-white text-black hover:bg-white"
               } 
                `}
@@ -161,7 +161,7 @@ export default function ExplorePage() {
             <Button
               className={`${
                 viewMode === "map"
-                  ? "bg-green-400 text-white hover:bg-green-400"
+                  ? "bg-green-600 text-white hover:bg-green-600"
                   : " bg-white text-black hover:bg-white"
               } 
                `}
@@ -176,7 +176,7 @@ export default function ExplorePage() {
 
         {/* Content */}
         {viewMode === "map" ? (
-          <div className="h-96 rounded-lg overflow-hidden">
+          <div className="h-80 sm:h-196 rounded-lg overflow-hidden">
             <ExploreMap data={companies} />
           </div>
         ) : (
@@ -207,7 +207,7 @@ export default function ExplorePage() {
                 <Card
                   onClick={() => jumpToDetail(company._id)}
                   key={company._id}
-                  className="hover:shadow-lg duration-300 bg-[#1A1E2E] border-none p-0"
+                  className="hover:shadow-lg duration-300 bg-white/10 backdrop-blur-sm border-white/20 border-none p-0"
                 >
                   <div className="h-48 bg-gray-200 rounded-t-lg overflow-hidden">
                     {company.images?.[0] ? (
@@ -235,7 +235,7 @@ export default function ExplorePage() {
                           <Badge
                             key={value.name}
                             variant="secondary"
-                            className="capitalize bg-green-400 text-white"
+                            className="capitalize bg-white text-black"
                           >
                             {value.name}
                           </Badge>
@@ -243,13 +243,13 @@ export default function ExplorePage() {
                       </div>
                     </div>
 
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                    <p className="text-white/50 text-sm mb-3 line-clamp-2">
                       {company.description}
                     </p>
 
                     <div className="flex items-center space-x-1 mb-4">
                       <MapPin className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600 truncate">
+                      <span className="text-sm text-white/50 truncate">
                         {company.location[0]?.address}
                       </span>
                     </div>

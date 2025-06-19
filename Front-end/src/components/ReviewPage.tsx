@@ -246,7 +246,7 @@ export default function ReviewsPage() {
                               />
                             </div>
 
-                            <span className="text-xs text-gray-500 w-8 text-right">
+                            <span className="text-xs text-white w-8 text-right">
                               {rating.count > 0 ? rating.count : ""}
                             </span>
                           </div>
