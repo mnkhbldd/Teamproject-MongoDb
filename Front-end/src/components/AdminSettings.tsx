@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Eye, Plus, Save, Trash2 } from "lucide-react";
+import { Eye, Plus, Save, Trash, Trash2 } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
 import axiosInstance from "@/utils/axios";
-import { useParams } from "next/navigation";
-import { uploadImageToCloudinary } from "@/app/admin/company/utils/imageUpload";
+import { useParams, useRouter } from "next/navigation";
+import {
+  uploadImageToCloudinary,
+  uploadToCloudinary,
+} from "@/app/admin/company/utils/imageUpload";
 
 type CompanyData = {
   companyLogo: string;
@@ -37,6 +40,7 @@ type CompanyData = {
 
 export const AdminSettings = () => {
   const params = useParams();
+  const router = useRouter();
 
   const [data, setData] = useState<CompanyData>({
     companyLogo: "",
@@ -135,13 +139,15 @@ export const AdminSettings = () => {
     console.log(data, "data");
   };
 
-  const handleImageChange = (index: number, value: string) => {
+  const handleImageChange = async (index: number, value: string) => {
     const newImages = [...data.images];
-    newImages[index] = value;
+    const file = new File([value], "image.jpg", { type: "image/jpeg" });
+    const cloudinaryURL = await uploadToCloudinary([file]);
+    newImages[index] = cloudinaryURL[0];
     setData((prev) => ({ ...prev, images: newImages }));
   };
 
-  const addImage = () => {
+  const addImage = async () => {
     setData((prev) => ({ ...prev, images: [...prev.images, ""] }));
   };
 
@@ -150,6 +156,29 @@ export const AdminSettings = () => {
       ...prev,
       images: prev.images.filter((_, i) => i !== index),
     }));
+  };
+
+  const updateCompanyData = async () => {
+    try {
+      await axiosInstance.put(`/company/update-company/${params.id}`, data);
+    } catch (error) {
+      console.error("Error updating company data:", error);
+    }
+  };
+
+  const handleSave = () => {
+    updateCompanyData();
+    router.push(`/admin/dashboard`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axiosInstance.delete(`/company/delete-company/${params.id}`);
+    } catch (error) {
+      console.error("Error deleting company:", error);
+    }
+
+    router.push(`/admin/dashboard`);
   };
 
   if (showPreview) {
@@ -237,9 +266,13 @@ export const AdminSettings = () => {
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
-          <Button>
+          <Button onClick={handleSave}>
             <Save className="w-4 h-4 mr-2" />
             Save
+          </Button>
+          <Button className="bg-red-500" onClick={handleDelete}>
+            <Trash className="w-4 h-4 mr-2" />
+            Delete
           </Button>
         </div>
       </div>
@@ -268,15 +301,13 @@ export const AdminSettings = () => {
                     id="logo"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          const result = event.target?.result as string;
-                          handleInputChange("companyLogo", result);
-                        };
-                        reader.readAsDataURL(file);
+                        const cloudinaryUrl = await uploadImageToCloudinary(
+                          file
+                        );
+                        handleInputChange("companyLogo", cloudinaryUrl);
                       }
                     }}
                     className="cursor-pointer"
