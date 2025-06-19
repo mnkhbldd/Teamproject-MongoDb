@@ -12,7 +12,7 @@ export const QrBooking = () => {
     const createQrSession = async () => {
       try {
         // Step 1: Request a new QR session from backend
-        const res = await axiosInstance.post("/create-qr-session");
+        const res = await axiosInstance.post("/qr/create-qr-session");
         const qrIdFromServer = res.data.qrId;
         setQrId(qrIdFromServer);
 
@@ -45,7 +45,9 @@ export const QrBooking = () => {
     createQrSession();
   }, []);
 
-  const qrUrl = qrId ? `https://yourdomain.com/scan/${qrId}` : "";
+  const qrUrl = qrId
+    ? `https://teamproject-mongodb.onrender.com/qr/scan/${qrId}`
+    : "";
 
   return (
     <div className="text-center p-6">
