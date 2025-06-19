@@ -6,7 +6,6 @@ export default function Recommendation() {
   return (
     <div className="w-full h-full">
       <BackgroundBoxesDemo />
-
     </div>
   );
 }

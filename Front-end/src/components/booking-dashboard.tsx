@@ -1,90 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookingData, generateBookingData } from "@/lib/booking-data";
+import { BookingData } from "@/lib/booking-data";
 import { BookingCard } from "./booking-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { GrCurrency } from "react-icons/gr";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-import { Calendar, TrendingUp, Users, Search, Filter } from "lucide-react";
+import { Calendar, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
-import { toast } from "@/app/hooks/use-toast";
+import axiosInstance from "@/utils/axios";
 
 export function BookingDashboard() {
   const [bookings, setBookings] = useState<BookingData[]>([]);
-  const [filteredBookings, setFilteredBookings] = useState<BookingData[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
-
+  const fetchBookings = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get("/booking/user-bookings");
+      setBookings(res.data.bookings);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error, "failed to fetch data");
+    }
+  };
   useEffect(() => {
-    console.log("Initializing booking dashboard...");
-    const data = generateBookingData();
-    setBookings(data);
-    setFilteredBookings(data);
-    setIsLoading(false);
+    fetchBookings();
   }, []);
-
-  useEffect(() => {
-    console.log(
-      "Filtering bookings with search:",
-      searchTerm,
-      "status:",
-      statusFilter
-    );
-    let filtered = bookings;
-
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (booking) =>
-          booking.customerName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          booking.service.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          booking.id.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (statusFilter !== "all") {
-      filtered = filtered.filter((booking) => booking.status === statusFilter);
-    }
-
-    setFilteredBookings(filtered);
-  }, [bookings, searchTerm, statusFilter]);
-
-  const handleStatusChange = (
-    bookingId: string,
-    newStatus: BookingData["status"]
-  ) => {
-    console.log(`Updating booking ${bookingId} status to ${newStatus}`);
-    setBookings((prev) =>
-      prev.map((booking) =>
-        booking.id === bookingId ? { ...booking, status: newStatus } : booking
-      )
-    );
-
-    toast({
-      title: "Booking Updated",
-      description: `Booking ${bookingId} has been ${newStatus}.`,
-    });
-  };
-
-  const stats = {
-    total: bookings.length,
-    booked: bookings.filter((b) => b.status === "booked").length,
-    cancelled: bookings.filter((b) => b.status === "cancelled").length,
-
-    revenue: bookings.reduce((sum, booking) => sum + booking.amount, 0),
-  };
+  console.log(bookings, "haha");
 
   if (isLoading) {
     return (
@@ -138,7 +80,7 @@ export function BookingDashboard() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="text-2xl font-bold">{bookings.length}</div>
           </CardContent>
         </Card>
 
@@ -148,7 +90,7 @@ export function BookingDashboard() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.booked}</div>
+            {/* <div className="text-2xl font-bold">{stats.booked}</div> */}
           </CardContent>
         </Card>
 
@@ -158,7 +100,7 @@ export function BookingDashboard() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold ">{stats.cancelled}</div>
+            {/* <div className="text-2xl font-bold ">{stats.cancelled}</div> */}
           </CardContent>
         </Card>
 
@@ -169,48 +111,12 @@ export function BookingDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {stats.revenue.toLocaleString()}
-              {"  "}
+              {/* {stats.revenue.toLocaleString()} */}
+
               <span className="text-2xl font-bold">₮ </span>
             </div>
           </CardContent>
         </Card>
-      </motion.div>
-
-      {/* Filters */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="flex flex-col relative sm:flex-row gap-4 items-center justify-between"
-      >
-        <div className="flex flex-1 max-w-md text-white  gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Search bookings..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 border-2 text-white"
-            />
-          </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40">
-              <Filter color="white" className="w-4 h-4 mr-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="text-black">
-              <SelectItem value="all">All Status</SelectItem>
-
-              <SelectItem value="booked">Booked</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Badge variant="secondary" className="text-sm">
-          {filteredBookings.length} results
-        </Badge>
       </motion.div>
 
       {/* Bookings Grid */}
@@ -220,32 +126,17 @@ export function BookingDashboard() {
         transition={{ delay: 0.3 }}
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        {filteredBookings.map((booking, index) => (
+        {bookings.map((booking, index) => (
           <motion.div
             key={booking.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 * index }}
           >
-            <BookingCard
-              booking={booking}
-              onStatusChange={handleStatusChange}
-            />
+            <BookingCard booking={booking} />
           </motion.div>
         ))}
       </motion.div>
-
-      {filteredBookings.length === 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-12"
-        >
-          <p className="text-muted-foreground text-lg">
-            No bookings found matching your criteria.
-          </p>
-        </motion.div>
-      )}
     </div>
   );
 }
