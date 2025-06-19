@@ -3,13 +3,10 @@
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useState } from "react";
-
-import axiosInstance from "@/utils/axios";
 import { MiniInfoCard } from "./MiniInfoCard";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
-
+import { useLoading } from "@/app/context/LoadingContext";
 interface Company {
   _id: string;
   name: string;
@@ -19,7 +16,12 @@ interface Company {
     coordinate: [number, number];
   }>;
   phoneNumber: string;
-  category: string[];
+  category: [
+    {
+      icon: string;
+      name: string;
+    }
+  ];
   socialMedia: {
     Facebook: string;
     instagram: string;
@@ -29,31 +31,15 @@ interface Company {
   companyLogo: string;
 }
 
-const ExploreMap = () => {
+const ExploreMap = ({ data }: { data: Company[] }) => {
   const router = useRouter();
-  const [data, setData] = useState<Company[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const FetchData = async () => {
-      try {
-        const res = await axiosInstance.get("/company/get-companies");
-        setData(res.data.companies);
-      } catch (error) {
-        console.log("Error fetching companies:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    FetchData();
-  }, []);
+  const { loading } = useLoading();
   const jumpToDetail = (_id: string) => {
     router.push(`/Company/${_id}`);
   };
   return (
     <>
-      {isLoading && <LoadingSpinner />}
+      {loading && <LoadingSpinner />}
       <div className="w-full h-full flex rounded-lg">
         <MapContainer
           className=" size-full z-10 "
@@ -78,7 +64,7 @@ const ExploreMap = () => {
                     ]}
                     icon={L.icon({
                       iconUrl: `${el.companyLogo}`,
-                      iconSize: [60, 60],
+                      iconSize: [30, 30],
                       iconAnchor: [16, 32],
                       popupAnchor: [0, -32],
                       className: " rounded-full object-cover",

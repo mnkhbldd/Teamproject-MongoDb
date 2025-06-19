@@ -42,13 +42,16 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-full justify-start text-left">
+        <Button
+          variant="outline"
+          className="w-full justify-start text-left overflow-x-scroll"
+        >
           {selectedNames.length > 0 ? selectedNames : "Select categories"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-2">
         {categories.length > 0 ? (
-          <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">
+          <div className="gap-2 max-h-60 overflow-y-auto flex flex-col">
             {categories.map((cat) => {
               const isSelected = value.includes(cat._id);
               return (
@@ -56,7 +59,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                   key={cat._id}
                   onClick={() => toggleSelect(cat)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer select-none border transition-colors",
+                    "flex items-center gap-2 px-3 py-1 rounded-md text-sm cursor-pointer select-none border transition-colors",
                     isSelected
                       ? "bg-accent text-accent-foreground border-primary"
                       : "hover:bg-accent border-muted"
