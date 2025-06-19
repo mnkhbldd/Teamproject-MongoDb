@@ -9,6 +9,7 @@ import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
 
 import CircularGallery from "@/components/CircularGallery/CircularGallery";
+import BentoGridDemo from "@/components/BentoGrid";
 
 export default function Home() {
   console.log("Welcome to Freely!");
@@ -159,7 +160,14 @@ export default function Home() {
         />
       </div>
 
-      <EnhancedFooter />
+
+      
+
+      <div className="bg-gray-900 pb-10">
+        <BentoGridDemo />
+      </div>
+ 
+<EnhancedFooter />
     </div>
   );
 }
