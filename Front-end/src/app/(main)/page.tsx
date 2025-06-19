@@ -87,7 +87,6 @@ export default function Home() {
           </div>
         </div>
       </BackgroundBeamsWithCollision>
-
       {/* <div className="w-full h-[80px] bg-gray-900 flex items-center justify-center">
         <div className="flex items-center justify-center w-full gap-30">
           <div className="flex gap-[30px] items-center">
@@ -158,7 +157,6 @@ export default function Home() {
         />
         <GlobeDemo />
       </div>
-
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
           What they tell about us
@@ -169,7 +167,7 @@ export default function Home() {
           speed="slow"
         />
       </div>
-
+      <div>git</div>
       <AnimatedFooter />
     </div>
   );
