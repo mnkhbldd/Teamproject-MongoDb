@@ -33,6 +33,9 @@ export const formSchema = z.object({
   website: z
     .string({ required_error: "url required" })
     .url({ message: "enter valid URL" }),
+  pricing: z
+    .string({ required_error: " number required" })
+    .max(5, { message: "too long" }),
   companyLogo: z
     .custom<FileList>((value) => value instanceof FileList, {
       message: "Company logo is required",

@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "motion/react";
 import dynamic from "next/dynamic";
-import { ContainerTextFlipDemo } from "./Textswitch";
 
 const World = dynamic(
   () => import("@/components/ui/globe").then((m) => m.World),
@@ -399,7 +398,7 @@ export function GlobeDemo() {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center bg-slate-900 py-20 h-fit  md:h-auto dark:bg-black relative w-[30%]">
+    <div className="flex pr-30 flex-row items-center justify-center bg-slate-900 py-20 h-fit  md:h-auto dark:bg-black relative w-[30%]">
       <div className="max-w-7xl mx-auto w-full relative h-full md:h-[40rem] px-4">
         <motion.div
           initial={{
@@ -414,11 +413,7 @@ export function GlobeDemo() {
             duration: 1,
           }}
           className="div"
-        >
-          <div className="text-center text-xl md:text-4xl font-bold text-white dark:text-white">
-            <ContainerTextFlipDemo />
-          </div>
-        </motion.div>
+        ></motion.div>
         <div className="absolute w-full bottom-2 inset-x-0 h-40 pointer-events-none select-none from-transparent " />
         <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
           <World data={sampleArcs} globeConfig={globeConfig} />

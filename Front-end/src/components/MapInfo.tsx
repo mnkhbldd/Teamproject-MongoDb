@@ -4,7 +4,6 @@ import {
   Instagram,
   MapPin,
   MapPinned,
-  PanelTop,
   Phone,
 } from "lucide-react";
 import "leaflet/dist/leaflet.css";

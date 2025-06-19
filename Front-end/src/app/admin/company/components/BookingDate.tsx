@@ -11,12 +11,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
 import { QrBooking } from "@/components/QrBooking";
-
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useScan } from "@/app/context/ScanContext";
+import { toast, Toaster } from "sonner";
 interface BackendBooking {
   _id: string;
   bookingDate: string;
@@ -33,7 +34,7 @@ interface Booking {
   isSale: boolean;
 }
 
-export const BookingDate = () => {
+export const BookingDate = ({ price }: { price: number | undefined }) => {
   const [currentStartDate, setCurrentStartDate] = React.useState<Date>(
     startOfDay(new Date())
   );
@@ -41,7 +42,8 @@ export const BookingDate = () => {
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [bookingsBackend, setBookingsBackend] = React.useState<Booking[]>([]);
   const [selectedDay, setSelectedDay] = React.useState<Date | null>(null);
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [_, setIsMobile] = React.useState(false);
+  const { scanned, setScanned } = useScan();
   const params = useParams();
 
   // Check if mobile on mount and resize
@@ -80,7 +82,7 @@ export const BookingDate = () => {
 
       return {
         time: `${hour.toString().padStart(2, "0")}:00-${nextHour}:00`,
-        price: 80,
+        price: price,
         isSale: false,
       };
     });
@@ -176,7 +178,7 @@ export const BookingDate = () => {
 
     switch (booking.status) {
       case "booked":
-        return "bg-green-100 text-green-800 cursor-not-allowed";
+        return "bg-green-100 text-green-500 cursor-not-allowed";
       case "pending":
         return "bg-blue-500 text-white cursor-not-allowed";
       default:
@@ -236,7 +238,16 @@ export const BookingDate = () => {
   useEffect(() => {
     fetchBookingData();
   }, []);
-  console.log(bookingsBackend, "haha");
+
+  useEffect(() => {
+    {
+      scanned == true && setBookings([]);
+      handleBooking();
+    }
+    setScanned(false);
+    fetchBookingData();
+    toast("time booked successfully");
+  }, [scanned]);
 
   // Mobile Day Selection Component
   const MobileDaySelector = () => (
@@ -326,7 +337,7 @@ export const BookingDate = () => {
                 className={`p-3 rounded-lg text-left transition-colors ${
                   slotBooked
                     ? currentBooking?.status === "booked"
-                      ? "bg-green-100 text-green-800 cursor-not-allowed"
+                      ? "bg-green-100 text-green-100 cursor-not-allowed"
                       : currentBooking?.status === "pending"
                       ? "bg-blue-500 text-white cursor-not-allowed"
                       : "bg-red-100 text-red-800 cursor-not-allowed"
@@ -339,7 +350,7 @@ export const BookingDate = () => {
                     {timeSlot.isSale && (
                       <span className="text-red-400 font-medium">SALE </span>
                     )}
-                    {timeSlot.price.toLocaleString()} ₮
+                    {timeSlot.price?.toLocaleString()} ₮
                   </div>
                 ) : (
                   <div className="text-xs font-medium">
@@ -359,269 +370,280 @@ export const BookingDate = () => {
   };
 
   return (
-    <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-      <div className="p-3 md:p-4 border-b">
-        <div className="w-full">
-          {/* Booked Time Slots Section */}
-          <div className="mb-6 md:mb-8 p-3 md:p-4 bg-white/10 backdrop-blur-sm border-white/20 rounded-lg">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
-              <h3 className="text-lg font-semibold text-white">
-                📅 Booked Time Slots
-              </h3>
-              {bookings.length > 0 && (
-                <Sheet>
-                  <SheetTrigger className="bg-white/10 text-white border-2 px-4 py-2 rounded text-sm hover:bg-blue-700 w-full sm:w-auto">
-                    Cashout ({bookings.length})
-                  </SheetTrigger>
-                  <SheetContent className="w-full sm:w-[540px] md:w-[720px] lg:w-[900px] z-50 overflow-y-auto">
-                    <SheetHeader>
-                      <SheetTitle>Confirm Your Bookings</SheetTitle>
-                      <SheetDescription>
-                        Review your selected time slots before confirming
-                      </SheetDescription>
+    <>
+      <Toaster />
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <div className="p-3 md:p-4 border-b">
+          <div className="w-full">
+            {/* Booked Time Slots Section */}
+            <div className="mb-6 md:mb-8 p-3 md:p-4 bg-white/10 backdrop-blur-sm border-white/20 rounded-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
+                <h3 className="text-lg font-semibold text-white">
+                  📅 Booked Time Slots
+                </h3>
+                {bookings.length > 0 && (
+                  <Sheet>
+                    <SheetTrigger className="bg-white/10 text-white border-2 px-4 py-2 rounded text-sm hover:bg-blue-700 w-full sm:w-auto">
+                      Cashout ({bookings.length})
+                    </SheetTrigger>
+                    <SheetContent className="w-full sm:w-[540px] md:w-[720px] lg:w-[900px] z-50 overflow-y-auto">
+                      <SheetHeader>
+                        <SheetTitle>Confirm Your Bookings</SheetTitle>
+                        <SheetDescription>
+                          Review your selected time slots before confirming
+                        </SheetDescription>
 
-                      <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
-                        {bookings.map((booking, index) => (
-                          <div
-                            key={index}
-                            className="p-4 bg-gray-50 rounded-lg border flex flex-col gap-2"
-                          >
-                            <div className="font-medium text-lg">
-                              {format(booking.date, "MMM d, yyyy")}
-                            </div>
-                            <div className="text-gray-600">
-                              Time: {booking.time}
-                            </div>
-                            <div className="text-gray-600">
-                              Price: {booking.price.toLocaleString()} ₮
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-gray-600">Status: </span>
-                              <span
-                                className={`font-medium ${
-                                  booking.status === "booked"
-                                    ? "text-green-600"
-                                    : booking.status === "pending"
-                                    ? "text-blue-600"
-                                    : booking.status === "selected"
-                                    ? "text-blue-600"
-                                    : "text-red-600"
-                                }`}
-                              >
-                                {booking.status.charAt(0).toUpperCase() +
-                                  booking.status.slice(1)}
-                              </span>
-                            </div>
-
-                            {booking.isSale && (
-                              <div className="text-sm text-red-600 font-medium">
-                                ON SALE
+                        <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
+                          {bookings.map((booking, index) => (
+                            <div
+                              key={index}
+                              className="p-4 bg-gray-50 rounded-lg border flex flex-col gap-2"
+                            >
+                              <div className="font-medium text-lg">
+                                {format(booking.date, "MMM d, yyyy")}
                               </div>
-                            )}
-                          </div>
-                        ))}
+                              <div className="text-gray-600">
+                                Time: {booking.time}
+                              </div>
+                              <div className="text-gray-600">
+                                Price: {booking.price.toLocaleString()} ₮
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-gray-600">Status: </span>
+                                <span
+                                  className={`font-medium ${
+                                    booking.status === "booked"
+                                      ? "text-green-600"
+                                      : booking.status === "pending"
+                                      ? "text-blue-600"
+                                      : booking.status === "selected"
+                                      ? "text-blue-600"
+                                      : "text-red-600"
+                                  }`}
+                                >
+                                  {booking.status.charAt(0).toUpperCase() +
+                                    booking.status.slice(1)}
+                                </span>
+                              </div>
+
+                              {booking.isSale && (
+                                <div className="text-sm text-red-600 font-medium">
+                                  ON SALE
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="pt-4 space-y-4">
+                          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+                            <CardContent className="p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="text-sm text-green-700 font-medium">
+                                    Total Price
+                                  </p>
+                                  <p className="text-2xl font-bold text-green-500">
+                                    {bookings
+                                      .reduce(
+                                        (acc, curr) => acc + curr.price,
+                                        0
+                                      )
+                                      .toLocaleString()}{" "}
+                                    ₮
+                                  </p>
+                                </div>
+                                <Wallet className="h-8 w-8 text-green-600" />
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          {/* <Button
+                         className="w-full py-3 text-lg"
+                         onClick={() => {
+                           setBookings([]);
+                           handleBooking();
+                         }}
+                       ></Button> */}
+                          <Dialog>
+                            <DialogTrigger className="w-full py-1 text-lg font-medium text-white bg-black border-black border-solid border-2 rounded-lg">
+                              Confirm Booking
+                            </DialogTrigger>
+                            <DialogContent>
+                              <QrBooking />
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </SheetHeader>
+                    </SheetContent>
+                  </Sheet>
+                )}
+              </div>
+
+              {bookings.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {bookings.map((booking, index) => (
+                    <div
+                      key={index}
+                      className="p-3 bg-white/10 backdrop-blur-sm border-white/20 rounded border flex flex-col gap-2"
+                    >
+                      <div className="font-medium text-white/90 text-sm">
+                        {format(booking.date, "MMM d, yyyy")}
                       </div>
-
-                      <div className="pt-4 space-y-4">
-                        <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-                          <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm text-green-700 font-medium">
-                                  Total Price
-                                </p>
-                                <p className="text-2xl font-bold text-green-800">
-                                  {bookings
-                                    .reduce((acc, curr) => acc + curr.price, 0)
-                                    .toLocaleString()}{" "}
-                                  ₮
-                                </p>
-                              </div>
-                              <Wallet className="h-8 w-8 text-green-600" />
-                            </div>
-                          </CardContent>
-                        </Card>
-
-                        <Button
-                          className="w-full py-3 text-lg"
-                          onClick={() => {
-                            setBookings([]);
-                            handleBooking();
-                          }}
+                      <div className="text-white/70 text-sm">
+                        Time: {booking.time}
+                      </div>
+                      <div className="text-white/70 text-sm">
+                        Price: {booking.price.toLocaleString()} ₮
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white/70 text-sm">Status: </span>
+                        <span
+                          className={`font-medium text-sm ${
+                            booking.status === "booked"
+                              ? "text-green-400"
+                              : booking.status === "pending"
+                              ? "text-blue-400"
+                              : booking.status === "selected"
+                              ? "text-blue-400"
+                              : "text-red-400"
+                          }`}
                         >
-                          Confirm Booking
-                        </Button>
+                          {booking.status.charAt(0).toUpperCase() +
+                            booking.status.slice(1)}
+                        </span>
                       </div>
-                    </SheetHeader>
-                    <QrBooking />
-                  </SheetContent>
-                </Sheet>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveBooking(booking.id);
+                        }}
+                        className="mt-2 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
+                      >
+                        Remove
+                      </button>
+                      {booking.isSale && (
+                        <div className="text-red-400 font-medium text-sm">
+                          On Sale!
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-400 text-sm">
+                  No bookings yet. Click on a time slot to book it.
+                </p>
               )}
             </div>
 
-            {bookings.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {bookings.map((booking, index) => (
-                  <div
-                    key={index}
-                    className="p-3 bg-white/10 backdrop-blur-sm border-white/20 rounded border flex flex-col gap-2"
-                  >
-                    <div className="font-medium text-white/90 text-sm">
-                      {format(booking.date, "MMM d, yyyy")}
-                    </div>
-                    <div className="text-white/70 text-sm">
-                      Time: {booking.time}
-                    </div>
-                    <div className="text-white/70 text-sm">
-                      Price: {booking.price.toLocaleString()} ₮
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white/70 text-sm">Status: </span>
-                      <span
-                        className={`font-medium text-sm ${
-                          booking.status === "booked"
-                            ? "text-green-400"
-                            : booking.status === "pending"
-                            ? "text-blue-400"
-                            : booking.status === "selected"
-                            ? "text-blue-400"
-                            : "text-red-400"
-                        }`}
-                      >
-                        {booking.status.charAt(0).toUpperCase() +
-                          booking.status.slice(1)}
-                      </span>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveBooking(booking.id);
-                      }}
-                      className="mt-2 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
-                    >
-                      Remove
-                    </button>
-                    {booking.isSale && (
-                      <div className="text-red-400 font-medium text-sm">
-                        On Sale!
-                      </div>
-                    )}
-                  </div>
-                ))}
+            {/* Desktop Calendar Header */}
+            <div className="hidden md:flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-white">Ulaanbaatar</h2>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handlePreviousWeek}
+                  className="p-2 rounded-full hover:bg-white/20 transition-colors"
+                  aria-label="Previous week"
+                >
+                  <ChevronLeft className="h-5 w-5 text-white" />
+                </button>
+                <button
+                  onClick={handleNextWeek}
+                  className="flex items-center text-blue-400 hover:bg-white/20 px-3 py-1 rounded transition-colors"
+                >
+                  Next week <ChevronRight className="ml-1 h-4 w-4" />
+                </button>
               </div>
-            ) : (
-              <p className="text-gray-400 text-sm">
-                No bookings yet. Click on a time slot to book it.
-              </p>
-            )}
-          </div>
-
-          {/* Desktop Calendar Header */}
-          <div className="hidden md:flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Ulaanbaatar</h2>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handlePreviousWeek}
-                className="p-2 rounded-full hover:bg-white/20 transition-colors"
-                aria-label="Previous week"
-              >
-                <ChevronLeft className="h-5 w-5 text-white" />
-              </button>
-              <button
-                onClick={handleNextWeek}
-                className="flex items-center text-blue-400 hover:bg-white/20 px-3 py-1 rounded transition-colors"
-              >
-                Next week <ChevronRight className="ml-1 h-4 w-4" />
-              </button>
             </div>
-          </div>
 
-          {/* Mobile Components */}
-          <MobileDaySelector />
-          <MobileTimeSlots />
+            {/* Mobile Components */}
+            <MobileDaySelector />
+            <MobileTimeSlots />
 
-          {/* Desktop Calendar Grid */}
-          <div className="hidden md:block overflow-x-auto">
-            <div className="min-w-[800px]">
-              <div className="grid grid-cols-8 gap-2">
-                {/* Empty cell for time column header */}
-                <div className="h-16"></div>
+            {/* Desktop Calendar Grid */}
+            <div className="hidden md:block overflow-x-auto">
+              <div className="min-w-[800px]">
+                <div className="grid grid-cols-8 gap-2">
+                  {/* Empty cell for time column header */}
+                  <div className="h-16"></div>
 
-                {/* Day headers */}
-                {days.map((day, i) => (
-                  <div
-                    key={i}
-                    className={`text-center p-2 font-medium ${
-                      isWeekend(day) ? "text-red-400" : ""
-                    }`}
-                  >
-                    <div className="text-sm text-white/70">
-                      {format(day, "EEEE")}
+                  {/* Day headers */}
+                  {days.map((day, i) => (
+                    <div
+                      key={i}
+                      className={`text-center p-2 font-medium ${
+                        isWeekend(day) ? "text-red-400" : ""
+                      }`}
+                    >
+                      <div className="text-sm text-white/70">
+                        {format(day, "EEEE")}
+                      </div>
+                      <div className="text-lg font-bold text-white/90">
+                        {format(day, "MMM d")}
+                      </div>
                     </div>
-                    <div className="text-lg font-bold text-white/90">
-                      {format(day, "MMM d")}
-                    </div>
-                  </div>
-                ))}
+                  ))}
 
-                {/* Time slots and booking grid */}
-                {timeSlots.map((timeSlot, timeIndex) => (
-                  <React.Fragment key={timeSlot.time}>
-                    {/* Time label */}
-                    <div className="flex items-center justify-end pr-2 text-sm text-white/70 min-h-[3rem]">
-                      {timeSlot.time}
-                    </div>
+                  {/* Time slots and booking grid */}
+                  {timeSlots.map((timeSlot, timeIndex) => (
+                    <React.Fragment key={timeSlot.time}>
+                      {/* Time label */}
+                      <div className="flex items-center justify-end pr-2 text-sm text-white/70 min-h-[3rem]">
+                        {timeSlot.time}
+                      </div>
 
-                    {/* Booking slots for each day */}
-                    {days.map((day, dayIndex) => {
-                      const currentBooking = getBookingForSlot(
-                        day,
-                        timeSlot.time
-                      );
-                      const slotBooked = !!currentBooking;
+                      {/* Booking slots for each day */}
+                      {days.map((day, dayIndex) => {
+                        const currentBooking = getBookingForSlot(
+                          day,
+                          timeSlot.time
+                        );
+                        const slotBooked = !!currentBooking;
 
-                      return (
-                        <div
-                          key={`${dayIndex}-${timeIndex}`}
-                          className={`rounded bg-white/10 border-white/20 min-h-[3rem] flex items-center justify-center transition-colors ${getStatusClass(
-                            currentBooking
-                          )}`}
-                          onClick={() =>
-                            !slotBooked && handleSlotClick(day, timeSlot.time)
-                          }
-                        >
-                          {!slotBooked ? (
-                            <div className="rounded flex flex-col items-center px-2 py-1 text-white hover:bg-gray-700 transition-colors">
-                              {timeSlot.isSale && (
-                                <div className="text-xs text-red-400 font-medium">
-                                  SALE
+                        return (
+                          <div
+                            key={`${dayIndex}-${timeIndex}`}
+                            className={`rounded bg-white/10 border-white/20 min-h-[3rem] flex items-center justify-center transition-colors ${getStatusClass(
+                              currentBooking
+                            )}`}
+                            onClick={() =>
+                              !slotBooked && handleSlotClick(day, timeSlot.time)
+                            }
+                          >
+                            {!slotBooked ? (
+                              <div className="rounded flex flex-col items-center px-2 py-1 text-white hover:bg-gray-700 transition-colors">
+                                {timeSlot.isSale && (
+                                  <div className="text-xs text-red-400 font-medium">
+                                    SALE
+                                  </div>
+                                )}
+                                <div className="font-medium text-sm">
+                                  {timeSlot.price?.toLocaleString()} ₮
                                 </div>
-                              )}
-                              <div className="font-medium text-sm">
-                                {timeSlot.price.toLocaleString()} ₮
                               </div>
-                            </div>
-                          ) : (
-                            <div className="text-center text-sm font-medium px-2 py-1">
-                              {currentBooking?.status === "pending"
-                                ? "Selected"
-                                : currentBooking?.status === "booked"
-                                ? "Booked"
-                                : currentBooking?.status === "cancelled"
-                                ? "Cancelled"
-                                : ""}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </React.Fragment>
-                ))}
+                            ) : (
+                              <div className="text-center text-sm font-medium px-2 py-1">
+                                {currentBooking?.status === "pending"
+                                  ? "Selected"
+                                  : currentBooking?.status === "booked"
+                                  ? "Booked"
+                                  : currentBooking?.status === "cancelled"
+                                  ? "Cancelled"
+                                  : ""}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </React.Fragment>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </>
   );
 };
