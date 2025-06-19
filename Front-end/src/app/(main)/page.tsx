@@ -3,13 +3,16 @@
 import React from "react";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
+import { PiArrowArcLeftFill } from "react-icons/pi";
 
 import { AnimatedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
-import { GlowingEffectDemo } from "@/components/Glowing-effect";
-import InfiniteMenu from "@/components/InfiniteMenu/InfiniteMenu";
-import { InfiniteMenuDemo } from "@/components/InfiniteMenu/Infinitemenudemo";
+
+import { LampDemo } from "@/components/Lampdemo";
+
+import CircularGallery from "@/components/CircularGallery/CircularGallery";
+
 export default function Home() {
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
@@ -141,12 +144,17 @@ export default function Home() {
           </div>
         </div>
       </div> */}
-      <div className="w-full bg-gray-900 h-[600px]">
-        <InfiniteMenuDemo />
+      <div className="h-[300px] bg-slate-900">
+        <CircularGallery />
       </div>
-      <div className="w-full h-[800px] bg-slate-900 flex items-center justify-center">
+      <div className="w-full h-[800px] bg-slate-900 flex relative items-center justify-center">
+        <LampDemo />
+        <PiArrowArcLeftFill
+          className="animate-pulse absolute bottom-120 left-340 rotate-[-10deg]"
+          size={200}
+          color="white"
+        />
         <GlobeDemo />
-        <GlowingEffectDemo />
       </div>
 
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">

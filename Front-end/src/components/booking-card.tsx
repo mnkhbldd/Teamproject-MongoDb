@@ -12,7 +12,6 @@ import {
   Calendar,
   MapPin,
   User,
-  Clock,
   CheckCircle,
   XCircle,
   Clock4,
