@@ -1,8 +1,12 @@
+import { Card } from "./ui/card";
+
 export const About = ({ description }: { description: string | undefined }) => {
   return (
-    <div className="flex flex-col w-full justify-center gap-5 border-b-2 pb-8">
-      <p className="text-2xl font-black">ABOUT THIS PLACE</p>
-      <h3 className="w-300 text-xl">{description}</h3>
-    </div>
+    <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+      <div className="p-4">
+        <h2 className="font-semibold mb-2 text-white">ABOUT THIS PLACE</h2>
+        <p className="text-white/80">{description}</p>
+      </div>
+    </Card>
   );
 };

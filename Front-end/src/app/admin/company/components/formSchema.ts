@@ -9,7 +9,7 @@ export const formSchema = z.object({
     .min(5, {
       message: "must be at least 5 characters.",
     })
-    .max(200, { message: "too long" }),
+    .max(500, { message: "too long" }),
   phoneNumber: z
     .string({ required_error: "phone number required" })
     .min(8, {

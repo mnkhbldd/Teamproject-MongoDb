@@ -1,145 +1,101 @@
 "use client";
+
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Play, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 
-export const CarouselImage = ({
-  imageSrc,
-}: {
-  imageSrc: string[] | undefined;
-}) => {
-  const carouselItems = imageSrc;
+type Images = {
+  images: string[] | null;
+};
 
-  const [currentIndex, setCurrentIndex] = useState(2); // Start with middle item
-  const [isAnimating, setIsAnimating] = useState(false);
+export const CarouselImage = ({ images }: Images) => {
+  console.log(images, "images");
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    console.log("Media carousel mounted, current slide:", currentSlide);
+  }, [currentSlide]);
 
   const nextSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex((prev) => (prev + 1) % carouselItems!.length);
+    console.log("Next slide clicked");
+    if (!images) {
+      return;
+    }
+    setCurrentSlide((prev) => (prev + 1) % images.length);
   };
 
   const prevSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex(
-      (prev) => (prev - 1 + carouselItems!.length) % carouselItems!.length
-    );
-  };
-
-  const goToSlide = (index: number) => {
-    if (isAnimating || index === currentIndex) return;
-    setIsAnimating(true);
-    setCurrentIndex(index);
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsAnimating(false), 500);
-    return () => clearTimeout(timer);
-  }, [currentIndex]);
-
-  const getCardStyle = (index: number) => {
-    const diff = index - currentIndex;
-    const absIndex = Math.abs(diff);
-
-    if (absIndex === 0) {
-      // Center card
-      return {
-        transform: "translateX(0) translateZ(0) rotateY(0deg) scale(1)",
-        zIndex: 10,
-        opacity: 1,
-      };
-    } else if (absIndex === 1) {
-      // Adjacent cards
-      const direction = diff > 0 ? 1 : -1;
-      return {
-        transform: `translateX(${
-          direction * 200
-        }px) translateZ(-300px) rotateY(${-direction * 25}deg) scale(0.85)`,
-        zIndex: 5,
-        opacity: 0.8,
-      };
-    } else if (absIndex === 2) {
-      // Second level cards
-      const direction = diff > 0 ? 1 : -1;
-      return {
-        transform: `translateX(${
-          direction * 200
-        }px) translateZ(-200px) rotateY(${-direction * 45}deg) scale(0.7)`,
-        zIndex: 3,
-        opacity: 0.6,
-      };
-    } else {
-      // Hidden cards
-      const direction = diff > 0 ? 1 : -1;
-      return {
-        transform: `translateX(${
-          direction * 280
-        }px) translateZ(-300px) rotateY(${-direction * 60}deg) scale(0.5)`,
-        zIndex: 1,
-        opacity: 0.3,
-      };
+    console.log("Previous slide clicked");
+    if (!images) {
+      return;
     }
+    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const toggleFullscreen = () => {
+    console.log("Fullscreen toggled");
+    setIsFullscreen(!isFullscreen);
   };
 
   return (
-    <div className="box w-full h-[500px] flex items-center justify-center px-2">
-      <div className="w-full">
-        <div className="relative">
-          {/* Carousel Container */}
-          <div
-            className="relative flex items-center justify-center"
-            style={{ perspective: "1000px" }}
-          >
-            {/* Navigation Buttons */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-0 z-20  hover:bg-white shadow-lg rounded-full w-12 h-12 transition-all duration-300 hover:scale-110"
-              onClick={prevSlide}
-              disabled={isAnimating}
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-0 z-20 hover:bg-white shadow-lg rounded-full w-12 h-12 transition-all duration-300 hover:scale-110"
-              onClick={nextSlide}
-              disabled={isAnimating}
-            >
-              <ChevronRight className="w-6 h-6" />
-            </Button>
+    <div className="relative w-full mx-auto">
+      {/* Main Carousel */}
+      {images && (
+        <div className="relative bg-white rounded-3xl overflow-hidden shadow-soft-lg border border-gray-100/50">
+          <div className="relative aspect-video">
+            <img
+              src={images[currentSlide]}
+              className="w-full h-full object-cover"
+            />
 
-            {/* Cards */}
-            <div className="relative w-full h-full flex items-center justify-center">
-              {carouselItems?.map((item: string, index: number) => {
-                const style = getCardStyle(index);
-                return (
-                  <div
-                    key={index}
-                    className="absolute w-150 h-100 rounded-2xl shadow-2xl cursor-pointer transition-all duration-500 ease-out overflow-hidden bg-white"
-                    style={style}
-                    onClick={() => goToSlide(index)}
-                  >
-                    {/* Image */}
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={item || "/placeholder.svg"}
-                        alt="image"
-                        fill
-                        className="object-cover rounded-2xl"
-                        sizes="(max-width: 768px) 100vw, 256px"
-                      />
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            {/* Overlay Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
           </div>
+
+          {/* Navigation Arrows */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 w-12 h-12 rounded-full"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 w-12 h-12 rounded-full"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </Button>
         </div>
+      )}
+
+      {/* Thumbnail Navigation */}
+      <div className="flex justify-center space-x-3 mt-4">
+        {images &&
+          images.map((image: string, index: any) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`relative w-20 h-12 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                index === currentSlide
+                  ? "border-coral shadow-glow scale-105"
+                  : "border-gray-200 hover:border-mint"
+              }`}
+            >
+              <img src={image} className="w-full h-full object-cover" />
+            </button>
+          ))}
+      </div>
+
+      {/* Slide Counter */}
+      <div className="text-center mt-3">
+        <p className="text-sm text-charcoal/60">
+          {currentSlide + 1} of {images?.length}
+        </p>
       </div>
     </div>
   );
