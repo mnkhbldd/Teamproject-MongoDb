@@ -1,5 +1,5 @@
 "use client";
-
+import gradient from "@/components/ui/gradient";
 import React from "react";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
@@ -12,6 +12,7 @@ import { GlobeDemo } from "@/components/Global";
 import { LampDemo } from "@/components/Lampdemo";
 
 import CircularGallery from "@/components/CircularGallery/CircularGallery";
+import GradientText from "@/components/ui/gradient";
 
 export default function Home() {
   console.log("Welcome to Freely!");
@@ -148,13 +149,7 @@ export default function Home() {
       <div className="h-[300px] bg-slate-900">
         <CircularGallery />
       </div>
-      <div className="w-full h-[800px] bg-slate-900 flex relative items-center justify-center">
-        <LampDemo />
-        <PiArrowArcLeftFill
-          className="animate-pulse absolute bottom-120 left-340 rotate-[-10deg]"
-          size={200}
-          color="white"
-        />
+      <div className="w-full h-[900px] bg-slate-900  pt-10  flex flex-col relative items-center justify-center">
         <GlobeDemo />
       </div>
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
@@ -167,7 +162,7 @@ export default function Home() {
           speed="slow"
         />
       </div>
-      <div>git</div>
+
       <AnimatedFooter />
     </div>
   );
