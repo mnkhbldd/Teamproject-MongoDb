@@ -63,7 +63,7 @@ export const createCompany = async (
 
 interface GetCompaniesQuery {
   q?: string;
-  categories?: string | string[];
+  categories?: string[] | string;
 }
 
 export const getCompanies = async (
@@ -75,7 +75,7 @@ export const getCompanies = async (
   try {
     const filter: Record<string, unknown> = {};
 
-    // Search query
+    // Text search
     if (q) {
       const searchRegex = new RegExp(q, "i");
       filter.$or = [
@@ -88,7 +88,7 @@ export const getCompanies = async (
       ];
     }
 
-    // Filter by category IDs
+    // Category filter
     if (categories) {
       const categoryArray = Array.isArray(categories)
         ? categories
@@ -101,7 +101,10 @@ export const getCompanies = async (
       filter.category = { $in: categoryObjectIds };
     }
 
-    const companies = await CompanyModel.find(filter).sort({ createdAt: -1 });
+    // Fetch and populate categories
+    const companies = await CompanyModel.find(filter)
+      .populate("category") // <-- this line populates the category field
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({ success: true, companies });
   } catch (error) {

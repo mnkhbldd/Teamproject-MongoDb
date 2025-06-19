@@ -52,8 +52,8 @@ import {
 } from "../utils/imageUpload";
 import axiosInstance from "@/utils/axios";
 import { toast, Toaster } from "sonner";
-import { MiniInfoCard } from "@/app/(main)/Explore/components/MiniInfoCard";
 import { useRouter } from "next/navigation";
+import { MiniInfoCard } from "@/app/(main)/Explore/components/MiniInfoCard";
 
 interface Company {
   _id: string;

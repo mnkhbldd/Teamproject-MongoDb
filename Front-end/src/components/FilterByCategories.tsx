@@ -1,4 +1,14 @@
+"use client";
+
 import React from "react";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Category = {
   _id: string;
@@ -24,36 +34,50 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
     onChange(newValue);
   };
 
+  const selectedNames = categories
+    .filter((cat) => value.includes(cat._id))
+    .map((cat) => cat.name)
+    .join(", ");
+
   return (
-    <div
-      style={{
-        scrollbarWidth: "thin",
-        scrollbarColor: "#e3e8ffe6 transparent",
-        msOverflowStyle: "none",
-      }}
-      className="max-h-60 overflow-y-scroll grid grid-cols-2 gap-2"
-    >
-      {categories.length > 0 ? (
-        categories.map((cat) => {
-          const isSelected = value.includes(cat._id);
-          return (
-            <div
-              key={cat._id}
-              onClick={() => toggleSelect(cat)}
-              className={`flex items-center gap-2 px-2 py-1 border rounded cursor-pointer transition hover:bg-blue-50 ${
-                isSelected ? "bg-blue-100 border-blue-400" : "border-gray-200"
-              }`}
-            >
-              <span className="text-lg">{cat.icons}</span>
-              <span className="text-black">{cat.name}</span>
-            </div>
-          );
-        })
-      ) : (
-        <p className="text-gray-400 col-span-2 text-center">
-          No categories available
-        </p>
-      )}
-    </div>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className="w-full justify-start text-left overflow-x-scroll"
+        >
+          {selectedNames.length > 0 ? selectedNames : "Select categories"}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-2">
+        {categories.length > 0 ? (
+          <div className="gap-2 max-h-60 overflow-y-auto flex flex-col">
+            {categories.map((cat) => {
+              const isSelected = value.includes(cat._id);
+              return (
+                <div
+                  key={cat._id}
+                  onClick={() => toggleSelect(cat)}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1 rounded-md text-sm cursor-pointer select-none border transition-colors",
+                    isSelected
+                      ? "bg-accent text-accent-foreground border-primary"
+                      : "hover:bg-accent border-muted"
+                  )}
+                >
+                  <span className="text-lg">{cat.icons}</span>
+                  <span className="flex-1">{cat.name}</span>
+                  {isSelected && <Check className="h-4 w-4 text-primary" />}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-sm text-center">
+            No categories available
+          </p>
+        )}
+      </PopoverContent>
+    </Popover>
   );
 };
