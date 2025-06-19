@@ -288,7 +288,7 @@ console.log(companies,"aha");
                     
                     <div className="flex items-center space-x-1 mb-4">
                       <MapPin className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600 truncate">{company.location[0].address}</span>
+                      <span className="text-sm text-gray-600 truncate">{company.location[0]?.address}</span>
                     </div>
                     
                   </CardContent>

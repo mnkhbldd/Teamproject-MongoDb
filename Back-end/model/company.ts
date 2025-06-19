@@ -15,7 +15,7 @@ const locationSchema = new Schema({
   },
   coordinates: {
     type: [Number],
-    required: true,
+    required: true, // Format: [lng, lat]
   },
   address: {
     type: String,
@@ -27,7 +27,10 @@ const companySchema = new Schema(
     user: { type: String, required: true },
     name: { type: String, required: true },
     description: { type: String },
-    location: locationSchema,
+    location: {
+      type: locationSchema,
+      required: true,
+    },
     phoneNumber: { type: String, required: true },
     category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     socialMedia: [socialMediaSchema],
@@ -39,6 +42,7 @@ const companySchema = new Schema(
   { timestamps: true }
 );
 
+// ✅ 2dsphere index for location
 companySchema.index({ location: "2dsphere" });
 
 const CompanyModel = mongoose.model("Company", companySchema);
