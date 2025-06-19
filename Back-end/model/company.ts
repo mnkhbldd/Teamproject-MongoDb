@@ -24,7 +24,7 @@ const companySchema = new mongoose.Schema({
   category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   socialMedia: [socialMediaSchema],
   images: [{ type: String }],
-  pricing: { type: String },
+  pricing: { type: Number },
 
   companyLogo: String,
   companyCoverImage: String,

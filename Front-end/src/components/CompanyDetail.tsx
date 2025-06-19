@@ -8,7 +8,6 @@ import { CompanyName } from "./CompanyName";
 import { CarouselImage } from "./CarouselImage";
 import { MapInfo } from "./MapInfo";
 import { About } from "./About";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { BookingDate } from "@/app/admin/company/components/BookingDate";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
@@ -32,6 +31,7 @@ interface Company {
   ];
   images: string[];
   companyLogo: string;
+  pricing: number;
 }
 
 export const CompanyDetail = () => {
@@ -69,7 +69,7 @@ export const CompanyDetail = () => {
           <CarouselImage images={data?.images || null} />
           <About description={data?.description} />
           <ReviewsPage />
-          <BookingDate />
+          <BookingDate price={data?.pricing} />
         </div>
 
         <div className="space-y-4">

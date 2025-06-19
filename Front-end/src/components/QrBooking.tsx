@@ -2,60 +2,68 @@
 
 import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
+import axiosInstance from "@/utils/axios";
+import { useScan } from "@/app/context/ScanContext";
 
 export const QrBooking = () => {
   const [qrId, setQrId] = useState<string | null>(null);
-  const [scanned, setScanned] = useState(false);
+  const { scanned, setScanned } = useScan();
 
   useEffect(() => {
-    const getQrId = async () => {
-      const res = await fetch(
-        "https://teamproject-mongodb.onrender.com/create-qr-session",
-        {
-          method: "POST",
-        }
-      );
-      const data = await res.json();
-      setQrId(data.qrId);
+    const createQrSession = async () => {
+      try {
+        const res = await axiosInstance.post("/qr/create-qr-session");
+        const qrIdFromServer = res.data.qrId;
+        setQrId(qrIdFromServer);
 
-      const socket = new WebSocket("wss://teamproject-mongodb.onrender.com");
+        const socket = new WebSocket("wss://teamproject-mongodb.onrender.com");
 
-      socket.onopen = () => {
-        socket.send(JSON.stringify({ qrId: data.qrId }));
-      };
+        socket.onopen = () => {
+          socket.send(JSON.stringify({ qrId: qrIdFromServer }));
+        };
 
-      socket.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        if (message.scanned) {
-          setScanned(true);
-          socket.close();
-        }
-      };
+        socket.onmessage = (event) => {
+          const message = JSON.parse(event.data);
+          if (message.scanned) {
+            setScanned(true);
+            socket.close();
+          }
+        };
 
-      return () => socket.close();
+        socket.onerror = (err) => {
+          console.error("WebSocket error:", err);
+        };
+
+        return () => socket.close();
+      } catch (error) {
+        console.error("Failed to create QR session", error);
+      }
     };
 
-    getQrId();
+    createQrSession();
   }, []);
 
-  const qrScanLink = qrId
-    ? `https://teamproject-mongodb.onrender.com/scan/${qrId}`
+  const qrUrl = qrId
+    ? `https://teamproject-mongodb.onrender.com/qr/scan/${qrId}`
     : "";
 
   return (
-    <div className="text-center p-4">
-      <h2 className="text-2xl font-bold mb-4">Scan to Confirm Booking</h2>
-      {qrId && !scanned ? (
-        <>
-          <QRCodeCanvas value={qrScanLink} size={250} />
-          <p className="mt-2 text-sm text-gray-600">Scan with any QR scanner</p>
-        </>
-      ) : scanned ? (
-        <p className="text-green-600 font-bold text-xl mt-4">
+    <div className="text-center flex flex-col items-center justify-center">
+      <h2 className="text-xl font-bold mb-4">Scan QR to Confirm</h2>
+
+      {scanned ? (
+        <p className="text-green-600 font-semibold text-lg mt-4">
           ✅ Booking Confirmed
         </p>
+      ) : qrId ? (
+        <>
+          <QRCodeCanvas value={qrUrl} size={256} />
+          <p className="mt-2 text-gray-500 text-sm">
+            Scan with your phone to confirm
+          </p>
+        </>
       ) : (
-        <p>Generating QR...</p>
+        <p className="text-gray-500">Generating QR...</p>
       )}
     </div>
   );

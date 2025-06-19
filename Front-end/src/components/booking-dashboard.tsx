@@ -15,14 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Calendar,
-  DollarSign,
-  TrendingUp,
-  Users,
-  Search,
-  Filter,
-} from "lucide-react";
+import { Calendar, TrendingUp, Users, Search, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "@/app/hooks/use-toast";
 
