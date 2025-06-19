@@ -167,7 +167,7 @@ export default function Home() {
           speed="slow"
         />
       </div>
-
+      <div>git</div>
       <AnimatedFooter />
     </div>
   );
