@@ -398,8 +398,8 @@ export function GlobeDemo() {
   ];
 
   return (
-    <div className="flex pr-30 flex-row items-center justify-center bg-slate-900 py-20 h-fit  md:h-auto dark:bg-black relative w-[30%]">
-      <div className="max-w-7xl mx-auto w-full relative h-full md:h-[40rem] px-4">
+    <div className="flex flex-row items-center justify-center py-20 h-screen md:h-auto dark:bg-black bg-slate-900 relative w-full">
+      <div className="max-w-7xl mx-auto bg-slate-900 w-full relative overflow-hidden h-full md:h-[50rem] px-4">
         <motion.div
           initial={{
             opacity: 0,
@@ -413,12 +413,17 @@ export function GlobeDemo() {
             duration: 1,
           }}
           className="div"
-        ></motion.div>
-        <div className="absolute w-full bottom-2 inset-x-0 h-40 pointer-events-none select-none from-transparent " />
-        <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
+        >
+          <p className="text-center text-base   text-white text-[46px]  max-w-[600px] mt-2 mx-auto">
+            Through our Website
+          </p>
+        </motion.div>
+        <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent  z-40" />
+        <div className="absolute w-full -bottom-10 h-72 md:h-full z-10 py-10">
           <World data={sampleArcs} globeConfig={globeConfig} />
         </div>
       </div>
     </div>
   );
 }
+export default GlobeDemo;

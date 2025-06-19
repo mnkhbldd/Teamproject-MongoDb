@@ -3,13 +3,10 @@
 import React from "react";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
-import { PiArrowArcLeftFill } from "react-icons/pi";
 
-import { AnimatedFooter } from "@/components/NextFooter";
+import { EnhancedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
-
-import { LampDemo } from "@/components/Lampdemo";
 
 import CircularGallery from "@/components/CircularGallery/CircularGallery";
 import BentoGridDemo from "@/components/BentoGrid";
@@ -149,13 +146,7 @@ export default function Home() {
       <div className="h-[300px] bg-slate-900">
         <CircularGallery />
       </div>
-      <div className="w-full h-[800px] bg-slate-900 flex relative items-center justify-center">
-        <LampDemo />
-        <PiArrowArcLeftFill
-          className="animate-pulse absolute bottom-120 left-340 rotate-[-10deg]"
-          size={200}
-          color="white"
-        />
+      <div className="w-full h-[900px] bg-slate-900  pt-10  flex flex-col relative items-center justify-center">
         <GlobeDemo />
       </div>
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
@@ -168,10 +159,15 @@ export default function Home() {
           speed="slow"
         />
       </div>
+
+
+      
+
       <div className="bg-gray-900 pb-10">
         <BentoGridDemo />
       </div>
-      <AnimatedFooter />
+ 
+<EnhancedFooter />
     </div>
   );
 }
