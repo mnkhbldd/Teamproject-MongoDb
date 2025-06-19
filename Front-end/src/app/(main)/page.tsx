@@ -3,12 +3,19 @@
 import React from "react";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
+import { PiArrowArcLeftFill } from "react-icons/pi";
 
 import { AnimatedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
-import { GlowingEffectDemo } from "@/components/Glowing-effect";
+
+import { LampDemo } from "@/components/Lampdemo";
+
+import CircularGallery from "@/components/CircularGallery/CircularGallery";
+
 export default function Home() {
+  console.log("Welcome to Freely!");
+
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";
 
@@ -80,7 +87,6 @@ export default function Home() {
           </div>
         </div>
       </BackgroundBeamsWithCollision>
-
       {/* <div className="w-full h-[80px] bg-gray-900 flex items-center justify-center">
         <div className="flex items-center justify-center w-full gap-30">
           <div className="flex gap-[30px] items-center">
@@ -139,11 +145,18 @@ export default function Home() {
           </div>
         </div>
       </div> */}
-      <div className="w-full h-[800px] bg-slate-900 flex items-center justify-center">
-        <GlobeDemo />
-        <GlowingEffectDemo />
+      <div className="h-[300px] bg-slate-900">
+        <CircularGallery />
       </div>
-
+      <div className="w-full h-[800px] bg-slate-900 flex relative items-center justify-center">
+        <LampDemo />
+        <PiArrowArcLeftFill
+          className="animate-pulse absolute bottom-120 left-340 rotate-[-10deg]"
+          size={200}
+          color="white"
+        />
+        <GlobeDemo />
+      </div>
       <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
           What they tell about us
@@ -154,7 +167,7 @@ export default function Home() {
           speed="slow"
         />
       </div>
-
+      <div>git</div>
       <AnimatedFooter />
     </div>
   );

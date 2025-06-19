@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Boxes } from "@/components/ui/backgroundboxes";
-import { cn } from "@/lib/utils";
+
 import { BookingDashboard } from "./booking-dashboard";
 
 export function BackgroundBoxesDemo() {
