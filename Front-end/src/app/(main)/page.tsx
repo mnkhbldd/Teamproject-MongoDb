@@ -5,7 +5,7 @@ import { BackgroundBeamsWithCollision } from "@/components/background-beams-with
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import { PiArrowArcLeftFill } from "react-icons/pi";
 
-import { AnimatedFooter } from "@/components/NextFooter";
+import { EnhancedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
 
@@ -170,7 +170,7 @@ export default function Home() {
         />
       </div>
 
-      <AnimatedFooter />
+      <EnhancedFooter />
     </div>
   );
 }
