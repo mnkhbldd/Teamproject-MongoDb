@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,53 +29,29 @@ import {
 import { CalendarIcon, Clock, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-
-// Mock data - replace with actual data from your API
-const mockCompanies = [
-  { id: "684d3c1135154184ccdcd6b2", name: "Tech Solutions Inc." },
-  { id: "684d3c1135154184ccdcd6b3", name: "Digital Marketing Pro" },
-  { id: "684d3c1135154184ccdcd6b4", name: "Creative Design Studio" },
-];
-
-const mockUsers = [
-  {
-    id: "user_2yDXdHHp9AN0w9XYA2FktIY8j9Z",
-    name: "John Doe",
-    email: "john@example.com",
-  },
-  {
-    id: "user_3xEYeIIq0BO1x0ZYB3GluJZ9k0A",
-    name: "Jane Smith",
-    email: "jane@example.com",
-  },
-  {
-    id: "user_4zFZfJJr1CP2y1AZC4HmvKA0l1B",
-    name: "Mike Johnson",
-    email: "mike@example.com",
-  },
-];
+import axiosInstance from "@/utils/axios";
 
 const timeSlots = [
   "08:00",
-  "08:30",
+
   "09:00",
-  "09:30",
+
   "10:00",
-  "10:30",
+
   "11:00",
-  "11:30",
+
   "12:00",
-  "12:30",
+
   "13:00",
-  "13:30",
+
   "14:00",
-  "14:30",
+
   "15:00",
-  "15:30",
+
   "16:00",
-  "16:30",
+
   "17:00",
-  "17:30",
+
   "18:00",
 ];
 
@@ -89,16 +65,39 @@ interface BookingFormData {
   status: string;
 }
 
+interface Company {
+  _id: string;
+  name: string;
+}
+
 export default function AdminBookingForm() {
   const [formData, setFormData] = useState<BookingFormData>({
     user: "",
     company: "",
-    bookingDate: undefined,
+    bookingDate: new Date(),
     startTime: "",
     endTime: "",
     price: "",
     status: "booked",
   });
+  const [companies, setCompanies] = useState<Company[]>([]);
+
+  const fetchCompanies = async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/company/get-companies-by-user"
+      );
+      if (response.data?.success && response.data?.companies) {
+        setCompanies(response.data.companies);
+      }
+    } catch (error) {
+      console.error("Error fetching companies:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -106,7 +105,6 @@ export default function AdminBookingForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Validate form
     if (
       !formData.user ||
       !formData.company ||
@@ -120,7 +118,6 @@ export default function AdminBookingForm() {
       return;
     }
 
-    // Validate time selection
     if (formData.startTime >= formData.endTime) {
       alert("End time must be after start time");
       setIsSubmitting(false);
@@ -128,25 +125,21 @@ export default function AdminBookingForm() {
     }
 
     try {
-      // Here you would make the API call to create the booking
-      const bookingData = {
+      const formattedDate = format(formData.bookingDate, "yyyy-MM-dd");
+
+      await axiosInstance.post("/booking/create-booking", {
         user: formData.user,
-        company: formData.company,
-        bookingDate: formData.bookingDate.toISOString(),
+        companyId: formData.company,
         startTime: formData.startTime,
+
         endTime: formData.endTime,
         status: formData.status,
         price: formData.price,
-      };
+        bookingDate: formattedDate,
+      });
 
-      console.log("Creating booking:", bookingData);
-
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      alert("Booking created successfully!");
-
-      // Reset form
       setFormData({
         user: "",
         company: "",
@@ -158,7 +151,6 @@ export default function AdminBookingForm() {
       });
     } catch (error) {
       console.error("Error creating booking:", error);
-      alert("Failed to create booking. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -177,34 +169,19 @@ export default function AdminBookingForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* User Selection */}
           <div className="space-y-2">
             <Label htmlFor="user">User *</Label>
-            <Select
+            <Input
+              id="user"
+              type="string"
+              placeholder="Enter user name"
               value={formData.user}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, user: value }))
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, user: e.target.value }))
               }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a user" />
-              </SelectTrigger>
-              <SelectContent>
-                {mockUsers.map((user) => (
-                  <SelectItem key={user.id} value={user.id}>
-                    <div className="flex flex-col">
-                      <span>{user.name}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {user.email}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            />
           </div>
 
-          {/* Company Selection */}
           <div className="space-y-2">
             <Label htmlFor="company">Company *</Label>
             <Select
@@ -217,8 +194,8 @@ export default function AdminBookingForm() {
                 <SelectValue placeholder="Select a company" />
               </SelectTrigger>
               <SelectContent>
-                {mockCompanies.map((company) => (
-                  <SelectItem key={company.id} value={company.id}>
+                {companies.map((company) => (
+                  <SelectItem key={company._id} value={company._id}>
                     {company.name}
                   </SelectItem>
                 ))}
@@ -226,7 +203,6 @@ export default function AdminBookingForm() {
             </Select>
           </div>
 
-          {/* Date Selection */}
           <div className="space-y-2">
             <Label>Booking Date *</Label>
             <Popover>
@@ -258,7 +234,6 @@ export default function AdminBookingForm() {
             </Popover>
           </div>
 
-          {/* Time Selection */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="startTime">Start Time *</Label>
@@ -313,7 +288,6 @@ export default function AdminBookingForm() {
             </div>
           </div>
 
-          {/* Price */}
           <div className="space-y-2">
             <Label htmlFor="price">Price *</Label>
             <Input
@@ -327,7 +301,6 @@ export default function AdminBookingForm() {
             />
           </div>
 
-          {/* Status */}
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
             <Select
@@ -348,7 +321,6 @@ export default function AdminBookingForm() {
             </Select>
           </div>
 
-          {/* Submit Button */}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Creating Booking..." : "Create Booking"}
           </Button>

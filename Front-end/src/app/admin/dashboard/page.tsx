@@ -338,10 +338,6 @@ export default function AdminDashboard() {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AdminBookingForm />
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Continue</AlertDialogAction>
-                  </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
             </div>
