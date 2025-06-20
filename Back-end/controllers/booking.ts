@@ -123,11 +123,13 @@ export const getBookingsByUser = async (
     const bookings = await BookingModel.find({ user: userId })
       .populate("company", "name")
       .sort({ createdAt: -1 });
-
+    const enrichedBookings = bookings.map((booking) => ({
+      ...booking.toObject(),
+      user,
+    }));
     res.status(200).json({
       success: true,
-      bookings,
-      user,
+      bookings: enrichedBookings,
     });
   } catch (error) {
     console.error(error);
