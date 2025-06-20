@@ -1,7 +1,5 @@
-import { cn } from "@/lib/utils";
 import React from "react";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
-import Image from "next/image";
 
 export default function BentoGridDemo() {
   return (
@@ -11,51 +9,97 @@ export default function BentoGridDemo() {
           key={i}
           title={item.title}
           description={item.description}
-          header={item.header}
+          image={item.image}
           className={i === 3 || i === 6 ? "md:col-span-2" : ""}
         />
       ))}
     </BentoGrid>
   );
 }
-const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-white"></div>
-);
+
 const items = [
   {
-    title: "The Dawn of Innovation",
-    description: "Explore the birth of groundbreaking ideas and inventions.",
-    header: <Skeleton />,
-  },
-  {
-    title: "The Digital Revolution",
-    description: "Dive into the transformative power of technology.",
-    header: <Skeleton />,
-  },
-  {
-    title: "The Art of Design",
-    description: "Discover the beauty of thoughtful and functional design.",
-    header: <Skeleton />,
-  },
-  {
-    title: "The Power of Communication",
+    title: "Freedom and Joy",
     description:
-      "Understand the impact of effective communication in our lives.",
-    header: <Skeleton />,
+      "Embrace life's beautiful moments with open arms and boundless energy.",
+    image: (
+      <img
+        className="h-[170px] w-full object-cover rounded-xl"
+        src="https://www.allprodad.com/wp-content/uploads/2014/01/iStock-1450052495-scaled.jpg"
+        alt=""
+      />
+    ),
   },
   {
-    title: "The Pursuit of Knowledge",
-    description: "Join the quest for understanding and enlightenment.",
-    header: <Skeleton />,
+    title: "Aquatic Excellence",
+    description:
+      "Dive deep into your passion and swim towards your goals with determination.",
+    image: (
+      <img
+        className="h-[170px] w-full object-cover rounded-xl"
+        src="https://i0.wp.com/blog.myswimpro.com/wp-content/uploads/2022/12/freestyle-swimming-stroke-myswimpro-taylor.jpg?fit=2000%2C1500&ssl=1"
+        alt=""
+      />
+    ),
   },
   {
-    title: "The Joy of Creation",
-    description: "Experience the thrill of bringing ideas to life.",
-    header: <Skeleton />,
+    title: "Outdoor Adventures",
+    description:
+      "Create unforgettable memories under the stars with friends and family.",
+    image: (
+      <img
+        className="h-[170px] w-full object-cover rounded-xl"
+        src="https://www.attwoolls.co.uk/media/catalog/category/easycamptents.jpg"
+        alt=""
+      />
+    ),
   },
   {
-    title: "The Spirit of Adventure",
-    description: "Embark on exciting journeys and thrilling discoveries.",
-    header: <Skeleton />,
+    title: "The Open Road",
+    description:
+      "Journey through life's winding paths and discover new horizons on two wheels.",
+    image: (
+      <img
+        className="h-[170px] w-full object-cover rounded-xl"
+        src="https://ek5jbm9x6ox.exactdn.com/wp-content/uploads/2022/10/19025737/Royal_Enfield_Scram_411_shoot_%C2%A9_Stories_of_Bike_2022-45-1.jpg?lossy=1&ssl=1"
+        alt=""
+      />
+    ),
+  },
+  {
+    title: "Competitive Spirit",
+    description:
+      "Channel your inner athlete and strive for excellence in every game.",
+    image: (
+      <img
+        className="h-[170px] w-full object-cover rounded-xl"
+        src="https://cdn.britannica.com/50/219150-050-0032E44D/Marc-Andre-Fleury-Vegas-Golden-Knights-Stanley-Cup-Final-2018.jpg"
+        alt=""
+      />
+    ),
+  },
+  {
+    title: "Mountain Exploration",
+    description:
+      "Conquer new heights and find inspiration in nature's grandest landscapes.",
+    image: (
+      <img
+        className="h-[170px] w-full object-cover rounded-xl"
+        src="https://cdn.prod.website-files.com/5f50b1a1d93e167ad6648e8a/6086536af4646f4ff8bfcb24_Scott%20Bergsport%20so21%202.jpg"
+        alt=""
+      />
+    ),
+  },
+  {
+    title: "Strike and Precision",
+    description:
+      "Master the art of focus and aim for perfect execution in every attempt.",
+    image: (
+      <img
+        className="h-[170px] w-full object-cover rounded-xl"
+        src="https://images.squarespace-cdn.com/content/v1/5e9e0dfba94cde48f0501a9c/1709916615120-G5Q11MNZKKJYQI9BTOPX/Bowling_Pins_2.jpg"
+        alt=""
+      />
+    ),
   },
 ];
