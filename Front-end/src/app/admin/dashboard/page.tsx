@@ -331,6 +331,10 @@ export default function AdminDashboard() {
             <div className="flex justify-between">
               <CardTitle>Bookings ({filteredBookings.length})</CardTitle>
               <AlertDialog>
+                <AlertDialogHeader>
+                  <AlertDialogTitle></AlertDialogTitle>
+                  <AlertDialogDescription></AlertDialogDescription>
+                </AlertDialogHeader>
                 <AlertDialogTrigger>
                   <div className="bg-black text-white px-2 py-1 rounded-lg hover:bg-blue-500 hover:text-black">
                     Add booking
@@ -338,6 +342,7 @@ export default function AdminDashboard() {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AdminBookingForm />
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
                 </AlertDialogContent>
               </AlertDialog>
             </div>
