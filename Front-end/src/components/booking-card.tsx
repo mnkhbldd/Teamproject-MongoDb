@@ -12,16 +12,16 @@ import { Calendar, MapPin, User, XCircle, Clock4 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface BookingCardProps {
-  booking: BookingData;
-  onStatusChange?: (
-    bookingId: string,
-    newStatus: BookingData["status"]
-  ) => void;
+  company: {
+    name: string;
+  };
+
+  price: number;
+  status: "booked" | "cancelled";
+  bookingDate: string;
 }
 
-export function BookingCard({ booking }: BookingCardProps) {
-  console.log(booking, "bol");
-
+export const BookingCard = ({ booking }: { booking: BookingCardProps }) => {
   const getStatusColor = (status: BookingData["status"]) => {
     switch (status) {
       case "booked":
@@ -48,7 +48,20 @@ export function BookingCard({ booking }: BookingCardProps) {
   //   console.log(`Changing status for ${booking.id} to ${newStatus}`);
   //   onStatusChange?.(booking.id, newStatus);
   // };
+  const LocalDateTime = ({ isoString }: { isoString: string }) => {
+    const date = new Date(isoString);
+    const formatted = date.toLocaleString("en-US", {
+      timeZone: "Asia/Ulaanbaatar",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
 
+    return <span>{formatted}</span>;
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -64,16 +77,16 @@ export function BookingCard({ booking }: BookingCardProps) {
           <div className="flex items-start justify-between">
             <div>
               <h3 className="font-semibold text-lg text-gray-900 group-hover:text-premium-indigo transition-colors">
-                {booking.service}
+                {booking.company.name}
               </h3>
               <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
                 <User className="w-4 h-4" />
-                <span>{booking.customerName}</span>
+                <span>{}sdsd</span>
               </div>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-gray-900 tabular-nums">
-                {formatCurrency(booking.amount, booking.currency)}
+                {formatCurrency(booking.price)}
               </div>
               <Badge
                 variant="outline"
@@ -90,18 +103,11 @@ export function BookingCard({ booking }: BookingCardProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="w-4 h-4" />
-              <span>{formatDateTime(booking.datetime)}</span>
+              <LocalDateTime isoString={booking.bookingDate} />
             </div>
-
-            {booking.location && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <MapPin className="w-4 h-4" />
-                <span>{booking.location}</span>
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>
     </motion.div>
   );
-}
+};

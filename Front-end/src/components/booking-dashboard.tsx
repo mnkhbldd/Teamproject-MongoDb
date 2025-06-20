@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import axiosInstance from "@/utils/axios";
 
 export function BookingDashboard() {
-  const [bookings, setBookings] = useState<BookingData[]>([]);
+  const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const fetchBookings = async () => {
     setIsLoading(true);
@@ -128,7 +128,7 @@ export function BookingDashboard() {
       >
         {bookings.map((booking, index) => (
           <motion.div
-            key={booking.id}
+            key={index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 * index }}

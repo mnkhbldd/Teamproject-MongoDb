@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import BookingModel from "../model/booking";
 import CompanyModel from "../model/company";
+import UserModel from "../model/user";
 
 interface RequestWithUserId extends Request {
   userId: string;
@@ -116,14 +117,17 @@ export const getBookingsByUser = async (
 ): Promise<void> => {
   try {
     const userId = req.userId;
+    const user = await UserModel.findOne({ clerkId: userId });
+    console.log(user);
+
     const bookings = await BookingModel.find({ user: userId })
       .populate("company", "name")
-      .populate("user", "name")
       .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       bookings,
+      user,
     });
   } catch (error) {
     console.error(error);
