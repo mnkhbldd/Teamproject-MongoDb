@@ -15,9 +15,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import axiosInstance from "@/utils/axios";
 import { useParams } from "next/navigation";
 import { QrBooking } from "@/components/QrBooking";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useScan } from "@/app/context/ScanContext";
 import { toast, Toaster } from "sonner";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 interface BackendBooking {
   _id: string;
   bookingDate: string;
@@ -200,6 +206,7 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
             }
 
             const formattedDate = format(booking.date, "yyyy-MM-dd");
+            console.log("working");
             await axiosInstance.post("/booking/create-booking", {
               companyId: params.id,
               bookingDate: formattedDate,
@@ -245,7 +252,7 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
     }
     setScanned(false);
     fetchBookingData();
-  }, []);
+  }, [scanned]);
 
   // Mobile Day Selection Component
   const MobileDaySelector = () => (
@@ -456,18 +463,15 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
                             </CardContent>
                           </Card>
 
-                          {/* <Button
-                         className="w-full py-3 text-lg"
-                         onClick={() => {
-                           setBookings([]);
-                           handleBooking();
-                         }}
-                       ></Button> */}
                           <Dialog>
                             <DialogTrigger className="w-full py-1 text-lg font-medium text-white bg-black border-black border-solid border-2 rounded-lg">
                               Confirm Booking
                             </DialogTrigger>
                             <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle></DialogTitle>
+                                <DialogDescription></DialogDescription>
+                              </DialogHeader>
                               <QrBooking />
                             </DialogContent>
                           </Dialog>

@@ -1,6 +1,6 @@
 "use client";
 
-import { BookingData, formatCurrency } from "@/lib/booking-data";
+import { BookingData } from "@/lib/booking-data";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -15,9 +15,14 @@ interface BookingCardProps {
   price: number;
   status: "booked" | "cancelled";
   bookingDate: string;
+  user: {
+    firstName: string;
+  };
 }
 
 export const BookingCard = ({ booking }: { booking: BookingCardProps }) => {
+  console.log(booking, "booking");
+
   const getStatusColor = (status: BookingData["status"]) => {
     switch (status) {
       case "booked":
@@ -73,12 +78,12 @@ export const BookingCard = ({ booking }: { booking: BookingCardProps }) => {
               </h3>
               <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
                 <User className="w-4 h-4" />
-                <span>{}sdsd</span>
+                <span>{booking.user.firstName}</span>
               </div>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-gray-900 tabular-nums">
-                {formatCurrency(booking.price)}
+                {booking.price}₮
               </div>
               <Badge
                 variant="outline"

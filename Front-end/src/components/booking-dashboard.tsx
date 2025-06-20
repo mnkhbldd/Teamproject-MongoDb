@@ -9,6 +9,22 @@ import { Calendar, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import axiosInstance from "@/utils/axios";
 
+interface Booking {
+  _id: string;
+  user: string;
+  company: {
+    _id: string;
+    name: string;
+  };
+  bookingDate: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  price: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export function BookingDashboard() {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +62,17 @@ export function BookingDashboard() {
       </div>
     );
   }
+
+  const stats = {
+    total: bookings.length,
+    booked: bookings.filter((b: Booking) => b.status === "booked").length,
+    cancelled: bookings.filter((b: Booking) => b.status === "cancelled").length,
+
+    revenue: bookings.reduce(
+      (sum, booking: Booking) => sum + parseFloat(booking.price),
+      0
+    ),
+  };
 
   return (
     <div className="container mx-auto p-6 space-y-8 h-screen overflow-scroll scrollbar-hide">
@@ -88,7 +115,7 @@ export function BookingDashboard() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {/* <div className="text-2xl font-bold">{stats.booked}</div> */}
+            <div className="text-2xl font-bold">{stats.booked}</div>
           </CardContent>
         </Card>
 
@@ -98,7 +125,7 @@ export function BookingDashboard() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {/* <div className="text-2xl font-bold ">{stats.cancelled}</div> */}
+            <div className="text-2xl font-bold ">{stats.cancelled}</div>
           </CardContent>
         </Card>
 
@@ -109,7 +136,7 @@ export function BookingDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {/* {stats.revenue.toLocaleString()} */}
+              {stats.revenue.toLocaleString()}
 
               <span className="text-2xl font-bold">₮ </span>
             </div>
