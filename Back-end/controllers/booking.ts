@@ -116,10 +116,9 @@ export const getBookingsByUser = async (
 ): Promise<void> => {
   try {
     const userId = req.userId;
-
     const bookings = await BookingModel.find({ user: userId })
       .populate("company", "name")
-      .populate("user", "name email")
+      .populate("user", "name")
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -130,7 +129,7 @@ export const getBookingsByUser = async (
     console.error(error);
     res.status(400).json({
       success: false,
-      message: error instanceof Error ? error.message : "Unknown error",
+      message: error,
     });
   }
 };
