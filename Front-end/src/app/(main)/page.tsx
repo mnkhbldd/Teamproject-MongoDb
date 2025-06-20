@@ -10,8 +10,22 @@ import { GlobeDemo } from "@/components/Global";
 
 import CircularGallery from "@/components/CircularGallery/CircularGallery";
 import BentoGridDemo from "@/components/BentoGrid";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/sign-in");
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   console.log("Welcome to Freely!");
 
   const words =
@@ -70,13 +84,19 @@ export default function Home() {
           />
 
           <div className="flex gap-6 pt-6">
-            <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+            <button
+              onClick={handleClick}
+              className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+            >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
               <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
                 Join us
               </span>
             </button>
-            <button className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+            <button
+              onClick={() => scrollToSection("learn more")}
+              className="min-w-[100px] relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+            >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
               <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
                 Learn More
@@ -143,13 +163,11 @@ export default function Home() {
           </div>
         </div>
       </div> */}
-      <div className="h-[300px] bg-slate-900">
-        <CircularGallery />
-      </div>
-      <div className="w-full h-[900px] bg-slate-900  pt-10  flex flex-col relative items-center justify-center">
+
+      <div className="w-full h-[900px] bg-gray-900  pt-10  flex flex-col relative items-center justify-center">
         <GlobeDemo />
       </div>
-      <div className="h-[40rem] w-full rounded-md flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
+      <div className="h-[40rem] w-full flex flex-col antialiased bg-gray-900 justify-center relative overflow-hidden hidden-scroll ">
         <p className="text-[30px] font-bold text-[rgba(227,232,255,0.9)] pl-40">
           What they tell about us
         </p>
@@ -160,14 +178,11 @@ export default function Home() {
         />
       </div>
 
-
-      
-
-      <div className="bg-gray-900 pb-10">
+      <div id="learn more" className="bg-gray-900 pb-10">
         <BentoGridDemo />
       </div>
- 
-<EnhancedFooter />
+
+      <EnhancedFooter />
     </div>
   );
 }

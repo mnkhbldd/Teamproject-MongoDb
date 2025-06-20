@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import dynamic from "next/dynamic";
+import GlobTextStyle from "./GlobTextStyle";
 
 const World = dynamic(
   () => import("@/components/ui/globe").then((m) => m.World),
@@ -398,8 +399,8 @@ export function GlobeDemo() {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center py-20 h-screen md:h-auto dark:bg-black bg-slate-900 relative w-full">
-      <div className="max-w-7xl mx-auto bg-slate-900 w-full relative overflow-hidden h-full md:h-[50rem] px-4">
+    <div className="flex flex-row items-center justify-center py-20 h-screen md:h-auto bg-gray-900 relative w-full">
+      <div className="max-w-7xl mx-auto bg-gray-900 w-full relative overflow-hidden h-full md:h-[50rem] px-4">
         <motion.div
           initial={{
             opacity: 0,
@@ -414,8 +415,8 @@ export function GlobeDemo() {
           }}
           className="div"
         >
-          <p className="text-center text-base   text-white text-[46px]  max-w-[600px] mt-2 mx-auto">
-            Through our Website
+          <p className="text-center text-base pt-0 text-white text-[46px]  max-w-[600px] mt-2 mx-auto">
+            <GlobTextStyle />
           </p>
         </motion.div>
         <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent  z-40" />
