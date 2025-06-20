@@ -26,10 +26,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Clock, Plus } from "lucide-react";
+import { CalendarIcon, Clock, Plus, Router } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import axiosInstance from "@/utils/axios";
+import { useRouter } from "next/navigation";
 
 const timeSlots = [
   "08:00",
@@ -81,6 +82,7 @@ export default function AdminBookingForm() {
     status: "booked",
   });
   const [companies, setCompanies] = useState<Company[]>([]);
+  const router = useRouter();
 
   const fetchCompanies = async () => {
     try {
@@ -149,6 +151,8 @@ export default function AdminBookingForm() {
         price: "",
         status: "booked",
       });
+
+      router.push("/admin/dashboard");
     } catch (error) {
       console.error("Error creating booking:", error);
     } finally {

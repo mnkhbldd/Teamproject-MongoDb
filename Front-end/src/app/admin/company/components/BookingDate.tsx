@@ -239,8 +239,7 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
   }, []);
 
   useEffect(() => {
-    if (scanned) {
-      setBookings([]);
+    if (scanned == true && setBookings([])) {
       handleBooking();
     }
     setScanned(false);
