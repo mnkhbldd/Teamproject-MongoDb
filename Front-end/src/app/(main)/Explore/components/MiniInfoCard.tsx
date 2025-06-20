@@ -6,9 +6,10 @@ type ListingCardProps = {
   imageUrl: string;
   name: string;
   location: string;
+  price: number;
 };
 
-export const MiniInfoCard = ({ name, location }: ListingCardProps) => {
+export const MiniInfoCard = ({ name, location, price }: ListingCardProps) => {
   return (
     <Popup className=" max-w-md">
       <div>
@@ -18,9 +19,9 @@ export const MiniInfoCard = ({ name, location }: ListingCardProps) => {
           {location}
         </div>
 
-        <div className="text-sm text-blue-600 font-medium flex items-center justify-between">
+        <div className="text-sm text-blue-600 font-medium flex items-center justify-between cursor-pointer">
           <div>
-            <span className="text-lg font-bold text-blue-600">${"100"}</span>
+            <span className="text-lg font-bold text-blue-600">{price}₮</span>
             <span className="text-sm text-gray-500">/hour</span>
           </div>
           see more

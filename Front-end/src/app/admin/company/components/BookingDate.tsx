@@ -35,6 +35,8 @@ interface Booking {
 }
 
 export const BookingDate = ({ price }: { price: number | undefined }) => {
+  console.log(price, "pric");
+
   const [currentStartDate, setCurrentStartDate] = React.useState<Date>(
     startOfDay(new Date())
   );
@@ -86,7 +88,7 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
         isSale: false,
       };
     });
-  }, []);
+  }, [price]);
 
   const handleSlotClick = (date: Date, timeSlot: string) => {
     const existingBooking = bookings.find(
@@ -103,7 +105,7 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
         date: startOfDay(date),
         time: timeSlot,
         status: "pending",
-        price: timeSlots.find((ts) => ts.time === timeSlot)?.price || 75000,
+        price: timeSlots.find((ts) => ts.time === timeSlot)?.price || 1,
         isSale: timeSlots.find((ts) => ts.time === timeSlot)?.isSale || false,
       };
 
@@ -219,6 +221,7 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
       }
     };
     fetchBooking();
+    toast("time booked successfully");
   };
 
   const fetchBookingData = () => {
@@ -246,8 +249,7 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
     }
     setScanned(false);
     fetchBookingData();
-    toast("time booked successfully");
-  }, [scanned]);
+  }, []);
 
   // Mobile Day Selection Component
   const MobileDaySelector = () => (

@@ -38,6 +38,7 @@ interface Company {
   };
   images: string[];
   companyLogo: string;
+  pricing: number;
 }
 
 export default function ExplorePage() {
@@ -207,7 +208,7 @@ export default function ExplorePage() {
                 <Card
                   onClick={() => jumpToDetail(company._id)}
                   key={company._id}
-                  className="hover:shadow-lg duration-300 bg-white/10 backdrop-blur-sm border-white/20 border-none p-0"
+                  className="hover:shadow-lg duration-300 bg-white/10 backdrop-blur-sm border-white/20 border-none p-0 cursor-pointer"
                 >
                   <div className="h-48 bg-gray-200 rounded-t-lg overflow-hidden">
                     {company.images?.[0] ? (

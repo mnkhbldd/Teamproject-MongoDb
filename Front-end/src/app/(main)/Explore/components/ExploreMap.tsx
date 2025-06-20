@@ -29,6 +29,7 @@ interface Company {
   };
   images: string[];
   companyLogo: string;
+  pricing: number;
 }
 
 const ExploreMap = ({ data }: { data: Company[] }) => {
@@ -71,6 +72,7 @@ const ExploreMap = ({ data }: { data: Company[] }) => {
                     })}
                   >
                     <MiniInfoCard
+                      price={el.pricing}
                       imageUrl={el.companyLogo}
                       name={el.name}
                       location={el.location[0].address}
