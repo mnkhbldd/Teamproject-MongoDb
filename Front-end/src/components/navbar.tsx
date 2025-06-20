@@ -312,12 +312,12 @@ export default function NavBar() {
                 Explore
               </span>
             </NavLink>
-            <NavLink href="/recommendation" onClick={closeMobileMenu}>
+            <NavLink href="/bookings" onClick={closeMobileMenu}>
               <span
                 className={`text-[16px] text-[rgba(99,100,117)] hover:text-white`}
                 style={twkLausanneFont}
               >
-                Recommendations
+                Bookings
               </span>
             </NavLink>
             <NavLink href="/AboutUs" onClick={closeMobileMenu}>
