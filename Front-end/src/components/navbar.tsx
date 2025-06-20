@@ -153,7 +153,7 @@ export default function NavBar() {
               </span>
             </NavLink>
 
-            {signedUser?.isAdmin == false ? (
+            {signedUser?.isAdmin == true ? (
               <NavLink href="/admin/dashboard">
                 <span
                   className={`text-[15px] text-[rgba(99,100,117)] hover:text-white`}
