@@ -136,12 +136,12 @@ export default function NavBar() {
                 Explore
               </span>
             </NavLink>
-            <NavLink href="/recommendation">
+            <NavLink href="/bookings">
               <span
                 className={`text-[15px] text-[rgba(99,100,117)] hover:text-white`}
                 style={twkLausanneFont}
               >
-                Recommendations
+                Bookings
               </span>
             </NavLink>
             <NavLink href="/AboutUs">
