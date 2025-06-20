@@ -12,9 +12,22 @@ import axiosInstance from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { CategoryFilter } from "@/components/FilterByCategories";
 import { useCategory } from "@/app/context/CategoryContext";
-import ExploreMap from "./components/ExploreMap";
 import { useLoading } from "@/app/context/LoadingContext";
 import Image from "next/image";
+
+import dynamic from "next/dynamic";
+
+const MapWrapper = dynamic(
+  () => import("@/app/(main)/Explore/components/ExploreMap"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+        Loading map...
+      </div>
+    ),
+  }
+);
 
 interface Company {
   _id: string;
@@ -79,8 +92,6 @@ export default function ExplorePage() {
 
     fetchCompanies();
   }, [search, selectedCategories]);
-
-  console.log(companies);
 
   const jumpToDetail = (_id: string) => {
     router.push(`/Company/${_id}`);
@@ -177,9 +188,7 @@ export default function ExplorePage() {
 
         {/* Content */}
         {viewMode === "map" ? (
-          <div className="h-80 sm:h-196 rounded-lg overflow-hidden">
-            <ExploreMap data={companies} />
-          </div>
+          <MapWrapper data={companies} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (

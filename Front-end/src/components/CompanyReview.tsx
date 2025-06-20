@@ -387,17 +387,12 @@ export default function AdminReviewsTable() {
       try {
         setLoading(true);
         setError(null);
-        console.log("Sending request to /review/user-company-reviews");
 
         const response = await axiosInstance.get(
           "/review/user-company-reviews"
         );
-        console.log("Response received:", {
-          data: response.data,
-        });
 
         if (response.data.success) {
-          console.log("Setting reviews:", response.data.reviews);
           setReviews(response.data.reviews);
         } else {
           console.error("API returned success:false");

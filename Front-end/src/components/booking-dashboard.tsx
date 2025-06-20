@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookingData } from "@/lib/booking-data";
 import { BookingCard } from "./booking-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GrCurrency } from "react-icons/gr";
@@ -26,7 +25,6 @@ export function BookingDashboard() {
   useEffect(() => {
     fetchBookings();
   }, []);
-  console.log(bookings, "haha");
 
   if (isLoading) {
     return (

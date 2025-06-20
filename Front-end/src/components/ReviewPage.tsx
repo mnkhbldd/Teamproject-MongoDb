@@ -311,7 +311,6 @@ export default function ReviewsPage() {
 
                     <form
                       onSubmit={(e) => {
-                        console.log("Form submitted", e);
                         e.preventDefault();
                         handleSubmit(e);
                       }}

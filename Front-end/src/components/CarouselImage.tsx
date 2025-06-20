@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Play, Maximize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Images = {
@@ -9,16 +9,11 @@ type Images = {
 };
 
 export const CarouselImage = ({ images }: Images) => {
-  console.log(images, "images");
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  useEffect(() => {
-    console.log("Media carousel mounted, current slide:", currentSlide);
-  }, [currentSlide]);
+  useEffect(() => {}, [currentSlide]);
 
   const nextSlide = () => {
-    console.log("Next slide clicked");
     if (!images) {
       return;
     }
@@ -26,16 +21,10 @@ export const CarouselImage = ({ images }: Images) => {
   };
 
   const prevSlide = () => {
-    console.log("Previous slide clicked");
     if (!images) {
       return;
     }
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const toggleFullscreen = () => {
-    console.log("Fullscreen toggled");
-    setIsFullscreen(!isFullscreen);
   };
 
   return (
@@ -76,7 +65,7 @@ export const CarouselImage = ({ images }: Images) => {
       {/* Thumbnail Navigation */}
       <div className="flex justify-center space-x-3 mt-4">
         {images &&
-          images.map((image: string, index: any) => (
+          images.map((image: string, index: number) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}

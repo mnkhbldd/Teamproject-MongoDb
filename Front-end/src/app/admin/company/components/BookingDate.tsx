@@ -35,8 +35,6 @@ interface Booking {
 }
 
 export const BookingDate = ({ price }: { price: number | undefined }) => {
-  console.log(price, "pric");
-
   const [currentStartDate, setCurrentStartDate] = React.useState<Date>(
     startOfDay(new Date())
   );
@@ -44,15 +42,13 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [bookingsBackend, setBookingsBackend] = React.useState<Booking[]>([]);
   const [selectedDay, setSelectedDay] = React.useState<Date | null>(null);
-  const [_, setIsMobile] = React.useState(false);
+
   const { scanned, setScanned } = useScan();
   const params = useParams();
 
   // Check if mobile on mount and resize
   React.useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const checkMobile = () => {};
 
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -243,8 +239,8 @@ export const BookingDate = ({ price }: { price: number | undefined }) => {
   }, []);
 
   useEffect(() => {
-    {
-      scanned == true && setBookings([]);
+    if (scanned) {
+      setBookings([]);
       handleBooking();
     }
     setScanned(false);

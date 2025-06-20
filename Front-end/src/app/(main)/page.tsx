@@ -8,7 +8,6 @@ import { EnhancedFooter } from "@/components/NextFooter";
 import { InfiniteMovingCards } from "@/components/infinite-moving-cards";
 import { GlobeDemo } from "@/components/Global";
 
-import CircularGallery from "@/components/CircularGallery/CircularGallery";
 import BentoGridDemo from "@/components/BentoGrid";
 import { useRouter } from "next/navigation";
 
@@ -25,8 +24,6 @@ export default function Home() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  console.log("Welcome to Freely!");
 
   const words =
     "With Freely, businesses can showcase their activities and start getting bookings in minutes—so every adventure stays exciting and effortless, no matter how big your audience grows.";

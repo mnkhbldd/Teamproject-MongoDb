@@ -49,7 +49,6 @@ export const CompanyDetail = () => {
     try {
       const res = await axiosInstance.get(`/company/get-company/${id}`);
       setData(res.data.company);
-      console.log(res.data.company, "company data");
     } catch (error) {
       console.log(error);
     }

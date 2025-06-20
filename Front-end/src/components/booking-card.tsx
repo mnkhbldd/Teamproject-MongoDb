@@ -1,14 +1,10 @@
 "use client";
 
-import {
-  BookingData,
-  formatCurrency,
-  formatDateTime,
-} from "@/lib/booking-data";
+import { BookingData, formatCurrency } from "@/lib/booking-data";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import { Calendar, MapPin, User, XCircle, Clock4 } from "lucide-react";
+import { Calendar, User, XCircle, Clock4 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface BookingCardProps {
@@ -44,10 +40,6 @@ export const BookingCard = ({ booking }: { booking: BookingCardProps }) => {
     }
   };
 
-  // const handleStatusChange = (newStatus: BookingData["status"]) => {
-  //   console.log(`Changing status for ${booking.id} to ${newStatus}`);
-  //   onStatusChange?.(booking.id, newStatus);
-  // };
   const LocalDateTime = ({ isoString }: { isoString: string }) => {
     const date = new Date(isoString);
     const formatted = date.toLocaleString("en-US", {

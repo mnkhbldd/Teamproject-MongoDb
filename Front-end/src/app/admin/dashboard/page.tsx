@@ -32,11 +32,9 @@ import { BookingListsAdmin } from "@/components/BookingListsAdmin";
 import axiosInstance from "@/utils/axios";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -325,7 +323,6 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Bookings Table */}
         <Card>
           <CardHeader>
             <div className="flex justify-between">

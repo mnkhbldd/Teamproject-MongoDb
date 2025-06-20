@@ -12,8 +12,6 @@ export interface BookingData {
 }
 
 export const generateBookingData = (): BookingData[] => {
-  console.log("Generating booking data...");
-
   const customers = [
     "Emma Thompson",
     "James Wilson",
@@ -83,7 +81,6 @@ export const generateBookingData = (): BookingData[] => {
     bookings.push(booking);
   }
 
-  console.log("Generated bookings:", bookings);
   return bookings;
 };
 

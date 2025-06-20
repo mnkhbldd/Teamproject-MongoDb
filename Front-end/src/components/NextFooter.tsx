@@ -26,7 +26,6 @@ export const EnhancedFooter = () => {
   const { push } = useRouter();
 
   const handleNavigate = (route: string) => {
-    console.log("Navigating to:", route);
     push(route);
   };
 

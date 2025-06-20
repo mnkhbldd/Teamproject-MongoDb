@@ -69,7 +69,6 @@ export const AdminSettings = () => {
       const response = await axiosInstance.get(
         `/company/get-company/${params.id}`
       );
-      console.log(response.data.company);
       setData(response.data.company);
     } catch (error) {
       console.error("Error fetching company data:", error);
@@ -84,7 +83,6 @@ export const AdminSettings = () => {
 
   const handleInputChange = (field: keyof CompanyData, value: string) => {
     setData((prev) => ({ ...prev, [field]: value }));
-    console.log(data, "data");
   };
 
   const handleLocationChange = (value: string) => {
@@ -136,7 +134,6 @@ export const AdminSettings = () => {
         },
       ],
     }));
-    console.log(data, "data");
   };
 
   const handleImageChange = async (index: number, value: string) => {

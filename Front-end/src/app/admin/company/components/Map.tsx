@@ -72,7 +72,7 @@ interface Company {
   };
   images: string[];
   companyLogo: string;
-  pricing: string;
+  pricing: number;
 }
 
 const MarkerIcon = new L.DivIcon({
@@ -575,6 +575,7 @@ export const Map = () => {
                   })}
                 >
                   <MiniInfoCard
+                    price={el.pricing}
                     imageUrl={el.companyLogo}
                     name={el.name}
                     location={el.location[0].address}
